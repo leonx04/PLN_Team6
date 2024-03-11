@@ -5,7 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="384e5fdf-cd18-4e9c-a8e0-5b83f61e19aa" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/built-jar.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/built-jar.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/LoginForm$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/LoginForm$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/LoginForm$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/LoginForm$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/LoginForm$LoginFormLayout.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/LoginForm$LoginFormLayout.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/LoginForm$LoginLayout.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/LoginForm$LoginLayout.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/LoginForm.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/LoginForm.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/MainForm$MainFormLayout.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/MainForm$MainFormLayout.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/MainForm.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/MainForm.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/other/DefaultForm.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/other/FormRead.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/other/FormSell.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/menu/Menu$MenuLayout.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/menu/Menu$MenuLayout.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/menu/Menu.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/menu/Menu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/menu/icon/4.svg" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/menu/icon/4.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/menu/icon/6.svg" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/menu/icon/6.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/menu/icon/7.svg" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/menu/icon/7.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/theme/FlatLightLaf.properties" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/theme/FlatLightLaf.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,6 +35,9 @@
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
   </component>
   <component name="ProjectId" id="2dLzmV5EXWBVOh4tZOIjarIm4U6" />
   <component name="ProjectViewState">
@@ -88,10 +109,23 @@
       <workItem from="1710012495804" duration="74000" />
       <workItem from="1710017718141" duration="255000" />
       <workItem from="1710072926882" duration="114000" />
+      <workItem from="1710074306600" duration="618000" />
+      <workItem from="1710133627344" duration="65000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
