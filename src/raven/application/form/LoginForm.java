@@ -142,6 +142,7 @@ public class LoginForm extends javax.swing.JPanel {
         Application.login();
     }//GEN-LAST:event_cmdLoginActionPerformed
 
+    //khj
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         // TODO add your handling code here:
         // Hiển thị thông báo xác nhận
