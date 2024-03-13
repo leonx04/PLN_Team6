@@ -15,7 +15,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import raven.application.Application;
 import raven.application.form.other.FormBanHang;
-import raven.application.form.other.FormInbox;
 import raven.application.form.other.FormSanPham;
 import raven.application.form.other.FormSanPhamChiTiet;
 import raven.application.form.other.FormThuocTinhSanPham;
@@ -66,6 +65,7 @@ public class MainForm extends JLayeredPane {
         String icon = (getComponentOrientation().isLeftToRight()) ? "menu_left.svg" : "menu_right.svg";
         menuButton.setIcon(new FlatSVGIcon("raven/icon/svg/" + icon, 0.8f));
     }
+
     //Thêm code gọi panel ở đây 
     private void initMenuEvent() {
         menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
@@ -84,7 +84,7 @@ public class MainForm extends JLayeredPane {
                 }
             } else if (index == 6) {
                 Application.logout();
-            }else if (index == 7) {
+            } else if (index == 7) {
                 int confirm = JOptionPane.showConfirmDialog(null,
                         "Bạn có muốn thoát chương trình?",
                         "Xác nhận thoát",
@@ -94,8 +94,7 @@ public class MainForm extends JLayeredPane {
                 if (confirm == JOptionPane.YES_OPTION) {
                     System.exit(0);
                 }
-            }
-            else {
+            } else {
                 action.cancel();
             }
         });

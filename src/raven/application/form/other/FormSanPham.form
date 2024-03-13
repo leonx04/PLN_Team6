@@ -179,6 +179,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="txtMaSP">
           <Properties>
+            <Property name="editable" type="boolean" value="false"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="14" style="0"/>
             </Property>
@@ -286,6 +287,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="C&#xe2;&#x323;p nh&#xe2;&#x323;t sa&#x309;n ph&#xe2;&#x309;m"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUpdateSPActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnReset">
           <Properties>
@@ -297,6 +301,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="La&#x300;m m&#x1a1;&#x301;i"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnResetActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnDeleteSP">
           <Properties>
@@ -308,6 +315,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Xo&#x301;a"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteSPActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
