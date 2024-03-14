@@ -9,5 +9,6 @@ package raven.application.model;
  * @author dungn
  */
 public class ChiTietSanPhamModel {
-    
+    // public String ID;
+    // public 
 }
