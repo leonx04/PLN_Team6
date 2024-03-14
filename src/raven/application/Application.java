@@ -7,6 +7,10 @@ import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import raven.application.form.LoginForm;
@@ -32,7 +36,9 @@ public class Application extends javax.swing.JFrame {
     public Application() {
         // Khởi tạo các thành phần của giao diện
         initComponents();
-
+        
+        // Sử dụng hàm setIconImage để đặt biểu tượng 
+        setIconImage();
         // Cài đặt kích thước và vị trí của cửa sổ
         setSize(new Dimension(1366, 768));
         setLocationRelativeTo(null);
@@ -40,12 +46,12 @@ public class Application extends javax.swing.JFrame {
         // Khởi tạo MainForm và LoginForm
         mainForm = new MainForm();
         loginForm = new LoginForm();
-
+        
         // Thiết lập nội dung của cửa sổ là form đăng nhập
         setContentPane(loginForm);
+        
 
         // Cài đặt JFrame cho Notifications
-        
     }
 
     /**
@@ -134,14 +140,27 @@ public class Application extends javax.swing.JFrame {
         UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
         // Thiết lập giao diện MacDark
         FlatMacDarkLaf.setup();
-        
+
         // Chạy ứng dụng trong Event Dispatch Thread
         java.awt.EventQueue.invokeLater(() -> {
             // Khởi tạo ứng dụng
             app = new Application();
+            
             // Hiển thị cửa sổ ứng dụng
             app.setVisible(true);
         });
+    }
+
+    // Trong lớp Application
+    private void setIconImage() {
+        try {
+            // Đọc ảnh từ tệp và đặt nó làm biểu tượng của ứng dụng
+            Image image = ImageIO.read(getClass().getResource("/raven/icon/png/logo.png")); // Thay đổi tên tệp ảnh nếu cần
+            setIconImage(image);
+        } catch (IOException e) {
+            // Xử lý nếu có lỗi khi đọc ảnh
+            e.printStackTrace();
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

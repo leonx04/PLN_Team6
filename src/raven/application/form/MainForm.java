@@ -11,13 +11,10 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
-import javax.swing.JButton;
-import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import raven.application.Application;
 import raven.application.form.other.FormBanHang;
-import raven.application.form.other.FormInbox;
 import raven.application.form.other.FormSanPham;
 import raven.application.form.other.FormSanPhamChiTiet;
 import raven.application.form.other.FormThuocTinhSanPham;
@@ -69,6 +66,7 @@ public class MainForm extends JLayeredPane {
         menuButton.setIcon(new FlatSVGIcon("raven/icon/svg/" + icon, 0.8f));
     }
 
+    //Thêm code gọi panel ở đây 
     private void initMenuEvent() {
         menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
             // Application.mainForm.showForm(new DefaultForm("Form : " + index + " " + subIndex));
@@ -81,11 +79,21 @@ public class MainForm extends JLayeredPane {
                     Application.showForm(new FormSanPhamChiTiet());
                 } else if (subIndex == 3) {
                     Application.showForm(new FormThuocTinhSanPham());
-                }else {
+                } else {
                     action.cancel();
                 }
             } else if (index == 6) {
                 Application.logout();
+            } else if (index == 7) {
+                int confirm = JOptionPane.showConfirmDialog(null,
+                        "Bạn có muốn thoát chương trình?",
+                        "Xác nhận thoát",
+                        JOptionPane.YES_NO_OPTION);
+
+                // Xử lý lựa chọn của người dùng
+                if (confirm == JOptionPane.YES_OPTION) {
+                    System.exit(0);
+                }
             } else {
                 action.cancel();
             }
