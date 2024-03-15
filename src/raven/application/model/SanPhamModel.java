@@ -26,6 +26,7 @@ public class SanPhamModel {
         this.MoTa = MoTa;
     }
 
+
     public String getID() {
         return ID;
     }
@@ -68,12 +69,11 @@ public class SanPhamModel {
     
 
     public Object[] toData() {
-        return new Object[]{
-            this.stt,
-            this.ID,
-            this.tenSP,
-            this.MoTa
-            
+        return new Object[] {
+                this.stt,
+                this.ID,
+                this.tenSP,
+                this.MoTa
         };
     }
     

@@ -3,7 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/A:/PLN_Team6/src/raven/application/service/SanPhamService.java</file>
+            <file>file:/A:/PLN_Team6/src/raven/application/service/ChiTietSanPhamService.java</file>
+            <file>file:/A:/PLN_Team6/src/raven/application/form/other/FormSanPhamChiTiet.java</file>
             <file>file:/A:/PLN_Team6/src/raven/application/form/other/FormSanPham.java</file>
             <file>file:/A:/PLN_Team6/src/raven/application/form/MainForm.java</file>
         </group>
