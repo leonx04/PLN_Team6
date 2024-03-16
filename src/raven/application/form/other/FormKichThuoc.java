@@ -8,12 +8,12 @@ package raven.application.form.other;
  *
  * @author dungn
  */
-public class FormKichThuoc extends javax.swing.JDialog {
+public class FormMauSac extends javax.swing.JDialog {
 
     /**
      * Creates new form FormMauSac
      */
-    public FormKichThuoc(java.awt.Frame parent, boolean modal) {
+    public FormMauSac(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
@@ -28,18 +28,18 @@ public class FormKichThuoc extends javax.swing.JDialog {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        txtTenKichThuoc = new javax.swing.JTextField();
-        btnAddKichThuoc = new javax.swing.JButton();
+        txtTenMauSac = new javax.swing.JTextField();
+        btnAddMauSac = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel1.setText("Tên kích thước:");
+        jLabel1.setText("Tên màu sắc:");
 
-        txtTenKichThuoc.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtTenMauSac.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
-        btnAddKichThuoc.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnAddKichThuoc.setText("Thêm");
+        btnAddMauSac.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnAddMauSac.setText("Thêm");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -48,12 +48,12 @@ public class FormKichThuoc extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnAddKichThuoc)
+                    .addComponent(btnAddMauSac)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtTenKichThuoc, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(txtTenMauSac, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -61,9 +61,9 @@ public class FormKichThuoc extends javax.swing.JDialog {
                 .addGap(17, 17, 17)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(txtTenKichThuoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTenMauSac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
-                .addComponent(btnAddKichThuoc)
+                .addComponent(btnAddMauSac)
                 .addGap(21, 21, 21))
         );
 
@@ -87,21 +87,20 @@ public class FormKichThuoc extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FormKichThuoc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormMauSac.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FormKichThuoc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormMauSac.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FormKichThuoc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormMauSac.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FormKichThuoc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormMauSac.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                FormKichThuoc dialog = new FormKichThuoc(new javax.swing.JFrame(), true);
+                FormMauSac dialog = new FormMauSac(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -114,8 +113,8 @@ public class FormKichThuoc extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAddKichThuoc;
+    private javax.swing.JButton btnAddMauSac;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JTextField txtTenKichThuoc;
+    private javax.swing.JTextField txtTenMauSac;
     // End of variables declaration//GEN-END:variables
 }
