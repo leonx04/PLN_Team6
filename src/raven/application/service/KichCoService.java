@@ -7,8 +7,6 @@ package raven.application.service;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import raven.application.model.ChatLieuModel;
 import raven.application.model.KichCoModel;
 import raven.connect.DBConnect;
 

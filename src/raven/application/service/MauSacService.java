@@ -9,8 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-
-import raven.application.model.ChatLieuModel;
 import raven.application.model.MauSacModel;
 import raven.connect.DBConnect;
 
