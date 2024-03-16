@@ -8,6 +8,7 @@ import javax.swing.table.TableRowSorter;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.util.List;
 
+import raven.application.controller.SanPhamController;
 import raven.application.model.SanPhamModel;
 import raven.application.service.SanPhamService;
 
@@ -20,8 +21,10 @@ public class FormSanPham extends javax.swing.JPanel {
         private DefaultTableModel model = new DefaultTableModel();
         private SanPhamService sprs = new SanPhamService();
 
+        private SanPhamController spcl = new SanPhamController();
         public FormSanPham() {
                 initComponents();
+                
                 this.fillTable(sprs.getAllSP());
 
                 lb.putClientProperty(FlatClientProperties.STYLE, ""
