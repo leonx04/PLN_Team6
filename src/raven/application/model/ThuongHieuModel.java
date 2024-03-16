@@ -23,6 +23,10 @@ public class ThuongHieuModel {
         this.MoTa = MoTa;
     }
 
+    public ThuongHieuModel(String TenTH) {
+        this.TenTH = TenTH;
+    }
+
     public String getID() {
         return ID;
     }

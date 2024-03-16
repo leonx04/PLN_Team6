@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import raven.application.model.ChatLieuModel;
 import raven.application.model.MauSacModel;
 import raven.connect.DBConnect;
 
@@ -35,8 +36,7 @@ public class MauSacService {
                 MauSacModel ms = new MauSacModel(
                         rs.getString(1),
                         rs.getString(2),
-                        rs.getString(3)
-                );
+                        rs.getString(3));
                 listCL.add(ms);
 
             }
@@ -46,6 +46,28 @@ public class MauSacService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public List<MauSacModel> getIDByTenMS(String tenMS) {
+        sql = "SELECT ID, TenMau, MoTa FROM MAUSAC WHERE TenMau = ?";
+        List<MauSacModel> listMS = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, tenMS);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                MauSacModel ms = new MauSacModel(
+                        rs.getString(1),
+                        rs.getString(2),
+                        rs.getString(3));
+                listMS.add(ms);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return listMS;
     }
 
     public int insert(MauSacModel ms) {
@@ -63,6 +85,44 @@ public class MauSacService {
 
         }
         return 0;
+    }
+
+    public String getNewIDMS() {
+        // Mã sản phẩm mặc định
+        String newID = "MS001";
+        try {
+            // Truy vấn SQL để lấy số thứ tự lớn nhất của mã sản phẩm từ cơ sở dữ liệu
+            sql = "SELECT MAX(CAST(SUBSTRING(ID, 4, LEN(ID)) AS INT)) AS maxID FROM MAUSAC";
+            // trong truy vấn SQL, MAX(CAST(SUBSTRING(ID, 4, LEN(ID)) AS INT)) được sử dụng
+            // để lấy số thứ tự lớn nhất của các mã sản phẩm trong cơ sở dữ liệu.
+            // SUBSTRING(ID, 4, LEN(ID)) được sử dụng để cắt bỏ ba ký tự đầu tiên của mã
+            // chất
+            // liệu (trong trường hợp này là "CL"),
+            // sau đó chuyển thành kiểu số nguyên bằng CAST.
+            // Kết nối đến cơ sở dữ liệu
+            con = DBConnect.getConnection();
+            // Tạo đối tượng PreparedStatement từ truy vấn SQL
+            ps = con.prepareStatement(sql);
+            // Thực hiện truy vấn và lưu kết quả vào ResultSet
+            rs = ps.executeQuery();
+            // Kiểm tra xem ResultSet có kết quả hay không
+            if (rs.next()) {
+                // Nếu có kết quả, lấy giá trị số thứ tự lớn nhất từ cột "maxID"
+                int maxID = rs.getInt("maxID");
+                // Tăng giá trị số thứ tự lên một đơn vị
+                maxID++;
+                // Tạo mã mới từ số thứ tự lớn nhất và định dạng lại để có hai chữ số
+                newID = "MS" + String.format("%03d", maxID);
+                // %03d là định dạng cho số nguyên với độ dài tối thiểu là 3 chữ số. Điều này
+                // đảm bảo rằng số thứ tự sẽ được đặt sau chuỗi "CL" và luôn có ít nhất 3 chữ
+                // số, được điền bằng số 0 nếu cần.
+            }
+        } catch (Exception e) {
+            // Xử lý ngoại lệ nếu có lỗi xảy ra
+            e.printStackTrace();
+        }
+        // Trả về mã sản phẩm mới hoặc mã mặc định nếu có lỗi xảy ra
+        return newID;
     }
 
     public int update(MauSacModel ms, String ma) {
@@ -100,14 +160,13 @@ public class MauSacService {
         try {
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
-            ps.setString(1,sql);
+            ps.setString(1, sql);
             rs = ps.executeQuery();
             while (rs.next()) {
                 MauSacModel ms = new MauSacModel(
                         rs.getString(1),
                         rs.getString(2),
-                        rs.getString(3)
-                );
+                        rs.getString(3));
                 listCL.add(ms);
 
             }

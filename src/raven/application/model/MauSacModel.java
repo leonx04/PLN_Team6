@@ -23,6 +23,10 @@ public class MauSacModel {
         this.MoTa = MoTa;
     }
 
+    public MauSacModel(String TenMS) {
+        this.TenMS = TenMS;
+    }
+
     public String getID() {
         return ID;
     }

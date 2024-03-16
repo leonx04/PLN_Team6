@@ -44,21 +44,16 @@ public class ChiTietSanPhamService {
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
-                MauSacModel ms = new MauSacModel(null, rs.getString(3), null);
-                SanPhamModel sp = new SanPhamModel(null, rs.getString(2),null);
-                KichCoModel kc = new KichCoModel(null, rs.getString(4),null);
-                ChatLieuModel cl = new ChatLieuModel(null, rs.getString(5),null);
-                ThuongHieuModel th = new ThuongHieuModel(null, rs.getString(6),null);
                 ChiTietSanPhamModel ctsp = new ChiTietSanPhamModel(
-                        rs.getString(1),
-                        sp,
-                        ms,
-                        kc,
-                        cl,
-                        th,
-                        rs.getBigDecimal(7),
-                        rs.getInt(8),
-                        rs.getString(9));
+                        rs.getString(1), // ID
+                        new SanPhamModel(rs.getString(2)), // TenSP
+                        new MauSacModel(rs.getString(3)), // MauSac
+                        new KichCoModel(rs.getString(4)), // Size
+                        new ChatLieuModel(rs.getString(5)), // ChatLieu
+                        new ThuongHieuModel(rs.getString(6)), // ThuongHieu
+                        rs.getBigDecimal(7), // GiaBan
+                        rs.getInt(8), // SoLuongTon
+                        rs.getString(9)); // MoTa
                 listCTSP.add(ctsp);
             }
             return listCTSP;
@@ -68,6 +63,40 @@ public class ChiTietSanPhamService {
             return null;
         }
 
+    }
+
+    public String getNewSPCTID() {
+        // Mã sản phẩm mặc định
+        String newID = "SPCT01";
+        try {
+            // Truy vấn SQL để lấy số thứ tự lớn nhất của mã sản phẩm từ cơ sở dữ liệu
+            sql = "SELECT MAX(CAST(SUBSTRING(ID, 5, LEN(ID)) AS INT)) AS maxID FROM SANPHAMCHITIET";
+            // trong truy vấn SQL, MAX(CAST(SUBSTRING(ID, 3, LEN(ID)) AS INT)) được sử dụng
+            // để lấy số thứ tự lớn nhất của các mã sản phẩm trong cơ sở dữ liệu.
+            // SUBSTRING(ID, 3, LEN(ID)) được sử dụng để cắt bỏ ba ký tự đầu tiên của mã sản
+            // phẩm (trong trường hợp này là "SP"),
+            // sau đó chuyển thành kiểu số nguyên bằng CAST.
+            // Kết nối đến cơ sở dữ liệu
+            con = DBConnect.getConnection();
+            // Tạo đối tượng PreparedStatement từ truy vấn SQL
+            ps = con.prepareStatement(sql);
+            // Thực hiện truy vấn và lưu kết quả vào ResultSet
+            rs = ps.executeQuery();
+            // Kiểm tra xem ResultSet có kết quả hay không
+            if (rs.next()) {
+                // Nếu có kết quả, lấy giá trị số thứ tự lớn nhất từ cột "maxID"
+                int maxID = rs.getInt("maxID");
+                // Tăng giá trị số thứ tự lên một đơn vị
+                maxID++;
+                // Tạo mã sản phẩm mới từ số thứ tự lớn nhất và định dạng lại để có hai chữ số
+                newID = "SPCT" + String.format("%02d", maxID);
+            }
+        } catch (Exception e) {
+            // Xử lý ngoại lệ nếu có lỗi xảy ra
+            e.printStackTrace();
+        }
+        // Trả về mã sản phẩm mới hoặc mã mặc định nếu có lỗi xảy ra
+        return newID;
     }
 
     public int insert(ChiTietSanPhamModel ctsp) {
@@ -93,4 +122,40 @@ public class ChiTietSanPhamService {
             return 0;
         }
     }
+
+    public int update(ChiTietSanPhamModel ctsp) {
+        sql = "UPDATE SANPHAMCHITIET SET ID_SanPham=?, ID_MauSac=?, ID_Size=?, ID_ChatLieu=?, ID_ThuongHieu=?, GiaBan=?, SoLuongTon=?, MoTa=?, NgaySua = CURRENT_TIMESTAMP WHERE ID=?";
+
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setObject(1, ctsp.getTenSP().getID());
+            ps.setObject(2, ctsp.getMauSac().getID());
+            ps.setObject(3, ctsp.getKichCo().getID());
+            ps.setObject(4, ctsp.getChatLieu().getID());
+            ps.setObject(5, ctsp.getThuongHieu().getID());
+            ps.setObject(6, ctsp.getGiaBan());
+            ps.setObject(7, ctsp.getSoLuongTon());
+            ps.setObject(8, ctsp.getMoTa());
+            ps.setObject(9, ctsp.getID());
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int delete(String id) {
+        String sql = "DELETE FROM SANPHAMCHITIET WHERE ID = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, id);
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
 }

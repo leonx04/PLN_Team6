@@ -22,6 +22,11 @@ public class KichCoModel {
         this.TenSize = TenSize;
         this.MoTa = MoTa;
     }
+
+    public KichCoModel(String TenSize) {
+        this.TenSize = TenSize;
+    }
+
     public String getID() {
         return ID;
     }

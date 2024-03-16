@@ -22,6 +22,10 @@ public class ChatLieuModel {
         this.TenCL = TenCL;
         this.MoTa = MoTa;
     }
+
+    public ChatLieuModel(String TenCL) {
+        this.TenCL = TenCL;
+    }
     
     public String getID() {
         return ID;

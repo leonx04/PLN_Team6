@@ -1,10 +1,6 @@
 
 package raven.application.model;
 
-import java.security.Timestamp;
-import java.sql.Date;
-import java.time.LocalDateTime;
-
 /**
  *
  * @author dungn
@@ -16,7 +12,6 @@ public class SanPhamModel {
     public String TrangThai;
     private int stt;
 
-
     public SanPhamModel() {
     }
 
@@ -26,6 +21,9 @@ public class SanPhamModel {
         this.MoTa = MoTa;
     }
 
+    public SanPhamModel(String tenSP) {
+        this.tenSP = tenSP;
+    }
 
     public String getID() {
         return ID;
@@ -59,14 +57,13 @@ public class SanPhamModel {
         this.TrangThai = TrangThai;
     }
 
-        public int getStt() {
+    public int getStt() {
         return stt;
     }
 
     public void setStt(int stt) {
         this.stt = stt;
     }
-    
 
     public Object[] toData() {
         return new Object[] {
@@ -76,6 +73,5 @@ public class SanPhamModel {
                 this.MoTa
         };
     }
-    
 
 }
