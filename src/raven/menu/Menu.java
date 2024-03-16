@@ -31,7 +31,7 @@ public class Menu extends JPanel {
         {"Product", "Sản phẩm", "Sản phẩm chi tiết", "Thuộc tính sản phẩm"},
         {"Bill"},
         {"Voucher"},
-        {"Staff", "Danh sách", "Quản lý"},
+        {"Staff"},
         {"Customer", "Danh sách", "Quản lý"},
         {"Logout"}
     };
