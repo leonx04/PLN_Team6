@@ -44,7 +44,6 @@ public class SanPhamService {
             return null;
         }
     }
-    
 
     public List<SanPhamModel> getAllSPByTrangThai(String trangthai) {
         sql = "SELECT ID, TenSanPham, MoTa FROM SANPHAM WHERE TrangThai = ?";
@@ -56,10 +55,9 @@ public class SanPhamService {
             rs = ps.executeQuery();
             while (rs.next()) {
                 SanPhamModel sp = new SanPhamModel(
-                    rs.getString("1"),
-                    rs.getString("2"),
-                    rs.getString(3)
-                );
+                        rs.getString("1"),
+                        rs.getString("2"),
+                        rs.getString(3));
                 listSPTT.add(sp);
             }
         } catch (Exception e) {
@@ -70,12 +68,34 @@ public class SanPhamService {
         return listSPTT;
     }
 
+    public List<SanPhamModel> getIDByTenSP(String tenSP) {
+        sql = "SELECT ID, TenSanPham, MoTa FROM SANPHAM WHERE TenSanPham = ?";
+        List<SanPhamModel> listSP = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, tenSP);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                SanPhamModel sp = new SanPhamModel(
+                        rs.getString(1),
+                        rs.getString(2),
+                        rs.getString(3));
+                listSP.add(sp);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return listSP;
+    }
+
     public String getNewSanPhamID() {
         // Mã sản phẩm mặc định
         String newID = "SP01";
         try {
             // Truy vấn SQL để lấy số thứ tự lớn nhất của mã sản phẩm từ cơ sở dữ liệu
-             sql = "SELECT MAX(CAST(SUBSTRING(ID, 3, LEN(ID)) AS INT)) AS maxID FROM SANPHAM";
+            sql = "SELECT MAX(CAST(SUBSTRING(ID, 3, LEN(ID)) AS INT)) AS maxID FROM SANPHAM";
             // trong truy vấn SQL, MAX(CAST(SUBSTRING(ID, 3, LEN(ID)) AS INT)) được sử dụng
             // để lấy số thứ tự lớn nhất của các mã sản phẩm trong cơ sở dữ liệu.
             // SUBSTRING(ID, 3, LEN(ID)) được sử dụng để cắt bỏ ba ký tự đầu tiên của mã sản
