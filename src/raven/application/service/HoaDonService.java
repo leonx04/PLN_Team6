@@ -22,6 +22,7 @@ public class HoaDonService {
 
     public List<HoaDonModel> getAll() {
 
+        return null;
     }
 
     public ArrayList<HoaDonModel> getList() {
