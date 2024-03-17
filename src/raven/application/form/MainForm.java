@@ -69,7 +69,8 @@ public class MainForm extends JLayeredPane {
     //Thêm code gọi panel ở đây 
     private void initMenuEvent() {
         menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
-            // Application.mainForm.showForm(new DefaultForm("Form : " + index + " " + subIndex));
+            // Application.mainForm.showForm(new DefaultForm("Form : " + index + " " +
+            // subIndex));
             if (index == 0) {
                 Application.showForm(new FormBanHang());
             } else if (index == 1) {
