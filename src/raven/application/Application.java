@@ -40,7 +40,7 @@ public class Application extends javax.swing.JFrame {
         // Sử dụng hàm setIconImage để đặt biểu tượng 
         setIconImage();
         // Cài đặt kích thước và vị trí của cửa sổ
-        setSize(new Dimension(1366, 768));
+//        setSize(new Dimension(1366, 768));
         setLocationRelativeTo(null);
 
         // Khởi tạo MainForm và LoginForm
@@ -120,11 +120,11 @@ public class Application extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 719, Short.MAX_VALUE)
+            .addGap(0, 1280, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 521, Short.MAX_VALUE)
+            .addGap(0, 781, Short.MAX_VALUE)
         );
 
         pack();

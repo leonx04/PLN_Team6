@@ -25,7 +25,7 @@ public class FormSanPham extends javax.swing.JPanel {
         public FormSanPham() {
                 initComponents();
                 
-                this.fillTable(sprs.getAllSP());
+                this.fillTable(spcl.getAllSanPham());
 
                 lb.putClientProperty(FlatClientProperties.STYLE, ""
                                 + "font:$h1.font");
@@ -98,7 +98,7 @@ public class FormSanPham extends javax.swing.JPanel {
                 } else {
                         trangThai = "Còn hàng";
                 }
-                List<SanPhamModel> list = sprs.getAllSPByTrangThai(trangThai);
+                List<SanPhamModel> list = spcl.getSanPhamByTrangThai(trangThai);
                 fillTable(list);
         }
 
