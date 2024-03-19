@@ -472,10 +472,10 @@
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="4" rowCount="12">
-                    <Column editable="true" title="STT" type="java.lang.Object"/>
-                    <Column editable="true" title="Ma&#x303; thu&#xf4;&#x323;c ti&#x301;nh" type="java.lang.Object"/>
-                    <Column editable="true" title="T&#xea;n thu&#xf4;&#x323;c ti&#x301;nh" type="java.lang.Object"/>
-                    <Column editable="true" title="M&#xf4; ta&#x309;" type="java.lang.Object"/>
+                    <Column editable="false" title="STT" type="java.lang.Object"/>
+                    <Column editable="false" title="Ma&#x303; thu&#xf4;&#x323;c ti&#x301;nh" type="java.lang.Object"/>
+                    <Column editable="false" title="T&#xea;n thu&#xf4;&#x323;c ti&#x301;nh" type="java.lang.Object"/>
+                    <Column editable="false" title="M&#xf4; ta&#x309;" type="java.lang.Object"/>
                   </Table>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">

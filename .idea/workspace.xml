@@ -6,36 +6,59 @@
   <component name="ChangeListManager">
     <list default="true" id="384e5fdf-cd18-4e9c-a8e0-5b83f61e19aa" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/.rescache" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/build/built-jar.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/built-jar.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/DefaultForm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormChatLieu$1$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormChatLieu$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormChatLieu$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormChatLieu$2$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormChatLieu$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormChatLieu$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormChatLieu.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormChatLieu.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormInbox.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormKichThuoc$1$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormKichThuoc$2$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormMauSac$1$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormMauSac$2$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPham$7.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/Application.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/Application.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormBanHang.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormBanHang.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPham$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPham$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPham$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPham$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPham$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPham$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPham$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPham$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPham$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPham$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPham$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPham$6.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPham.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPham.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSell.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuongHieu$1$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuongHieu$2$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated-sources/.rescache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/.rescache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/PLN_Team6.jar" beforeDir="false" afterPath="$PROJECT_DIR$/dist/PLN_Team6.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/lib/.rescache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$10.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$11.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$11.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$12.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$12.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$13.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$13.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$14.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$14.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$15.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$15.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$16.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$16.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$8.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet$9.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPhamChiTiet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham$10.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham$8.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham$9.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormThuocTinhSanPham.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/service/ChiTietSanPhamService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/service/ChiTietSanPhamService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/raven/connect/JdbcHelper.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/connect/JdbcHelper.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nbproject/private/private.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/private/private.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/MainForm$MainFormLayout.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/MainForm$MainFormLayout.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/MainForm.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/MainForm.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/other/FormSanPham.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/other/FormSanPham.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/other/FormSanPhamChiTiet.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/other/FormSanPhamChiTiet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/other/FormThuocTinhSanPham.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/other/FormThuocTinhSanPham.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/raven/application/form/other/FormChatLieu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/application/form/other/FormChatLieu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nbproject/project.properties" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/project.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/raven/application/Application.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/application/Application.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/raven/application/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/application/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/raven/application/form/other/FormBanHang.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/application/form/other/FormBanHang.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/raven/application/form/other/FormBanHang.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/application/form/other/FormBanHang.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/raven/application/form/other/FormSanPham.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/application/form/other/FormSanPham.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/raven/application/form/other/FormSanPham.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/application/form/other/FormSanPham.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/raven/application/form/other/FormSanPhamChiTiet.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/application/form/other/FormSanPhamChiTiet.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/raven/application/form/other/FormSanPhamChiTiet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/application/form/other/FormSanPhamChiTiet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/raven/application/form/other/FormThuocTinhSanPham.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/application/form/other/FormThuocTinhSanPham.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/raven/application/form/other/FormThuocTinhSanPham.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/application/form/other/FormThuocTinhSanPham.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/raven/application/service/ChiTietSanPhamService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/application/service/ChiTietSanPhamService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +72,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="2dLzmV5EXWBVOh4tZOIjarIm4U6" />
   <component name="ProjectViewState">
@@ -58,21 +81,21 @@
     <option name="showMembers" value="true" />
     <option name="showVisibilityIcons" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;A:/PLN_Team6&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "A:/PLN_Team6",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Application.DBConnect">
     <configuration name="Application" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="raven.application.Application" />
@@ -142,6 +165,8 @@
       <workItem from="1710226343475" duration="755000" />
       <workItem from="1710236786082" duration="596000" />
       <workItem from="1710747021164" duration="860000" />
+      <workItem from="1710854741201" duration="36000" />
+      <workItem from="1710858809219" duration="813000" />
     </task>
     <servers />
   </component>
