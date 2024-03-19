@@ -21,6 +21,7 @@ public class FormChatLieu extends javax.swing.JFrame {
 
     private DefaultTableModel model = new DefaultTableModel();
     private ChatLieuService clrs = new ChatLieuService();
+    
 
     /**
      * Creates new form FormMauSac
