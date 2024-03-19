@@ -51,14 +51,8 @@ public class HoaDonService {
         }
     }
 
-<<<<<<< HEAD
-    public ArrayList<HoaDonModel> getList() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from
-                                                                       // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-=======
     public HoaDonModel getRow(int row) {
         return listHD.get(row);
->>>>>>> origin/dev_linh
     }
 
     public List<HoaDonModel> getAllByTrangThai(String trangThai) {

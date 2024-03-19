@@ -20,7 +20,6 @@ public class FormBanHang extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        birthdayEvaluator1 = new com.toedter.calendar.demo.BirthdayEvaluator();
         jPanel2 = new javax.swing.JPanel();
         lb1 = new javax.swing.JLabel();
 
@@ -65,7 +64,6 @@ public class FormBanHang extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.toedter.calendar.demo.BirthdayEvaluator birthdayEvaluator1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lb1;
     // End of variables declaration//GEN-END:variables
