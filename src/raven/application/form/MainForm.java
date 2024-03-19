@@ -15,6 +15,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import raven.application.Application;
 import raven.application.form.other.FormBanHang;
+import raven.application.form.other.FormHoaDon;
 import raven.application.form.other.FormSanPham;
 import raven.application.form.other.FormSanPhamChiTiet;
 import raven.application.form.other.FormThuocTinhSanPham;
@@ -82,6 +83,8 @@ public class MainForm extends JLayeredPane {
                 } else {
                     action.cancel();
                 }
+            }else if (index == 2) {
+                Application.showForm(new FormHoaDon());
             } else if (index == 6) {
                 Application.logout();
             } else if (index == 7) {
