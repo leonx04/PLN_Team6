@@ -4,38 +4,28 @@
  */
 package raven.application.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.security.Timestamp;
+import java.sql.Date;
 
 /**
  *
  * @author admin
  */
 public class HoaDonModel {
-    private String ID;
-    private String MaNhanVien;
-    private String MaKhachHang;
-    private String MaVoucher;
-    private String MaHinhThucThanhToan;
-    private Integer TongTien;
-    private LocalDateTime NgayTao;
-    private LocalDateTime NgaySua;
-    private String TrangThai;
+
+    public String ID;
+    public String MaNhanVien;
+    public String MaKhachHang;
+    public String MaVoucher;
+    public String MaHinhThucThanhToan;
+    public BigDecimal TongTien;
+    public LocalDateTime NgayTao;
+    public String TrangThai;
     private int STT;
 
     public HoaDonModel() {
-    }
-
-    public HoaDonModel(String ID, String MaNhanVien, String MaKhachHang, String MaVoucher, String MaHinhThucThanhToan, Integer TongTien, LocalDateTime NgayTao, LocalDateTime NgaySua, String TrangThai, int STT) {
-        this.ID = ID;
-        this.MaNhanVien = MaNhanVien;
-        this.MaKhachHang = MaKhachHang;
-        this.MaVoucher = MaVoucher;
-        this.MaHinhThucThanhToan = MaHinhThucThanhToan;
-        this.TongTien = TongTien;
-        this.NgayTao = NgayTao;
-        this.NgaySua = NgaySua;
-        this.TrangThai = TrangThai;
-        this.STT = STT;
     }
 
     public String getID() {
@@ -78,11 +68,11 @@ public class HoaDonModel {
         this.MaHinhThucThanhToan = MaHinhThucThanhToan;
     }
 
-    public Integer getTongTien() {
+    public BigDecimal getTongTien() {
         return TongTien;
     }
 
-    public void setTongTien(Integer TongTien) {
+    public void setTongTien(BigDecimal TongTien) {
         this.TongTien = TongTien;
     }
 
@@ -92,14 +82,6 @@ public class HoaDonModel {
 
     public void setNgayTao(LocalDateTime NgayTao) {
         this.NgayTao = NgayTao;
-    }
-
-    public LocalDateTime getNgaySua() {
-        return NgaySua;
-    }
-
-    public void setNgaySua(LocalDateTime NgaySua) {
-        this.NgaySua = NgaySua;
     }
 
     public String getTrangThai() {
@@ -116,5 +98,14 @@ public class HoaDonModel {
 
     public void setSTT(int STT) {
         this.STT = STT;
+    }
+
+    public Object[] toData() {
+        return new Object[]{
+            this.STT,
+            this.NgayTao,
+            this.MaNhanVien,
+            this.MaKhachHang,
+        };
     }
 }

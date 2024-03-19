@@ -5,7 +5,7 @@
             <url>src/raven/application/form/other/FormHoaDon.java</url>
             <bookmark id="1">
                 <name/>
-                <line>24</line>
+                <line>47</line>
                 <key/>
             </bookmark>
         </file>
@@ -13,6 +13,7 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
 <<<<<<< HEAD
         <group>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
             <file>file:/A:/PLN_Team6/src/raven/application/form/LoginForm.java</file>
@@ -29,6 +30,14 @@
 =======
             <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/form/other/FormBanHang.java</file>
             <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/form/other/FormHoaDon.java</file>
+>>>>>>> origin/dev_linh
+=======
+            <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/model/HoaDonModel.java</file>
+            <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/model/SanPhamModel.java</file>
+            <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/service/SanPhamService.java</file>
+            <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/form/other/FormSanPham.java</file>
+            <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/form/other/FormHoaDon.java</file>
+            <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/service/HoaDonService.java</file>
 >>>>>>> origin/dev_linh
         </group>
 =======
