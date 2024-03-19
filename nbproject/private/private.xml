@@ -14,6 +14,7 @@
 <<<<<<< HEAD
         <group>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <file>file:/A:/PLN_Team6/src/raven/application/form/LoginForm.java</file>
             <file>file:/A:/PLN_Team6/src/raven/application/form/MainForm.java</file>
             <file>file:/A:/PLN_Team6/src/raven/application/Application.java</file>
@@ -24,6 +25,10 @@
             <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/form/other/FormSanPham.java</file>
             <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/form/other/FormHoaDon.java</file>
             <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/service/HoaDonService.java</file>
+>>>>>>> origin/dev_linh
+=======
+            <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/form/other/FormBanHang.java</file>
+            <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/form/other/FormHoaDon.java</file>
 >>>>>>> origin/dev_linh
         </group>
 =======

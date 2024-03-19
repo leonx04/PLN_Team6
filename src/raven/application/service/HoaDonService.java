@@ -19,9 +19,8 @@ public class HoaDonService {
     PreparedStatement ps = null;
     ResultSet rs = null;
     String sql = null;
-
-    public List<HoaDonModel> getAll() {
-
+    
+    public List<HoaDonModel> getAll(){
         return null;
     }
 
