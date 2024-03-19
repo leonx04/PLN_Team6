@@ -106,6 +106,6 @@ public class HoaDonModel {
             this.NgayTao,
             this.MaNhanVien,
             this.MaKhachHang,
-        }
+        };
     }
 }
