@@ -15,7 +15,11 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import raven.application.Application;
 import raven.application.form.other.FormBanHang;
+<<<<<<< HEAD
 import raven.application.form.other.FormHoaDon;
+=======
+import raven.application.form.other.FormNhanVien;
+>>>>>>> main
 import raven.application.form.other.FormSanPham;
 import raven.application.form.other.FormSanPhamChiTiet;
 import raven.application.form.other.FormThuocTinhSanPham;
@@ -70,7 +74,8 @@ public class MainForm extends JLayeredPane {
     //Thêm code gọi panel ở đây 
     private void initMenuEvent() {
         menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
-            // Application.mainForm.showForm(new DefaultForm("Form : " + index + " " + subIndex));
+            // Application.mainForm.showForm(new DefaultForm("Form : " + index + " " +
+            // subIndex));
             if (index == 0) {
                 Application.showForm(new FormBanHang());
             } else if (index == 1) {
@@ -83,8 +88,13 @@ public class MainForm extends JLayeredPane {
                 } else {
                     action.cancel();
                 }
+<<<<<<< HEAD
             }else if (index == 2) {
                 Application.showForm(new FormHoaDon());
+=======
+            } else if (index == 4) {
+                Application.showForm(new FormNhanVien());
+>>>>>>> main
             } else if (index == 6) {
                 Application.logout();
             } else if (index == 7) {
