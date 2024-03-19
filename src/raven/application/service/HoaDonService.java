@@ -22,7 +22,6 @@ public class HoaDonService {
     PreparedStatement ps = null;
     ResultSet rs = null;
     String sql = null;
-<<<<<<< HEAD
     List<HoaDonModel> listHD = new ArrayList<>();
 
     public List<HoaDonModel> getAll() {
@@ -54,17 +53,6 @@ public class HoaDonService {
 
     public HoaDonModel getRow(int row) {
         return listHD.get(row);
-=======
-
-    public List<HoaDonModel> getAll() {
-
-        return null;
-    }
-
-    public ArrayList<HoaDonModel> getList() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from
-                                                                       // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
->>>>>>> main
     }
 
     public List<HoaDonModel> getAllByTrangThai(String trangThai) {
