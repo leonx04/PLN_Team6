@@ -25,11 +25,30 @@ public class NhanVienService {
     String update_sql = "UPDATE [dbo].[NHANVIEN] SET [ID] = ? , [HoTen] = ? ,[DiaChi] = ?  ,[SoDienThoai] = ?  ,[Email] = ? ,[NamSinh] = ? ,\n"
             + "		[GioiTinh] = ? ,[ChucVu] = ? ,[MatKhau] = ?  ,[NgaySua] = GETDATE()  WHERE id = ?";
     String delete_sql = "UPDATE [dbo].[NHANVIEN] SET [TrangThai] = 1 WHERE id = ?";
-    String slect_all_0_sql = "SELECT * FROM NhanVien WHERE TrangThai = '0'";
     String slect_by_id_sql = "SELECT * FROM NhanVien WHERE id = ? ";
-    
-    String slect_all = "SELECT * FROM NhanVien";
 
+    String slect_all = "SELECT * FROM NhanVien";
+    String slect_all_0_sql = "SELECT * FROM NhanVien WHERE TrangThai = '0'";
+    String slect_all_1_sql = "SELECT * FROM NhanVien WHERE TrangThai = '1'";
+
+    public List<NhanVienModel> Search(String input) {
+        List<NhanVienModel> listNV = new ArrayList<>();
+        if (input == null) {
+            return selectAll();
+        }
+        for (NhanVienModel x : selectAll()) {
+            if (x.getId().contains(input)
+                    || x.getHoTen().contains(input)
+                    || x.getChucVu().contains(input)
+                    || x.getDiaChi().contains(input)
+                    || x.getEmail().contains(input)
+                    || x.getSdt().contains(input)) {
+                listNV.add(x);
+            }
+        }
+        return listNV;
+    }
+    
     private String hashPassword(String password) throws Exception {
         MessageDigest md = MessageDigest.getInstance("MD5");
         byte[] hashedBytes = md.digest(password.getBytes("UTF-8"));
@@ -56,7 +75,7 @@ public class NhanVienService {
     public boolean update(NhanVienModel entity) {
         try {
             String hashedPassword = hashPassword(entity.getMatKhau()); // Mã hóa mật khẩu
-            JdbcHelper.update(update_sql, Integer.parseInt(entity.getId()), entity.getHoTen(), entity.getDiaChi(), entity.getSdt(), entity.getEmail(),
+            JdbcHelper.update(update_sql, entity.getId(), entity.getHoTen(), entity.getDiaChi(), entity.getSdt(), entity.getEmail(),
                     entity.getNamSinh(), entity.getGioiTinh(), entity.getChucVu(), hashedPassword, entity.getId());
             return true;
         } catch (Exception e) {
@@ -79,7 +98,11 @@ public class NhanVienService {
     public List<NhanVienModel> selectAll_0() {
         return selectBySql(slect_all_0_sql);
     }
-    
+
+    public List<NhanVienModel> selectAll_1() {
+        return selectBySql(slect_all_1_sql);
+    }
+
     public List<NhanVienModel> selectAll() {
         return selectBySql(slect_all);
     }
@@ -104,13 +127,10 @@ public class NhanVienService {
                 list.add(entity);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return list;
     }
 
-    
-    
-    
     
 }

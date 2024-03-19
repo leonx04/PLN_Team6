@@ -25,17 +25,50 @@ public class FormNhanVien extends javax.swing.JPanel {
     private NhanVienService nhanVienService = new NhanVienService();
     int index = 0;
 
+    private List<NhanVienModel> listNV = new ArrayList<>();
     
     public FormNhanVien() {
         initComponents();
-        loadData();
+        listNV = nhanVienService.selectAll();
+        loadData(listNV);
     }
 
-    public void loadData() {
+    public void loadData(List<NhanVienModel> nhanVienModels) {
         DefaultTableModel model = (DefaultTableModel) tblNhanVien.getModel();
         model.setRowCount(0);
         try {
-            List<NhanVienModel> nhanViens = nhanVienService.selectAll();
+            for (NhanVienModel nv : nhanVienModels) {
+                String trangThai = "";
+                if (nv.getTrangThai().equals("0")) {
+                    trangThai = "Đang làm";
+                } else if (nv.getTrangThai().equals("1")) {
+                    trangThai = "Nghỉ làm";
+                }
+
+                Object[] row = {
+                    nv.getId(),
+                    nv.getHoTen(),
+                    nv.getDiaChi(),
+                    nv.getSdt(),
+                    nv.getEmail(),
+                    nv.getNamSinh(),
+                    nv.getGioiTinh(),
+                    nv.getChucVu(),
+                    nv.getMatKhau(),
+                    trangThai
+                };
+                model.addRow(row);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void loadData0() {
+        DefaultTableModel model = (DefaultTableModel) tblNhanVien.getModel();
+        model.setRowCount(0);
+        try {
+            List<NhanVienModel> nhanViens = nhanVienService.selectAll_0();
             for (NhanVienModel nv : nhanViens) {
                 String trangThai = "";
                 if (nv.getTrangThai().equals("0")) {
@@ -59,7 +92,39 @@ public class FormNhanVien extends javax.swing.JPanel {
                 model.addRow(row);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void loadData1() {
+        DefaultTableModel model = (DefaultTableModel) tblNhanVien.getModel();
+        model.setRowCount(0);
+        try {
+            List<NhanVienModel> nhanViens = nhanVienService.selectAll_1();
+            for (NhanVienModel nv : nhanViens) {
+                String trangThai = "";
+                if (nv.getTrangThai().equals("0")) {
+                    trangThai = "Đang làm";
+                } else if (nv.getTrangThai().equals("1")) {
+                    trangThai = "Nghỉ làm";
+                }
+
+                Object[] row = {
+                    nv.getId(),
+                    nv.getHoTen(),
+                    nv.getDiaChi(),
+                    nv.getSdt(),
+                    nv.getEmail(),
+                    nv.getNamSinh(),
+                    nv.getGioiTinh(),
+                    nv.getChucVu(),
+                    nv.getMatKhau(),
+                    trangThai
+                };
+                model.addRow(row);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -123,13 +188,13 @@ public class FormNhanVien extends javax.swing.JPanel {
 
     void updateStatus() {
         boolean edit = (this.index >= 0);
-        boolean first = (this.index == 0);
-        boolean last = (this.index == tblNhanVien.getRowCount() - 1);
         // Trạng thái form
         txtID.setEditable(!edit);
     }
 
     void clerForm() {
+        listNV = nhanVienService.selectAll();
+        loadData(listNV);
         this.setModel(new NhanVienModel());
         this.updateStatus();
         index = -1;
@@ -137,51 +202,137 @@ public class FormNhanVien extends javax.swing.JPanel {
     }
 
     void insert() {
-
-        ArrayList<NhanVienModel> list = (ArrayList<NhanVienModel>) this.nhanVienService.selectAll();
-        NhanVienModel model = getModel();
-
-        if (model == null) {
+        if (isAnyFieldEmpty()) {
+            JOptionPane.showMessageDialog(this, "Có trường đang bị trống");
             return;
         }
-        for (NhanVienModel model1 : list) {
-            if (this.txtID.getText().equals(model1.getId() + "")) {
-                JOptionPane.showMessageDialog(this, "Không để trùng id");
-                return;
-            }
+
+        if (isIDAlreadyExists()) {
+            JOptionPane.showMessageDialog(this, "Không để trùng ID");
+            return;
         }
-        if (nhanVienService.insert(model)) {
-            this.loadData();
-            JOptionPane.showMessageDialog(this, "Thêm mới thành công!");
-            this.clerForm();
-        } else {
-            JOptionPane.showMessageDialog(this, "Thêm mới thất bại!");
+
+        String email = txtEmail.getText();
+        if (isInvalidEmail(email)) {
+            JOptionPane.showMessageDialog(this, "Địa chỉ email không hợp lệ.");
+            return;
+        }
+
+        String phoneNumber = txtSDT.getText();
+        if (isInvalidPhoneNumber(phoneNumber)) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại không hợp lệ. Vui lòng nhập 10 chữ số.");
+            return;
+        }
+
+        String input = txtNamSinh.getText();
+        if (isInvalidInput(input)) {
+            JOptionPane.showMessageDialog(this, "Năm sinh chỉ được nhập số và không quá 4 số");
+            return;
+        }
+
+        NhanVienModel model = getModel();
+        if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn thêm mới?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            if (nhanVienService.insert(model)) {
+                listNV = nhanVienService.selectAll();
+                loadData(listNV);
+                JOptionPane.showMessageDialog(this, "Thêm mới thành công!");
+                this.clerForm();
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm mới thất bại!");
+            }
         }
     }
 
     void update() {
-        NhanVienModel model = getModel();
-        setModel(model);
-        if (nhanVienService.update(model)) {
-            this.loadData();
-            JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
-        } else {
-            JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
+        if (isAnyFieldEmpty()) {
+            JOptionPane.showMessageDialog(this, "Có trường đang bị trống");
+            return;
         }
 
+        String phoneNumber = txtSDT.getText();
+        if (isInvalidPhoneNumber(phoneNumber)) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại không hợp lệ. Vui lòng nhập 10 chữ số.");
+            return;
+        }
+
+        String email = txtEmail.getText();
+        if (isInvalidEmail(email)) {
+            JOptionPane.showMessageDialog(this, "Địa chỉ email không hợp lệ.");
+            return;
+        }
+
+        String input = txtNamSinh.getText();
+        if (isInvalidInput(input)) {
+            JOptionPane.showMessageDialog(this, "Năm sinh chỉ được nhập số và không quá 4 số");
+            return;
+        }
+
+        NhanVienModel model = getModel();
+        setModel(model);
+
+        if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn cập nhật?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            if (nhanVienService.update(model)) {
+                listNV = nhanVienService.selectAll();
+                loadData(listNV);
+                JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
+            }
+        }
     }
 
     void delete() {
-        String manv = txtID.getText();
-        try {
-            nhanVienService.delete(manv);
-            this.loadData();
-            this.clerForm();
-            JOptionPane.showMessageDialog(this, "Xóa thành công!");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Xóa thất bại!");
-        }
+        if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            String manv = txtID.getText();
+            if (manv.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên muốn xóa!");
+                return;
+            }
 
+            try {
+                nhanVienService.delete(manv);
+                listNV = nhanVienService.selectAll();
+                loadData(listNV);
+                this.clerForm();
+                JOptionPane.showMessageDialog(this, "Xóa thành công!");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Xóa thất bại!");
+            }
+        }
+    }
+
+    boolean isInvalidEmail(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        return !email.matches(emailRegex);
+    }
+
+    boolean isAnyFieldEmpty() {
+        return txtID.getText().isEmpty()
+                || txtHoTen.getText().isEmpty()
+                || txtDiaChi.getText().isEmpty()
+                || txtEmail.getText().isEmpty()
+                || txtSDT.getText().isEmpty()
+                || txtMatKhau.getText().isEmpty()
+                || txtNamSinh.getText().isEmpty();
+    }
+
+    boolean isIDAlreadyExists() {
+        String id = txtID.getText();
+        ArrayList<NhanVienModel> list = (ArrayList<NhanVienModel>) this.nhanVienService.selectAll();
+        for (NhanVienModel model : list) {
+            if (id.equals(model.getId() + "")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    boolean isInvalidInput(String input) {
+        return !input.matches("\\d{1,4}");
+    }
+
+    boolean isInvalidPhoneNumber(String phoneNumber) {
+        return !phoneNumber.matches("\\d{10}");
     }
 
     void edit() {
@@ -209,7 +360,6 @@ public class FormNhanVien extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtTimKiem = new javax.swing.JTextField();
-        btnTimKiem = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -248,7 +398,11 @@ public class FormNhanVien extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
         jLabel1.setText("Quản Lý Nhân Viên");
 
-        btnTimKiem.setText("Tìm Kiếm");
+        txtTimKiem.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txtTimKiemCaretUpdate(evt);
+            }
+        });
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel13.setText("Danh Sách Nhân Viên:");
@@ -496,9 +650,19 @@ public class FormNhanVien extends javax.swing.JPanel {
 
         buttonGroup1.add(rbDangLam);
         rbDangLam.setText("Đang làm");
+        rbDangLam.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbDangLamActionPerformed(evt);
+            }
+        });
 
         buttonGroup1.add(rbDaNghiViec);
         rbDaNghiViec.setText("Đã nghỉ việc");
+        rbDaNghiViec.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbDaNghiViecActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -515,9 +679,7 @@ public class FormNhanVien extends javax.swing.JPanel {
                             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnTimKiem)
-                                .addGap(227, 227, 227)
+                                .addGap(325, 325, 325)
                                 .addComponent(jLabel8)
                                 .addGap(31, 31, 31)
                                 .addComponent(rbDangLam)
@@ -539,7 +701,6 @@ public class FormNhanVien extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTimKiem)
                     .addComponent(jLabel8)
                     .addComponent(rbDangLam)
                     .addComponent(rbDaNghiViec))
@@ -597,12 +758,27 @@ public class FormNhanVien extends javax.swing.JPanel {
         delete();
     }//GEN-LAST:event_btnXoaActionPerformed
 
+    private void rbDangLamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbDangLamActionPerformed
+        // TODO add your handling code here:
+        loadData0();
+    }//GEN-LAST:event_rbDangLamActionPerformed
+
+    private void rbDaNghiViecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbDaNghiViecActionPerformed
+        // TODO add your handling code here:
+        loadData1();
+    }//GEN-LAST:event_rbDaNghiViecActionPerformed
+
+    private void txtTimKiemCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtTimKiemCaretUpdate
+        // TODO add your handling code here:
+        listNV = nhanVienService.Search(txtTimKiem.getText());
+        loadData(listNV);
+    }//GEN-LAST:event_txtTimKiemCaretUpdate
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLamMoi;
     private javax.swing.JButton btnSua;
     private javax.swing.JButton btnThem;
-    private javax.swing.JButton btnTimKiem;
     private javax.swing.JButton btnXoa;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
