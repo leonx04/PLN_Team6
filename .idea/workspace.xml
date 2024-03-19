@@ -4,52 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="384e5fdf-cd18-4e9c-a8e0-5b83f61e19aa" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/built-jar.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/built-jar.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/Application.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/Application.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/MainForm$MainFormLayout.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/MainForm$MainFormLayout.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/MainForm.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/MainForm.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormInbox.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormInbox.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPham.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/form/other/FormSanPham.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/model/SanPhamModel.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/model/SanPhamModel.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/application/service/SanPhamService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/application/service/SanPhamService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/connect/DBConnect.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/connect/DBConnect.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/menu/Menu$MenuLayout.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/menu/Menu$MenuLayout.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/menu/Menu.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/menu/Menu.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/menu/icon/7.svg" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/menu/icon/7.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/theme/FlatDarkLaf.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/theme/FlatDarkLaf.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/raven/theme/FlatLaf.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/raven/theme/FlatLaf.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/genfiles.properties" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/genfiles.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/private/private.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/private/private.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/project.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/Application.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/Application.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/MainForm$MainFormLayout.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/MainForm$MainFormLayout.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/MainForm.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/MainForm.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/other/FormSanPham.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/other/FormSanPham.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/other/FormSanPhamChiTiet.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/other/FormSanPhamChiTiet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/other/FormThuocTinhSanPham.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/application/form/other/FormThuocTinhSanPham.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/menu/Menu$MenuLayout.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/menu/Menu$MenuLayout.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/menu/Menu.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/menu/Menu.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/menu/icon/7.svg" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/flatlaf-dashboard-main/raven/menu/icon/7.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/raven/application/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/application/Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/raven/application/form/MainForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/application/form/MainForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/raven/application/form/other/FormInbox.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/application/form/other/FormInbox.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/raven/application/form/other/FormInbox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/application/form/other/FormInbox.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/raven/application/form/other/FormSanPham.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/application/form/other/FormSanPham.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/raven/application/form/other/FormSanPham.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/application/form/other/FormSanPham.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/raven/application/model/SanPhamModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/application/model/SanPhamModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/raven/application/service/SanPhamService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/application/service/SanPhamService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/raven/connect/DBConnect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/connect/DBConnect.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/raven/menu/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/menu/Menu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/raven/menu/icon/7.svg" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/menu/icon/7.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/raven/theme/FlatDarkLaf.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/theme/FlatDarkLaf.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/raven/theme/FlatLaf.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/raven/theme/FlatLaf.properties" afterDir="false" />
-    </list>
+    <list default="true" id="384e5fdf-cd18-4e9c-a8e0-5b83f61e19aa" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitToolBoxStore">
     <option name="projectConfigVersion" value="5" />
@@ -60,6 +22,9 @@
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="ProjectErrors" />
   </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 1
+}]]></component>
   <component name="ProjectId" id="2dLzmV5EXWBVOh4tZOIjarIm4U6" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -67,21 +32,27 @@
     <option name="showMembers" value="true" />
     <option name="showVisibilityIcons" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;A:/PLN_Team6&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Application.executor": "Debug",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "dev__linh",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/New folder/PLN_Team6",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="Application" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="raven.application.Application" />
@@ -101,6 +72,13 @@
         <item itemvalue="Application.Application" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-17.0.10-corretto-17.0.10-4caba194b151-5cd809f4" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -136,6 +114,7 @@
       <workItem from="1710219695733" duration="174000" />
       <workItem from="1710226343475" duration="755000" />
       <workItem from="1710236786082" duration="596000" />
+      <workItem from="1710650015028" duration="937000" />
     </task>
     <servers />
   </component>
@@ -152,5 +131,36 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/raven/connect/DBConnect.java</url>
+          <line>17</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/raven/connect/DBConnect.java</url>
+          <line>21</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/raven/application/Application.java</url>
+          <line>37</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/raven/application/Application.java</url>
+          <line>115</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/raven/application/Application.java</url>
+          <line>50</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

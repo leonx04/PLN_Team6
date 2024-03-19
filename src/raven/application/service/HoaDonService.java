@@ -21,7 +21,7 @@ public class HoaDonService {
     String sql = null;
     
     public List<HoaDonModel> getAll(){
-        
+        return null;
     }
 
     public ArrayList<HoaDonModel> getList() {
