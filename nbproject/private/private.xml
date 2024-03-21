@@ -15,6 +15,7 @@
         <group>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/model/HoaDonModel.java</file>
             <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/model/SanPhamModel.java</file>
 =======
@@ -49,6 +50,13 @@
             <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/form/other/FormHoaDon.java</file>
             <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/service/HoaDonService.java</file>
 >>>>>>> origin/dev_linh
+=======
+            <file>file:/C:/Users/OS/OneDrive/Documents/PLN_Team6/src/raven/application/form/MainForm.java</file>
+            <file>file:/C:/Users/OS/OneDrive/Documents/PLN_Team6/src/raven/application/model/KhachHangModel.java</file>
+            <file>file:/C:/Users/OS/OneDrive/Documents/PLN_Team6/src/raven/menu/Menu.java</file>
+            <file>file:/C:/Users/OS/OneDrive/Documents/PLN_Team6/src/raven/application/form/other/FormKhachHang.java</file>
+            <file>file:/C:/Users/OS/OneDrive/Documents/PLN_Team6/src/raven/application/service/KhachHangService.java</file>
+>>>>>>> origin/dev_thang
         </group>
 =======
         <group/>

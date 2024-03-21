@@ -7,6 +7,7 @@ package raven.application.form.other;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import raven.application.model.HoaDonModel;
+import raven.application.service.ChiTietHoaDonService;
 import raven.application.service.HoaDonService;
 
 /**
@@ -20,25 +21,27 @@ public class FormHoaDon extends javax.swing.JPanel {
      */
     private DefaultTableModel model = new DefaultTableModel();
     private HoaDonService hdsr = new HoaDonService();
+    private ChiTietHoaDonService cthd = new ChiTietHoaDonService();
+    private int index = -1;
     public FormHoaDon() {
         initComponents();
         ArrayList<HoaDonModel> list = new ArrayList<>();
-        loadDataHD(list);
+        //loadDataHD(list);
     }
-    void loadDataHD(ArrayList<HoaDonModel> listHD){
-        model = (DefaultTableModel) tblHoaDon.getModel();
-        model.setRowCount(0);
-        int index = 1;
-        for (HoaDonModel hoaDonModel : listHD) {
-            hoaDonModel.setSTT(index++);
-            model.addRow(new Object[]{
-                hoaDonModel.getID(),
-                hoaDonModel.getMaNhanVien(),
-                hoaDonModel.getMaKhachHang(),
-                hoaDonModel.getMaVoucher(),
-            });
-        }
-    }
+//    void loadDataHD(ArrayList<HoaDonModel> listHD){
+//        model = (DefaultTableModel) tblHoaDon.getModel();
+//        model.setRowCount(0);
+//        int index = 1;
+//        for (HoaDonModel hoaDonModel : listHD) {
+//            hoaDonModel.setSTT(index++);
+//            model.addRow(new Object[]{
+//                hoaDonModel.getID(),
+//                hoaDonModel.getMaNhanVien(),
+//                hoaDonModel.getMaKhachHang(),
+//                hoaDonModel.getMaVoucher(),
+//            });
+//        }
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -91,7 +94,7 @@ public class FormHoaDon extends javax.swing.JPanel {
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "STT", "Mã Hóa Đơn", "Ngày Tạo", "Mã Nhân Viên", "Mã Khách Hàng", "Tên Voucher", "Tổng Tiền", "Hình thức thanh toán"
+                "STT", "Mã Hóa Đơn", "Ngày Tạo", "Tên Nhân Viên", "Tên Khách Hàng", "Tên Voucher", "Tổng Tiền", "Hình thức thanh toán"
             }
         ) {
             boolean[] canEdit = new boolean [] {
