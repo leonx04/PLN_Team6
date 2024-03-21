@@ -54,6 +54,8 @@ public class LoginForm extends javax.swing.JPanel {
         txtPass = new javax.swing.JPasswordField();
         btnExit = new javax.swing.JButton();
 
+        setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
         cmdLogin.setBackground(new java.awt.Color(0, 153, 102));
         cmdLogin.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cmdLogin.setText("Login");
@@ -127,7 +129,7 @@ public class LoginForm extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(204, 204, 204)
                 .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -65,6 +65,44 @@ public class ChiTietSanPhamService {
 
     }
 
+    public List<ChiTietSanPhamModel> searchBySanPhamID(String sanPhamID) {
+        sql = "SELECT SANPHAMCHITIET.ID, SANPHAM.TenSanPham, MAUSAC.TenMau AS MauSac, SIZE.Ten AS Size, "
+                + "CHATLIEU.Ten AS ChatLieu, THUONGHIEU.Ten AS ThuongHieu, SANPHAMCHITIET.GiaBan, "
+                + "SANPHAMCHITIET.SoLuongTon, SANPHAMCHITIET.MoTa "
+                + "FROM SANPHAMCHITIET "
+                + "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID "
+                + "INNER JOIN MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID "
+                + "INNER JOIN SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID "
+                + "INNER JOIN CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID "
+                + "INNER JOIN THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID "
+                + "WHERE SANPHAM.ID = ?";
+
+        List<ChiTietSanPhamModel> listCTSP = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, sanPhamID);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietSanPhamModel ctsp = new ChiTietSanPhamModel(
+                        rs.getString(1), // ID
+                        new SanPhamModel(rs.getString(2)), // TenSP
+                        new MauSacModel(rs.getString(3)), // MauSac
+                        new KichCoModel(rs.getString(4)), // Size
+                        new ChatLieuModel(rs.getString(5)), // ChatLieu
+                        new ThuongHieuModel(rs.getString(6)), // ThuongHieu
+                        rs.getBigDecimal(7), // GiaBan
+                        rs.getInt(8), // SoLuongTon
+                        rs.getString(9)); // MoTa
+                listCTSP.add(ctsp);
+            }
+            return listCTSP;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public String getNewSPCTID() {
         // Mã sản phẩm mặc định
         String newID = "SPCT01";

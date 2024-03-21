@@ -11,39 +11,44 @@ import java.util.Date;
  * @author acer
  */
 public class NhanVienModel {
-    private String id_NhanVien;
+    
+     private String id;
     private String hoTen;
-    private boolean gioiTinh;
-    private Date namSinh ;
-    private String diaChi ;
-    private String sdt ;
-    private String trangThai ;
-    private String matkhau ;
+    private String diaChi;
+    private String sdt;
     private String email;
-    private String chucVu ;
+    private int namSinh;
+    private String gioiTinh;
+    private String chucVu;
+    private String matKhau;
+    private Date ngayTao;
+    private Date ngaySua;
+    private String trangThai;
 
     public NhanVienModel() {
     }
 
-    public NhanVienModel(String id_NhanVien, String hoTen, boolean gioiTinh, Date namSinh, String diaChi, String sdt, String trangThai, String matkhau, String email, String chucVu) {
-        this.id_NhanVien = id_NhanVien;
+    public NhanVienModel(String id, String hoTen, String diaChi, String sdt, String email, int namSinh, String gioiTinh, String chucVu, String matKhau, Date ngayTao, Date ngaySua, String trangThai) {
+        this.id = id;
         this.hoTen = hoTen;
-        this.gioiTinh = gioiTinh;
-        this.namSinh = namSinh;
         this.diaChi = diaChi;
         this.sdt = sdt;
-        this.trangThai = trangThai;
-        this.matkhau = matkhau;
         this.email = email;
+        this.namSinh = namSinh;
+        this.gioiTinh = gioiTinh;
         this.chucVu = chucVu;
+        this.matKhau = matKhau;
+        this.ngayTao = ngayTao;
+        this.ngaySua = ngaySua;
+        this.trangThai = trangThai;
     }
 
-    public String getId_NhanVien() {
-        return id_NhanVien;
+    public String getId() {
+        return id;
     }
 
-    public void setId_NhanVien(String id_NhanVien) {
-        this.id_NhanVien = id_NhanVien;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getHoTen() {
@@ -52,22 +57,6 @@ public class NhanVienModel {
 
     public void setHoTen(String hoTen) {
         this.hoTen = hoTen;
-    }
-
-    public boolean isGioiTinh() {
-        return gioiTinh;
-    }
-
-    public void setGioiTinh(boolean gioiTinh) {
-        this.gioiTinh = gioiTinh;
-    }
-
-    public Date getNamSinh() {
-        return namSinh;
-    }
-
-    public void setNamSinh(Date namSinh) {
-        this.namSinh = namSinh;
     }
 
     public String getDiaChi() {
@@ -86,28 +75,28 @@ public class NhanVienModel {
         this.sdt = sdt;
     }
 
-    public String getTrangThai() {
-        return trangThai;
-    }
-
-    public void setTrangThai(String trangThai) {
-        this.trangThai = trangThai;
-    }
-
-    public String getMatkhau() {
-        return matkhau;
-    }
-
-    public void setMatkhau(String matkhau) {
-        this.matkhau = matkhau;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getNamSinh() {
+        return namSinh;
+    }
+
+    public void setNamSinh(int namSinh) {
+        this.namSinh = namSinh;
+    }
+
+    public String getGioiTinh() {
+        return gioiTinh;
+    }
+
+    public void setGioiTinh(String gioiTinh) {
+        this.gioiTinh = gioiTinh;
     }
 
     public String getChucVu() {
@@ -118,10 +107,36 @@ public class NhanVienModel {
         this.chucVu = chucVu;
     }
 
-    @Override
-    public String toString() {
-        return "NhanVienModel{" + "id_NhanVien=" + id_NhanVien + ", hoTen=" + hoTen + ", gioiTinh=" + gioiTinh + ", namSinh=" + namSinh + ", diaChi=" + diaChi + ", sdt=" + sdt + ", trangThai=" + trangThai + ", matkhau=" + matkhau + ", email=" + email + ", chucVu=" + chucVu + '}';
+    public String getMatKhau() {
+        return matKhau;
     }
-    
+
+    public void setMatKhau(String matKhau) {
+        this.matKhau = matKhau;
+    }
+
+    public Date getNgayTao() {
+        return ngayTao;
+    }
+
+    public void setNgayTao(Date ngayTao) {
+        this.ngayTao = ngayTao;
+    }
+
+    public Date getNgaySua() {
+        return ngaySua;
+    }
+
+    public void setNgaySua(Date ngaySua) {
+        this.ngaySua = ngaySua;
+    }
+
+    public String getTrangThai() {
+        return trangThai;
+    }
+
+    public void setTrangThai(String trangThai) {
+        this.trangThai = trangThai;
+    }
     
 }
