@@ -302,7 +302,11 @@
                           <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="CBoGioiTinh" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtTimKiem" min="-2" pref="178" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Component id="txtTimKiem" min="-2" pref="178" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="btnTimKiem" min="-2" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                   </Group>
@@ -317,6 +321,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtTimKiem" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnTimKiem" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -383,6 +388,11 @@
             </Component>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JButton" name="btnTimKiem">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="T&#xec;m ki&#x1ebf;m"/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
   </SubComponents>
