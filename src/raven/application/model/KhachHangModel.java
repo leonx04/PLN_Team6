@@ -4,34 +4,40 @@
  */
 package raven.application.model;
 
+import java.util.Date;
+
 /**
  *
  * @author OS
  */
 public class KhachHangModel {
-    String ma, ten, gioitinh, sodt, diachi, email, ngaysinh;
+    private String ma, ten, sodt, diachi, email;
+    private Date ngaysinh;
+    private boolean gioitinh;
 
     public KhachHangModel() {
     }
 
-    public KhachHangModel(String ma, String ten, String gioitinh, String sodt, String diachi, String email, String ngaysinh) {
+    public KhachHangModel(String ma, String ten, String sodt, String diachi, String email, Date ngaysinh, boolean gioitinh) {
         this.ma = ma;
         this.ten = ten;
-        this.gioitinh = gioitinh;
         this.sodt = sodt;
         this.diachi = diachi;
         this.email = email;
         this.ngaysinh = ngaysinh;
+        this.gioitinh = gioitinh;
     }
 
-    public KhachHangModel(String ten, String gioitinh, String sodt, String diachi, String email, String ngaysinh) {
+    public KhachHangModel(String ten, String sodt, String diachi, String email, Date ngaysinh, boolean gioitinh) {
         this.ten = ten;
-        this.gioitinh = gioitinh;
         this.sodt = sodt;
         this.diachi = diachi;
         this.email = email;
         this.ngaysinh = ngaysinh;
+        this.gioitinh = gioitinh;
     }
+    
+    
 
     public String getMa() {
         return ma;
@@ -47,14 +53,6 @@ public class KhachHangModel {
 
     public void setTen(String ten) {
         this.ten = ten;
-    }
-
-    public String getGioitinh() {
-        return gioitinh;
-    }
-
-    public void setGioitinh(String gioitinh) {
-        this.gioitinh = gioitinh;
     }
 
     public String getSodt() {
@@ -81,13 +79,21 @@ public class KhachHangModel {
         this.email = email;
     }
 
-    public String getNgaysinh() {
+    public Date getNgaysinh() {
         return ngaysinh;
     }
 
-    public void setNgaysinh(String ngaysinh) {
+    public void setNgaysinh(Date ngaysinh) {
         this.ngaysinh = ngaysinh;
     }
-    
+
+    public boolean isGioitinh() {
+        return gioitinh;
+    }
+
+    public void setGioitinh(boolean gioitinh) {
+        this.gioitinh = gioitinh;
+    }
+
     
 }
