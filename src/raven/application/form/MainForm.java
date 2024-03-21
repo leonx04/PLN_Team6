@@ -23,6 +23,7 @@ import raven.application.form.other.FormNhanVien;
 import raven.application.form.other.FormSanPham;
 import raven.application.form.other.FormSanPhamChiTiet;
 import raven.application.form.other.FormThuocTinhSanPham;
+import raven.application.form.other.FormVoucher;
 import raven.menu.Menu;
 import raven.menu.MenuAction;
 
@@ -90,7 +91,10 @@ public class MainForm extends JLayeredPane {
                 }
             }else if (index == 2) {
                 Application.showForm(new FormHoaDon());
-            } else if (index == 4) {
+            } else if (index == 3) {
+                Application.showForm(new FormVoucher());
+            } 
+            else if (index == 4) {
                 Application.showForm(new FormNhanVien());
 
             } else if (index == 6) {

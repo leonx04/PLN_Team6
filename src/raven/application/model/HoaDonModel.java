@@ -25,7 +25,7 @@ public class HoaDonModel {
     public String TrangThai;
     private int STT;
 
-    public HoaDonModel() {
+    public HoaDonModel(String ID, Date NgayTao, String MaNhanVien, String MaKhachHang, VoucherModer TenVoucher, BigDecimal TongTien) {
     }
 
     public String getID() {
@@ -98,14 +98,5 @@ public class HoaDonModel {
 
     public void setSTT(int STT) {
         this.STT = STT;
-    }
-
-    public Object[] toData() {
-        return new Object[]{
-            this.STT,
-            this.NgayTao,
-            this.MaNhanVien,
-            this.MaKhachHang,
-        };
     }
 }

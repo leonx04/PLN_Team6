@@ -18,112 +18,113 @@ import raven.application.service.SanPhamService;
  */
 public class FormSanPham extends javax.swing.JPanel {
 
-        private DefaultTableModel model = new DefaultTableModel();
-        private SanPhamService sprs = new SanPhamService();
+    private DefaultTableModel model = new DefaultTableModel();
+    private SanPhamService sprs = new SanPhamService();
 
-        private SanPhamController spcl = new SanPhamController();
-        public FormSanPham() {
-                initComponents();
-                
-                this.fillTable(sprs.getAllSP());
+    private SanPhamController spcl = new SanPhamController();
 
-                lb.putClientProperty(FlatClientProperties.STYLE, ""
-                                + "font:$h1.font");
+    public FormSanPham() {
+        initComponents();
+
+        this.fillTable(sprs.getAllSP());
+
+        lb.putClientProperty(FlatClientProperties.STYLE, ""
+                + "font:$h1.font");
+    }
+
+    void fillTable(List<SanPhamModel> listSP) {
+        model = (DefaultTableModel) tblSP.getModel();
+        model.setRowCount(0);
+
+        int index = 1; // Biến đếm STT
+
+        for (SanPhamModel sp : listSP) {
+            sp.setStt(index++); // Đặt giá trị STT cho mỗi sản phẩm
+            model.addRow(sp.toData());
         }
 
-        void fillTable(List<SanPhamModel> listSP) {
-                model = (DefaultTableModel) tblSP.getModel();
-                model.setRowCount(0);
+        // Đảm bảo hiển thị sản phẩm mới thêm ở đầu tiên
+        if (model.getRowCount() > 0) {
+            tblSP.scrollRectToVisible(tblSP.getCellRect(0, 0, true));
+            tblSP.setRowSelectionInterval(0, 0);
+        }
+    }
 
-                int index = 1; // Biến đếm STT
+    void showData(int index) {
+        String ID = tblSP.getValueAt(index, 1).toString().trim();
+        String tenSP = tblSP.getValueAt(index, 2).toString().trim();
+        String moTa = tblSP.getValueAt(index, 3).toString().trim();
 
-                for (SanPhamModel sp : listSP) {
-                        sp.setStt(index++); // Đặt giá trị STT cho mỗi sản phẩm
-                        model.addRow(sp.toData());
-                }
+        txtMaSP.setText(ID);
+        txtTenSP.setText(tenSP);
+        txtMoTa.setText(moTa);
+    }
 
-                // Đảm bảo hiển thị sản phẩm mới thêm ở đầu tiên
-                if (model.getRowCount() > 0) {
-                        tblSP.scrollRectToVisible(tblSP.getCellRect(0, 0, true));
-                        tblSP.setRowSelectionInterval(0, 0);
-                }
+    SanPhamModel read() {
+        SanPhamModel sp = new SanPhamModel();
+        sp.setID(txtMaSP.getText());
+        sp.setTenSP(txtTenSP.getText());
+        sp.setMoTa(txtMoTa.getText());
+        return sp;
+    }
+
+    void clear() {
+        txtMaSP.setText(null);
+        txtTenSP.setText(null);
+        txtMoTa.setText(null);
+        txtTimKiem.setText(null);
+    }
+
+    private boolean checkForm() {
+        if (txtTenSP.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên sản phẩm !", "Cảnh báo",
+                    JOptionPane.WARNING_MESSAGE);
+            txtTenSP.requestFocus();
+            return false;
         }
 
-        void showData(int index) {
-                String ID = tblSP.getValueAt(index, 1).toString().trim();
-                String tenSP = tblSP.getValueAt(index, 2).toString().trim();
-                String moTa = tblSP.getValueAt(index, 3).toString().trim();
-
-                txtMaSP.setText(ID);
-                txtTenSP.setText(tenSP);
-                txtMoTa.setText(moTa);
+        if (txtMoTa.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mô tả sản phẩm !", "Cảnh báo",
+                    JOptionPane.WARNING_MESSAGE);
+            txtMoTa.requestFocus();
+            return false;
         }
+        return true;
+    }
 
-        SanPhamModel read() {
-                SanPhamModel sp = new SanPhamModel();
-                sp.setID(txtMaSP.getText());
-                sp.setTenSP(txtTenSP.getText());
-                sp.setMoTa(txtMoTa.getText());
-                return sp;
+    public void Cbo_FilTrangThai() {
+        String trangThai = "";
+        if (Cbo_TrangThai.getSelectedItem().equals("Hết hàng")) {
+            trangThai = "Hết hàng";
+        } else {
+            trangThai = "Còn hàng";
         }
+        List<SanPhamModel> list = sprs.getAllSPByTrangThai(trangThai);
+        fillTable(list);
+    }
 
-        void clear() {
-                txtMaSP.setText(null);
-                txtTenSP.setText(null);
-                txtMoTa.setText(null);
-                txtTimKiem.setText(null);
-        }
+    /**
+     * Lọc dữ liệu trong bảng theo biểu thức chính quy.
+     *
+     * @param query Biểu thức chính quy sử dụng để lọc dữ liệu.
+     */
+    private void filter(String query) {
+        // Tạo một đối tượng TableRowSorter và gán cho bảng tblSP.
+        TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<>(model);
+        tblSP.setRowSorter(tableRowSorter);
 
-        private boolean checkForm() {
-                if (txtTenSP.getText().trim().isEmpty()) {
-                        JOptionPane.showMessageDialog(this, "Vui lòng nhập tên sản phẩm !", "Cảnh báo",
-                                        JOptionPane.WARNING_MESSAGE);
-                        txtTenSP.requestFocus();
-                        return false;
-                }
+        // Thiết lập bộ lọc sử dụng biểu thức chính quy và áp dụng cho TableRowSorter.
+        // Sử dụng biểu thức chính quy không phân biệt chữ hoa chữ thường
+        tableRowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + query));
+    }
 
-                if (txtMoTa.getText().trim().isEmpty()) {
-                        JOptionPane.showMessageDialog(this, "Vui lòng nhập mô tả sản phẩm !", "Cảnh báo",
-                                        JOptionPane.WARNING_MESSAGE);
-                        txtMoTa.requestFocus();
-                        return false;
-                }
-                return true;
-        }
-
-        public void Cbo_FilTrangThai() {
-                String trangThai = "";
-                if (Cbo_TrangThai.getSelectedItem().equals("Hết hàng")) {
-                        trangThai = "Hết hàng";
-                } else {
-                        trangThai = "Còn hàng";
-                }
-                List<SanPhamModel> list = sprs.getAllSPByTrangThai(trangThai);
-                fillTable(list);
-        }
-
-        /**
-         * Lọc dữ liệu trong bảng theo biểu thức chính quy.
-         * 
-         * @param query Biểu thức chính quy sử dụng để lọc dữ liệu.
-         */
-        private void filter(String query) {
-                // Tạo một đối tượng TableRowSorter và gán cho bảng tblSP.
-                TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<>(model);
-                tblSP.setRowSorter(tableRowSorter);
-
-                // Thiết lập bộ lọc sử dụng biểu thức chính quy và áp dụng cho TableRowSorter.
-                // Sử dụng biểu thức chính quy không phân biệt chữ hoa chữ thường
-                tableRowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + query));
-        }
-
-        @SuppressWarnings("unchecked")
-        // <editor-fold defaultstate="collapsed" desc="Generated
-        // <editor-fold defaultstate="collapsed" desc="Generated
-        // <editor-fold defaultstate="collapsed" desc="Generated
-        // <editor-fold defaultstate="collapsed" desc="Generated
-        // <editor-fold defaultstate="collapsed" desc="Generated
-        // <editor-fold defaultstate="collapsed" desc="Generated
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
         // Code">//GEN-BEGIN:initComponents
         private void initComponents() {
 
@@ -510,89 +511,89 @@ public class FormSanPham extends javax.swing.JPanel {
                                                                 .addContainerGap()));
         }// </editor-fold>//GEN-END:initComponents
 
-        private void btnUpdateSPActionPerformed(java.awt.event.ActionEvent evt) {
-                // Kiểm tra dữ liệu nhập vào
-                if (!checkForm()) {
-                        return;
-                } else {
-                        // Đọc dữ liệu từ form
-                        SanPhamModel spmd = this.read();
-                        SanPhamService sprs = new SanPhamService();
-                        int index = tblSP.getSelectedRow();
+    private void btnUpdateSPActionPerformed(java.awt.event.ActionEvent evt) {
+        // Kiểm tra dữ liệu nhập vào
+        if (!checkForm()) {
+            return;
+        } else {
+            // Đọc dữ liệu từ form
+            SanPhamModel spmd = this.read();
+            SanPhamService sprs = new SanPhamService();
+            int index = tblSP.getSelectedRow();
 
-                        int option = JOptionPane.showConfirmDialog(this,
-                                        "Bạn có chắc muốn cập nhật thông tin sản phẩm này?", "Xác nhận cập nhật",
-                                        JOptionPane.YES_NO_OPTION);
-                        if (option == JOptionPane.YES_OPTION) {
-                                if (sprs.update(spmd, spmd.getID()) > 0) {
-                                        JOptionPane.showMessageDialog(this, "Cập nhật thông tin sản phẩm thành công");
-                                        fillTable(sprs.getAllSP());
-                                        clear();
-                                } else {
-                                        JOptionPane.showMessageDialog(this, "Cập nhật thất bại");
-                                }
-                        }
+            int option = JOptionPane.showConfirmDialog(this,
+                    "Bạn có chắc muốn cập nhật thông tin sản phẩm này?", "Xác nhận cập nhật",
+                    JOptionPane.YES_NO_OPTION);
+            if (option == JOptionPane.YES_OPTION) {
+                if (sprs.update(spmd, spmd.getID()) > 0) {
+                    JOptionPane.showMessageDialog(this, "Cập nhật thông tin sản phẩm thành công");
+                    fillTable(sprs.getAllSP());
+                    clear();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Cập nhật thất bại");
                 }
+            }
         }
+    }
 
-        private void btnDeleteSPActionPerformed(java.awt.event.ActionEvent evt) {
-                // Lấy chỉ mục của dòng được chọn trong bảng
-                int rowDC = tblSP.getSelectedRow();
-                if (rowDC >= 0) {
-                        // Lấy ID của sản phẩm từ cột thứ hai (index 1)
-                        String ID = tblSP.getValueAt(rowDC, 1).toString();
+    private void btnDeleteSPActionPerformed(java.awt.event.ActionEvent evt) {
+        // Lấy chỉ mục của dòng được chọn trong bảng
+        int rowDC = tblSP.getSelectedRow();
+        if (rowDC >= 0) {
+            // Lấy ID của sản phẩm từ cột thứ hai (index 1)
+            String ID = tblSP.getValueAt(rowDC, 1).toString();
 
-                        // Hiển thị hộp thoại xác nhận
-                        int option = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa sản phẩm này?",
-                                        "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
-                        if (option == JOptionPane.YES_OPTION) {
-                                if (sprs.delete(ID) > 0) {
-                                        JOptionPane.showMessageDialog(this, "Xoá thành công sản phẩm!");
-                                        fillTable(sprs.getAllSP());
-                                        clear();
-                                } else {
-                                        JOptionPane.showMessageDialog(this, "Xoá thất bại");
-                                }
-                        }
+            // Hiển thị hộp thoại xác nhận
+            int option = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa sản phẩm này?",
+                    "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+            if (option == JOptionPane.YES_OPTION) {
+                if (sprs.delete(ID) > 0) {
+                    JOptionPane.showMessageDialog(this, "Xoá thành công sản phẩm!");
+                    fillTable(sprs.getAllSP());
+                    clear();
                 } else {
-                        JOptionPane.showMessageDialog(this, "Vui lòng chọn một sản phẩm để xóa");
+                    JOptionPane.showMessageDialog(this, "Xoá thất bại");
                 }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một sản phẩm để xóa");
         }
+    }
 
-        private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnResetActionPerformed
-                this.clear();
-        }// GEN-LAST:event_btnResetActionPerformed
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnResetActionPerformed
+        this.clear();
+    }// GEN-LAST:event_btnResetActionPerformed
 
-        private void txtTimKiemKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtTimKiemKeyReleased
-                // TODO add your handling code here:
-                String query = txtTimKiem.getText();
-                filter(query);
-        }// GEN-LAST:event_txtTimKiemKeyReleased
+    private void txtTimKiemKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtTimKiemKeyReleased
+        // TODO add your handling code here:
+        String query = txtTimKiem.getText();
+        filter(query);
+    }// GEN-LAST:event_txtTimKiemKeyReleased
 
-        private void tblSPMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_tblSPMouseClicked
-                // TODO add your handling code here:
-                int row = this.tblSP.getSelectedRow();
-                if (model.getRowCount() > 0 && evt.getClickCount() == 1) {
-                        txtMaSP.setText(this.tblSP.getValueAt(row, 1).toString().trim());
-                        txtTenSP.setText(this.tblSP.getValueAt(row, 2).toString().trim());
-                        txtMoTa.setText(this.tblSP.getValueAt(row, 3).toString().trim());
-                }
-        }// GEN-LAST:event_tblSPMouseClicked
+    private void tblSPMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_tblSPMouseClicked
+        // TODO add your handling code here:
+        int row = this.tblSP.getSelectedRow();
+        if (model.getRowCount() > 0 && evt.getClickCount() == 1) {
+            txtMaSP.setText(this.tblSP.getValueAt(row, 1).toString().trim());
+            txtTenSP.setText(this.tblSP.getValueAt(row, 2).toString().trim());
+            txtMoTa.setText(this.tblSP.getValueAt(row, 3).toString().trim());
+        }
+    }// GEN-LAST:event_tblSPMouseClicked
 
-        private void btnAddSPActionPerformed(java.awt.event.ActionEvent evt) {
-                String newID = sprs.getNewSanPhamID();
-                SanPhamModel spmd = this.read();
-                if (!checkForm()) {
-                        return;
-                } else {
-                        spmd.setID(newID);
-                        if (sprs.insert(spmd) > 0) {
-                                JOptionPane.showMessageDialog(this, "Thêm thành công");
-                                this.fillTable(sprs.getAllSP());
-                                clear();
-                        }
-                }
-        }// GEN-LAST:event_btnAddSPActionPerformed
+    private void btnAddSPActionPerformed(java.awt.event.ActionEvent evt) {
+        String newID = sprs.getNewSanPhamID();
+        SanPhamModel spmd = this.read();
+        if (!checkForm()) {
+            return;
+        } else {
+            spmd.setID(newID);
+            if (sprs.insert(spmd) > 0) {
+                JOptionPane.showMessageDialog(this, "Thêm thành công");
+                this.fillTable(sprs.getAllSP());
+                clear();
+            }
+        }
+    }// GEN-LAST:event_btnAddSPActionPerformed
 
         // Variables declaration - do not modify//GEN-BEGIN:variables
         private javax.swing.JComboBox<String> Cbo_TrangThai;

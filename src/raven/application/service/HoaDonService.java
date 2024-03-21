@@ -10,6 +10,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import raven.application.model.HoaDonModel;
+import raven.application.model.VoucherModer;
 import raven.connect.DBConnect;
 
 /**
@@ -33,19 +34,19 @@ public class HoaDonService {
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
-//                HoaDonModel hd = new HoaDonModel(
-//                        rs.getString(1),
-//                        rs.getDate(2),
-//                        rs.getString(3),
-//                        rs.getString(4),
-//                        rs.getString(5),
-//                        rs.getBigDecimal(6),
-//                        rs.getString(7)
-//                );
+////                HoaDonModel hd = new HoaDonModel(
+////                        rs.getString(1), //ID
+////                        rs.getDate(2), //NgayTao
+////                        rs.getString(3), //MaNhanVien
+////                        rs.getString(4), //MaKhachHang
+////                        new VoucherModer(rs.getString(5)), //TenVoucher
+////                        rs.getBigDecimal(6) //tongTien
+////                        //hinhThucThanhToan
+////                );
 //                listHD.add(hd);
             }
             return listHD;
-        } catch (Exception e) {
+        }catch (Exception e){
             e.printStackTrace();
             return null;
         }
