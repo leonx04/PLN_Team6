@@ -24,6 +24,18 @@ public class VoucherModer {
     public String trangThai;
     private int STT;
 
+    public VoucherModer() {
+    }
+    
+
+    public VoucherModer(BigDecimal mucGiamGia) {
+        this.mucGiamGia = mucGiamGia;
+    }
+     public VoucherModer(String loaiVoucher) {
+        this.loaiVoucher = loaiVoucher;
+    }
+    
+
     public VoucherModer(String ID, String tenVoucher, int soLuong, String loaiVoucher, BigDecimal mucGiamGia, String moTa, Date ngayBatDau, Date ngayKetThuc) {
         this.ID = ID;
         this.tenVoucher = tenVoucher;
@@ -36,10 +48,6 @@ public class VoucherModer {
     }
 
     
-    public VoucherModer() {
-        
-    }
-
     public String getID() {
         return ID;
     }

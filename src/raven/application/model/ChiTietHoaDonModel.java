@@ -13,23 +13,23 @@ import java.math.BigDecimal;
 public class ChiTietHoaDonModel {
     public String ID;
     public SanPhamModel tenSP = new SanPhamModel();
-    public ThuongHieuModel thuongHieu = new ThuongHieuModel();
     public MauSacModel mauSac = new MauSacModel();
     public KichCoModel size = new KichCoModel();
     public ChatLieuModel chatLieu = new ChatLieuModel();
-    public BigDecimal donGia;
+    public ThuongHieuModel thuongHieu = new ThuongHieuModel();
+    public ChiTietSanPhamModel ctsp = new ChiTietSanPhamModel(BigDecimal.ONE);
     public int soLuong;
     public BigDecimal thanhTien;
     private int stt;
 
-    public ChiTietHoaDonModel(String ID, SanPhamModel tenSP, ThuongHieuModel thuongHieu, MauSacModel mauSac, KichCoModel size, ChatLieuModel chatLieu, BigDecimal donGia, int soLuong, BigDecimal thanhTien) {
+    public ChiTietHoaDonModel(String ID, SanPhamModel tenSP, MauSacModel mauSac, KichCoModel size, ChatLieuModel chatLieu, ThuongHieuModel thuongHieu, ChiTietSanPhamModel donGia, int soLuong, BigDecimal thanhTien) {
         this.ID = ID;
-        this.tenSP = tenSP;
-        this.thuongHieu = thuongHieu;
+        this.tenSP = tenSP;      
         this.mauSac = mauSac;
         this.size = size;
         this.chatLieu = chatLieu;
-        this.donGia = donGia;
+        this.thuongHieu = thuongHieu;
+        this.ctsp = donGia;
         this.soLuong = soLuong;
         this.thanhTien = thanhTien;
     }
@@ -51,14 +51,6 @@ public class ChiTietHoaDonModel {
 
     public void setTenSP(SanPhamModel tenSP) {
         this.tenSP = tenSP;
-    }
-
-    public ThuongHieuModel getThuongHieu() {
-        return thuongHieu;
-    }
-
-    public void setThuongHieu(ThuongHieuModel thuongHieu) {
-        this.thuongHieu = thuongHieu;
     }
 
     public MauSacModel getMauSac() {
@@ -85,12 +77,20 @@ public class ChiTietHoaDonModel {
         this.chatLieu = chatLieu;
     }
 
-    public BigDecimal getDonGia() {
-        return donGia;
+    public ThuongHieuModel getThuongHieu() {
+        return thuongHieu;
     }
 
-    public void setDonGia(BigDecimal donGia) {
-        this.donGia = donGia;
+    public void setThuongHieu(ThuongHieuModel thuongHieu) {
+        this.thuongHieu = thuongHieu;
+    }
+
+    public ChiTietSanPhamModel getDonGia() {
+        return ctsp;
+    }
+
+    public void setDonGia(ChiTietSanPhamModel donGia) {
+        this.ctsp = donGia;
     }
 
     public int getSoLuong() {
@@ -116,17 +116,17 @@ public class ChiTietHoaDonModel {
     public void setStt(int stt) {
         this.stt = stt;
     }
-
-    public Object[] toData(){
+    
+    public Object[] toData2(){
         return new Object[]{
             this.stt,
             this.ID,
             this.tenSP.getTenSP(),
-            this.thuongHieu.getTenTH(),
             this.mauSac.getTenMS(),
             this.size.getTenSize(),
             this.chatLieu.getTenCL(),
-            this.donGia,
+            this.thuongHieu.getTenTH(),
+            this.ctsp.getGiaBan(),
             this.soLuong,
             this.thanhTien
         };

@@ -112,7 +112,7 @@ public class NhanVienService {
         try {
             ResultSet rs = JdbcHelper.query(sql, args);
             while (rs.next()) {
-                NhanVienModel entity = new NhanVienModel();
+                NhanVienModel entity = new NhanVienModel(rs.getString(3));
                 entity.setId(rs.getString("ID"));
                 entity.setHoTen(rs.getString("HoTen"));
                 entity.setDiaChi(rs.getString("DiaChi"));

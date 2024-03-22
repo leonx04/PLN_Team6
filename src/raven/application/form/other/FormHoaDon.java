@@ -4,10 +4,18 @@
  */
 package raven.application.form.other;
 
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+import raven.application.model.ChiTietHoaDonModel;
+import raven.application.model.ChiTietSanPhamModel;
 import raven.application.model.HoaDonModel;
 import raven.application.service.ChiTietHoaDonService;
+import raven.application.service.ChiTietSanPhamService;
 import raven.application.service.HoaDonService;
 
 /**
@@ -19,29 +27,69 @@ public class FormHoaDon extends javax.swing.JPanel {
     /**
      * Creates new form FormHoaDon1
      */
+    private HoaDonModel HDModel = new HoaDonModel();
+    private ChiTietHoaDonModel CTHDModel = new ChiTietHoaDonModel();
     private DefaultTableModel model = new DefaultTableModel();
     private HoaDonService hdsr = new HoaDonService();
     private ChiTietHoaDonService cthd = new ChiTietHoaDonService();
+    private ChiTietSanPhamService ctsp = new ChiTietSanPhamService();
+    DefaultComboBoxModel<String> dcb1 = new DefaultComboBoxModel<>();
+    DefaultComboBoxModel<String> dcb2 = new DefaultComboBoxModel<>();
+    List<HoaDonModel> listHD = new ArrayList<>();
+    List<ChiTietSanPhamModel> listSPCT = new ArrayList<>();
     private int index = -1;
+
     public FormHoaDon() {
         initComponents();
-        ArrayList<HoaDonModel> list = new ArrayList<>();
-        //loadDataHD(list);
+        dcb1 = (DefaultComboBoxModel<String>) cboTrangThaiHD.getModel();
+        dcb2 = (DefaultComboBoxModel<String>) cboHinhThuc.getModel();
+        loadTrangThai();
+        loadHinhThuc();
+        this.fillTable(hdsr.getAll());
+        this.fillTable2(cthd.getAllCTHD());
+
     }
-//    void loadDataHD(ArrayList<HoaDonModel> listHD){
-//        model = (DefaultTableModel) tblHoaDon.getModel();
-//        model.setRowCount(0);
-//        int index = 1;
-//        for (HoaDonModel hoaDonModel : listHD) {
-//            hoaDonModel.setSTT(index++);
-//            model.addRow(new Object[]{
-//                hoaDonModel.getID(),
-//                hoaDonModel.getMaNhanVien(),
-//                hoaDonModel.getMaKhachHang(),
-//                hoaDonModel.getMaVoucher(),
-//            });
-//        }
-//    }
+
+    void loadTrangThai() {
+        dcb1.addElement("Đã thanh toán");
+        dcb1.addElement("Đã hủy");
+        dcb1.addElement("Chờ thanh toán");
+        dcb1.addElement("Chưa thanh toán");
+    }
+
+    void loadHinhThuc() {
+        dcb2.addElement("Tiền mặt");
+        dcb2.addElement("Chuyển khoản");
+        dcb2.addElement("Kết hợp");
+    }
+
+    void fillTable(List<HoaDonModel> list) {
+        model = (DefaultTableModel) tblHoaDon.getModel();
+        model.setRowCount(0);
+        int index = 1;
+        for (HoaDonModel hoaDonModel : list) {
+            hoaDonModel.setStt(index++);
+            model.addRow(hoaDonModel.toData());
+        }
+        if (model.getRowCount() > 0) {
+            tblHoaDon.scrollRectToVisible(tblHoaDon.getCellRect(0, 0, true));
+            tblHoaDon.setRowSelectionInterval(0, 0);
+        }
+    }
+
+    void fillTable2(List<ChiTietHoaDonModel> listHD) {
+        model = (DefaultTableModel) tblHoaDonChiTiet.getModel();
+        model.setRowCount(0);
+        int option = 1;
+        for (ChiTietHoaDonModel chiTietHoaDon : listHD) {
+            chiTietHoaDon.setStt(option++);
+            model.addRow(chiTietHoaDon.toData2());
+        }
+        if (model.getRowCount() > 0) {
+            tblHoaDonChiTiet.scrollRectToVisible(tblHoaDonChiTiet.getCellRect(0, 0, true));
+            tblHoaDonChiTiet.setRowSelectionInterval(0, 0);
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -84,6 +132,11 @@ public class FormHoaDon extends javax.swing.JPanel {
         jLabel2.setText("Tìm kiếm hóa đơn: ");
 
         txtTimKiemHD.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtTimKiemHD.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTimKiemHDActionPerformed(evt);
+            }
+        });
 
         tblHoaDon.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         tblHoaDon.setModel(new javax.swing.table.DefaultTableModel(
@@ -122,7 +175,7 @@ public class FormHoaDon extends javax.swing.JPanel {
         jLabel5.setText("Hình thức thanh toán:");
 
         cboHinhThuc.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cboHinhThuc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tiền mặt", "Chuyển khoản" }));
+        cboHinhThuc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tiền mặt", "Chuyển khoản", "Kết hợp" }));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel6.setText("Từ :");
@@ -220,7 +273,7 @@ public class FormHoaDon extends javax.swing.JPanel {
                 {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "STT", "Mã sản phẩm chi tiết", "Tên sản phẩm", "Thương hiệu", "Màu sắc", "Size", "Chất liệu", "Đơn giá", "Số lượng", "Thành Tiền"
+                "STT", "Mã sản phẩm chi tiết", "Tên sản phẩm", "Màu sắc", "Size", "Chất liệu", "Thương hiệu", "Đơn giá", "Số lượng", "Thành Tiền"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -341,6 +394,26 @@ public class FormHoaDon extends javax.swing.JPanel {
     private void btnLocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLocActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnLocActionPerformed
+
+    private void txtTimKiemHDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTimKiemHDActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) tblHoaDon.getModel();
+        TableRowSorter<DefaultTableModel> trs = new TableRowSorter<>(model);
+        tblHoaDon.setRowSorter(trs);
+
+        String IDHD = txtTimKiemHD.getText().trim();
+        trs.setRowFilter(new RowFilter<DefaultTableModel, Object>() {
+            @Override
+            public boolean include(RowFilter.Entry<? extends DefaultTableModel, ? extends Object> entry) {
+                for (int i = 0; i < entry.getValueCount(); i++) {
+                    if (entry.getStringValue(i).toLowerCase().contains(IDHD.toLowerCase())) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+    }//GEN-LAST:event_txtTimKiemHDActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

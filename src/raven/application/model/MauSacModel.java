@@ -9,10 +9,15 @@ package raven.application.model;
  * @author dungn
  */
 public class MauSacModel {
+
     public String ID;
     public String TenMS;
     public String MoTa;
     public int stt;
+
+    public MauSacModel(String tenMS) {
+        this.TenMS = tenMS;
+    }
 
     public MauSacModel() {
     }
@@ -21,10 +26,6 @@ public class MauSacModel {
         this.ID = ID;
         this.TenMS = TenMS;
         this.MoTa = MoTa;
-    }
-
-    public MauSacModel(String TenMS) {
-        this.TenMS = TenMS;
     }
 
     public String getID() {
@@ -60,11 +61,11 @@ public class MauSacModel {
     }
 
     public Object[] toData() {
-        return new Object[] {
-                this.stt,
-                this.ID,
-                this.TenMS,
-                this.MoTa
+        return new Object[]{
+            this.stt,
+            this.ID,
+            this.TenMS,
+            this.MoTa
         };
     }
 

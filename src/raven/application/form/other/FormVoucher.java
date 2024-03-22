@@ -53,17 +53,17 @@ public class FormVoucher extends javax.swing.JPanel {
         txtMoTa.setText(moTa);
     }
 
-    VoucherModer read() {
-        VoucherModer voucher = new VoucherModer();
-        
-        voucher.setID(txtMaVoucher.getText());
-        voucher.setTenVoucher(txtTenVoucher.getText());
-        voucher.setSoLuong(Integer.parseInt(txtSoLuong.getText()));
-        voucher.setLoaiVoucher(cboLoaiVoucher.getSelectedItem().toString());
-        voucher.setMucGiamGia(new BigDecimal(txtMucGiamGia.getText()));
-        voucher.setMoTa(txtMoTa.getText());
-        return voucher;
-    }
+//    VoucherModer read() {
+//        VoucherModer voucher = new VoucherModer(rs.getString(5));
+//        
+//        voucher.setID(txtMaVoucher.getText());
+//        voucher.setTenVoucher(txtTenVoucher.getText());
+//        voucher.setSoLuong(Integer.parseInt(txtSoLuong.getText()));
+//        voucher.setLoaiVoucher(cboLoaiVoucher.getSelectedItem().toString());
+//        voucher.setMucGiamGia(new BigDecimal(txtMucGiamGia.getText()));
+//        voucher.setMoTa(txtMoTa.getText());
+//        return voucher;
+//    }
 
     private boolean checkValidate() {
         if (txtTenVoucher.getText().trim().isEmpty()) {
@@ -611,24 +611,24 @@ public class FormVoucher extends javax.swing.JPanel {
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         // TODO add your handling code here:
-        if (!checkValidate()) {
-            return;
-        } else {
-            VoucherModer vm = this.read();
-            VoucherService vs = new VoucherService();
-            int index = tblVoucher.getSelectedRow();
-            int option = JOptionPane.showConfirmDialog(this, 
-                    "Bạn có muốn cập nhật không?", "Xác nhận cập nhật!", JOptionPane.YES_NO_OPTION);
-            if (option == JOptionPane.YES_OPTION) {
-                if (vs.update(vm, vm.getID()) > 0) {
-                    JOptionPane.showMessageDialog(this, "Cập nhật thành công");
-                    fillTable(vs.getAllVoucher());
-                    clear();
-                }else{
-                    JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
-                }
-            }
-        }
+//        if (!checkValidate()) {
+//            return;
+//        } else {
+//            VoucherModer vm = this.read();
+//            VoucherService vs = new VoucherService();
+//            int index = tblVoucher.getSelectedRow();
+//            int option = JOptionPane.showConfirmDialog(this, 
+//                    "Bạn có muốn cập nhật không?", "Xác nhận cập nhật!", JOptionPane.YES_NO_OPTION);
+//            if (option == JOptionPane.YES_OPTION) {
+//                if (vs.update(vm, vm.getID()) > 0) {
+//                    JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+//                    fillTable(vs.getAllVoucher());
+//                    clear();
+//                }else{
+//                    JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
+//                }
+//            }
+//        }
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void tblVoucherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblVoucherMouseClicked
@@ -651,18 +651,18 @@ public class FormVoucher extends javax.swing.JPanel {
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         // TODO add your handling code here:
-        String newID = service.getNewVoucherID();
-        VoucherModer voucherModer = this.read();
-        if (!checkValidate()) {
-            return;
-        } else {
-            voucherModer.setID(newID);
-            if (service.insert(voucherModer) > 0) {
-                JOptionPane.showMessageDialog(this, "Thêm thành công");
-                this.fillTable(service.getAllVoucher());
-                clear();
-            }
-        }
+//        String newID = service.getNewVoucherID();
+//        VoucherModer voucherModer = this.read();
+//        if (!checkValidate()) {
+//            return;
+//        } else {
+//            voucherModer.setID(newID);
+//            if (service.insert(voucherModer) > 0) {
+//                JOptionPane.showMessageDialog(this, "Thêm thành công");
+//                this.fillTable(service.getAllVoucher());
+//                clear();
+//            }
+//        }
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void btnXoaTrangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaTrangActionPerformed

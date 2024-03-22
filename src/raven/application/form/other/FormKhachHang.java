@@ -22,24 +22,24 @@ public class FormKhachHang extends javax.swing.JPanel {
     
     public FormKhachHang() {
         initComponents();
-        fillTable();
+//        fillTable();
     }
     
     
-    public void fillTable() {
-        DefaultTableModel model = (DefaultTableModel)tblThongTinKH.getModel();
-        model.setRowCount(0); //clear table
-        for (KhachHangModel kh : khS.getAll()) {
-            Object rowData[] = new Object[6];
-            rowData[0] = kh.getMa();
-            rowData[1] =kh.getTen();
-            rowData[2] =kh.isGioitinh();
-            rowData[3] =kh.getSodt();
-            rowData[4] =kh.getDiachi();
-            rowData[5] =kh.getEmail();
-            rowData[6] =date_format.format(kh.getNgaysinh());
-        }
-    }
+//    public void fillTable() {
+//        DefaultTableModel model = (DefaultTableModel)tblThongTinKH.getModel();
+//        model.setRowCount(0); //clear table
+//        for (KhachHangModel kh : khS.getAll()) {
+//            Object rowData[] = new Object[6];
+//            rowData[0] = kh.getMa();
+//            rowData[1] =kh.getTen();
+//            rowData[2] =kh.isGioitinh();
+//            rowData[3] =kh.getSodt();
+//            rowData[4] =kh.getDiachi();
+//            rowData[5] =kh.getEmail();
+//            rowData[6] =date_format.format(kh.getNgaysinh());
+//        }
+//    }
     
     public boolean validateForm() {
         if (txtMa.getText().isEmpty()
@@ -333,22 +333,22 @@ public class FormKhachHang extends javax.swing.JPanel {
         txtNgaySinh.setText("");
     }
     
-    public KhachHangModel getModel() throws ParseException{
-        KhachHangModel kh = new KhachHangModel();
-        kh.setMa(txtMa.getText());
-        kh.setTen(txtTen.getText());
-        boolean gt = false; // Mặc định là nữ
-        if (rdoNam.isSelected()) {
-            gt = true;
-        }
-        kh.setGioitinh(gt);
-        kh.setSodt(txtSDT.getText());
-        kh.setDiachi(txtDiaChi.getText());
-        kh.setEmail(txtEmail.getText());
-        kh.setNgaysinh(date_format.parse(txtNgaySinh.getText()));
-    return kh;
-    }
-    
+//    public KhachHangModel getModel() throws ParseException{
+//        KhachHangModel kh = new KhachHangModel(rs.getString(4));
+//        kh.setMa(txtMa.getText());
+//        kh.setTen(txtTen.getText());
+//        boolean gt = false; // Mặc định là nữ
+//        if (rdoNam.isSelected()) {
+//            gt = true;
+//        }
+//        kh.setGioitinh(gt);
+//        kh.setSodt(txtSDT.getText());
+//        kh.setDiachi(txtDiaChi.getText());
+//        kh.setEmail(txtEmail.getText());
+//        kh.setNgaysinh(date_format.parse(txtNgaySinh.getText()));
+//    return kh;
+//    }
+//    
     public void setModel(KhachHangModel kh) {
         txtMa.setText(kh.getMa());
         txtTen.setText(kh.getTen());
@@ -365,45 +365,45 @@ public class FormKhachHang extends javax.swing.JPanel {
     }
     
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
-        // TODO add your handling code here:
-        if(validateForm()) {
-            try {
-                KhachHangModel kh = getModel();
-                if (khS.Them(kh)>0) {
-                    JOptionPane.showMessageDialog(this, "Thêm thành công");
-                    fillTable();
-                }
-            } catch (ParseException ex) {
-                Logger.getLogger(FormKhachHang.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }else{
-            JOptionPane.showMessageDialog(this, "Bạn chưa nhập đầy đủ thông tin");
-        }
+//        // TODO add your handling code here:
+//        if(validateForm()) {
+//            try {
+//                KhachHangModel kh = getModel();
+//                if (khS.Them(kh)>0) {
+//                    JOptionPane.showMessageDialog(this, "Thêm thành công");
+//                    fillTable();
+//                }
+//            } catch (ParseException ex) {
+//                Logger.getLogger(FormKhachHang.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }else{
+//            JOptionPane.showMessageDialog(this, "Bạn chưa nhập đầy đủ thông tin");
+//        }
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void tblThongTinKHMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblThongTinKHMouseClicked
         // TODO add your handling code here:
-        int id=tblThongTinKH.rowAtPoint(evt.getPoint());
-        String ma=tblThongTinKH.getValueAt(id, 0).toString();
-        KhachHangModel kh = khS.getKhachHangByID(ma);
-        setModel(kh);
+//        int id=tblThongTinKH.rowAtPoint(evt.getPoint());
+//        String ma=tblThongTinKH.getValueAt(id, 0).toString();
+//        KhachHangModel kh = khS.getKhachHangByID(ma);
+//        setModel(kh);
     }//GEN-LAST:event_tblThongTinKHMouseClicked
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         // TODO add your handling code here:
-        if(validateForm()) {
-            try {
-                KhachHangModel kh = getModel();
-                if (khS.Sua(kh)>0) {
-                    JOptionPane.showMessageDialog(this, "Sửa được rồi hihi");
-                    fillTable();
-                }
-            } catch (ParseException ex) {
-                Logger.getLogger(FormKhachHang.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }else{
-            JOptionPane.showMessageDialog(this, "Bạn chưa nhập đầy đủ thông tin");
-        }
+//        if(validateForm()) {
+//            try {
+//                KhachHangModel kh = getModel();
+//                if (khS.Sua(kh)>0) {
+//                    JOptionPane.showMessageDialog(this, "Sửa được rồi hihi");
+//                    fillTable();
+//                }
+//            } catch (ParseException ex) {
+//                Logger.getLogger(FormKhachHang.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }else{
+//            JOptionPane.showMessageDialog(this, "Bạn chưa nhập đầy đủ thông tin");
+//        }
     }//GEN-LAST:event_btnSuaActionPerformed
 
 

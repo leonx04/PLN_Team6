@@ -18,6 +18,10 @@ public class KhachHangModel {
     public KhachHangModel() {
     }
 
+    public KhachHangModel(String tenKH) {
+        this.ten = tenKH;
+    }
+
     public KhachHangModel(String ma, String ten, String sodt, String diachi, String email, Date ngaysinh, boolean gioitinh) {
         this.ma = ma;
         this.ten = ten;

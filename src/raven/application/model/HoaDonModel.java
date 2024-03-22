@@ -5,17 +5,109 @@
 package raven.application.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.security.Timestamp;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  *
  * @author admin
  */
 public class HoaDonModel {
+
     public String ID;
     public Date ngayTao;
     public NhanVienModel tenNV = new NhanVienModel();
+    public KhachHangModel tenKH = new KhachHangModel();
+    public VoucherModer tenVoucher = new VoucherModer();
     public BigDecimal tongTien;
+    public String hinhThucThanhToan;
+    private int stt;
+
+    public HoaDonModel(String ID, Date ngayTao, NhanVienModel tenNV, KhachHangModel tenKH, BigDecimal tongTien, VoucherModer tenVoucher, String hinhThucThanhToan) {
+        this.ID = ID;
+        this.ngayTao = ngayTao;
+        this.tenNV = tenNV;
+        this.tenKH = tenKH;
+        this.tongTien = tongTien;
+        this.tenVoucher = tenVoucher;
+        this.hinhThucThanhToan = hinhThucThanhToan;
+    }
+
+    public HoaDonModel() {
+    }
+
+        public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+
+    public Date getNgayTao() {
+        return ngayTao;
+    }
+
+    public void setNgayTao(Date ngayTao) {
+        this.ngayTao = ngayTao;
+    }
+
+    public NhanVienModel getTenNV() {
+        return tenNV;
+    }
+
+    public void setTenNV(NhanVienModel tenNV) {
+        this.tenNV = tenNV;
+    }
+
+    public KhachHangModel getTenKH() {
+        return tenKH;
+    }
+
+    public void setTenKH(KhachHangModel tenKH) {
+        this.tenKH = tenKH;
+    }
+
+    public BigDecimal getTongTien() {
+        return tongTien;
+    }
+
+    public void setTongTien(BigDecimal tongTien) {
+        this.tongTien = tongTien;
+    }
+
+    public VoucherModer getTenVoucher() {
+        return tenVoucher;
+    }
+
+    public void setTenVoucher(VoucherModer tenVoucher) {
+        this.tenVoucher = tenVoucher;
+    }
+    public String getHinhThucThanhToan() {
+        return hinhThucThanhToan;
+    }
+
+    public void setHinhThucThanhToan(String hinhThucThanhToan) {
+        this.hinhThucThanhToan = hinhThucThanhToan;
+    }
+
+    public int getStt() {
+        return stt;
+    }
+
+    public void setStt(int stt) {
+        this.stt = stt;
+    }
+    public Object[] toData(){
+        return new Object[]{
+            this.stt,
+            this.ID,
+            this.ngayTao,
+            this.tenNV.getHoTen(),
+            this.tenKH.getTen(),
+            this.tenVoucher.getTenVoucher(),
+            this.tongTien,
+            this.hinhThucThanhToan,
+        };
+    }
 }

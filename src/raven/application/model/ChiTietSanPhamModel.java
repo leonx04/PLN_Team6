@@ -36,8 +36,13 @@ public class ChiTietSanPhamModel {
         this.MoTa = MoTa;
     }
 
+    public ChiTietSanPhamModel(BigDecimal donGia) {
+        this.giaBan = donGia;
+    }
+
     public ChiTietSanPhamModel() {
     }
+    
 
     public String getMoTa() {
         return MoTa;
