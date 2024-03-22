@@ -49,7 +49,7 @@ public class NhanVienService {
         return listNV;
     }
     
-    private String hashPassword(String password) throws Exception {
+    public String hashPassword(String password) throws Exception {
         MessageDigest md = MessageDigest.getInstance("MD5");
         byte[] hashedBytes = md.digest(password.getBytes("UTF-8"));
 

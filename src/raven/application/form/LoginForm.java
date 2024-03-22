@@ -9,6 +9,8 @@ import java.awt.Insets;
 import java.awt.LayoutManager;
 import javax.swing.JOptionPane;
 import raven.application.Application;
+import raven.application.model.NhanVienModel;
+import raven.application.service.NhanVienService;
 
 /**
  *
@@ -16,6 +18,9 @@ import raven.application.Application;
  */
 public class LoginForm extends javax.swing.JPanel {
 
+    
+    private NhanVienService nhanVienService = new NhanVienService();
+    
     public LoginForm() {
         initComponents();
         init();
@@ -53,6 +58,8 @@ public class LoginForm extends javax.swing.JPanel {
         lbPass = new javax.swing.JLabel();
         txtPass = new javax.swing.JPasswordField();
         btnExit = new javax.swing.JButton();
+
+        setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         cmdLogin.setBackground(new java.awt.Color(0, 153, 102));
         cmdLogin.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -127,21 +134,43 @@ public class LoginForm extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(204, 204, 204)
                 .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(322, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(68, 68, 68)
                 .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(184, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void cmdLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLoginActionPerformed
-        Application.login();
+        String maNV = txtUser.getText();
+        String matKhau = new String(txtPass.getPassword());
+
+        try {
+            NhanVienModel nhanVienModel = nhanVienService.selectById(maNV);
+
+            if (nhanVienModel == null) {
+                JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu");
+            } else {
+                String hashedPassword = nhanVienService.hashPassword(matKhau); // Hash the entered password
+
+                if (!nhanVienModel.getMatKhau().equals(hashedPassword)) {
+                    JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Đăng nhập thành công");
+                    Application.login();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Lỗi truy vấn dữ liệu!");
+        }
     }//GEN-LAST:event_cmdLoginActionPerformed
 
+    //khj
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         // TODO add your handling code here:
         // Hiển thị thông báo xác nhận

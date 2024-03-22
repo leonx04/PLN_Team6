@@ -33,7 +33,8 @@ public class Menu extends JPanel {
         {"Voucher"},
         {"Staff"},
         {"Customer", "Danh sách", "Quản lý"},
-        {"Logout"}
+        {"Logout"},
+        {"Exit"}
     };
 
     // Getter cho trạng thái menuFull
