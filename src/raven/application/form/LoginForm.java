@@ -9,12 +9,16 @@ import java.awt.Insets;
 import java.awt.LayoutManager;
 import javax.swing.JOptionPane;
 import raven.application.Application;
+import raven.application.model.NhanVienModel;
+import raven.application.service.NhanVienService;
 
 /**
  *
  * @author Raven
  */
 public class LoginForm extends javax.swing.JPanel {
+
+    private NhanVienService nhanVienService = new NhanVienService();
 
     public LoginForm() {
         initComponents();
@@ -141,6 +145,28 @@ public class LoginForm extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cmdLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLoginActionPerformed
+//        String maNV = txtUser.getText();
+//        String matKhau = new String(txtPass.getPassword());
+//
+//        try {
+//            NhanVienModel nhanVienModel = nhanVienService.selectById(maNV);
+//
+//            if (nhanVienModel == null) {
+//                JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu");
+//            } else {
+//                String hashedPassword = nhanVienService.hashPassword(matKhau); // Hash the entered password
+//
+//                if (!nhanVienModel.getMatKhau().equals(hashedPassword)) {
+//                    JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu");
+//                } else {
+//                    JOptionPane.showMessageDialog(this, "Đăng nhập thành công");
+//                    Application.login();
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            JOptionPane.showMessageDialog(null, "Lỗi truy vấn dữ liệu!");
+//        }
         Application.login();
     }//GEN-LAST:event_cmdLoginActionPerformed
 
