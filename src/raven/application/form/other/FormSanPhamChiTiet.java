@@ -1,13 +1,21 @@
 package raven.application.form.other;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import raven.application.model.ChatLieuModel;
 import raven.application.model.ChiTietSanPhamModel;
@@ -104,7 +112,7 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
 
         // Xác định ID tương ứng với tên sản phẩm đã chọn
         List<SanPhamModel> listSP = sprs.getIDByTenSP(tenSP);
-        String maSP = null;
+        String maSP = null; //Biến này sẽ được sử dụng để lưu trữ ID của sản phẩm tương ứng nếu tìm thấy
         if (listSP.size() > 0) { // Kiểm tra xem danh sách có phần tử không
             maSP = listSP.get(0).getID();// Lấy ID của phần tử đầu tiên nếu danh sách không rỗng
         }
@@ -238,7 +246,78 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
         new FormKichThuoc().setVisible(true);
     }
 
+    public boolean validatef() {
+        // Dữ liệu cần thiết từ các trường nhập liệu
+        String tenSP = cboTenSP.getSelectedItem().toString().trim();
+        String mauSac = cboMauSac.getSelectedItem().toString().trim();
+        String kichThuoc = cboKichThuoc.getSelectedItem().toString().trim();
+        String chatLieu = cboChatLieu.getSelectedItem().toString().trim();
+        String thuongHieu = cboThuonHieu.getSelectedItem().toString().trim();
+        String giaBanStr = txtGiaBan.getText().trim();
+        String soLuongTonStr = txtSoLuong.getText().trim();
+        String moTa = txtMoTaCTSP.getText().trim();
+
+        // Kiểm tra trường nào đó có trống không
+        if (tenSP.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn tên sản phẩm", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (mauSac.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn màu sắc", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (kichThuoc.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn kích thước", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (chatLieu.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn chất liệu", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (thuongHieu.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn thương hiệu", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (giaBanStr.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập giá bán", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (soLuongTonStr.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập số lượng tồn", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (moTa.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập mô tả", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Kiểm tra giá bán có phải là số và lớn hơn 1000 không
+        try {
+            BigDecimal giaBan = new BigDecimal(giaBanStr);
+            int soLuongTon = Integer.parseInt(soLuongTonStr);
+            if (giaBan.compareTo(BigDecimal.valueOf(1000)) <= 0) {
+                // Thông báo lỗi
+                JOptionPane.showMessageDialog(null, "Giá bán phải lớn hơn 1000", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            // Thông báo lỗi nếu giá bán không phải là số
+            JOptionPane.showMessageDialog(null, "Giá bán phải là số", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
+    }
+
     @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
@@ -346,7 +425,7 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
         jLabel5.setText("Màu sắc");
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel6.setText("Kích thước");
+        jLabel6.setText("Size");
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel7.setText("Chất liệu");
@@ -613,33 +692,26 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
         tblSPCT.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         tblSPCT.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "STT", "Mã CTSP", "Tên sản phẩm", "Màu sắc", "Kích thước", "Chất liệu", "Hãng", "Giá bán", "Số lượng", "Mô tả", "Chọn"
+                "STT", "Mã CTSP", "Tên sản phẩm", "Màu sắc", "Size", "Chất liệu", "Hãng", "Giá bán", "Số lượng", "Mô tả"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
-            };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, true
+                false, false, false, false, false, false, false, false, false, false
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -651,6 +723,17 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
             }
         });
         jScrollPane4.setViewportView(tblSPCT);
+        if (tblSPCT.getColumnModel().getColumnCount() > 0) {
+            tblSPCT.getColumnModel().getColumn(0).setResizable(false);
+            tblSPCT.getColumnModel().getColumn(1).setResizable(false);
+            tblSPCT.getColumnModel().getColumn(2).setResizable(false);
+            tblSPCT.getColumnModel().getColumn(4).setResizable(false);
+            tblSPCT.getColumnModel().getColumn(5).setResizable(false);
+            tblSPCT.getColumnModel().getColumn(6).setResizable(false);
+            tblSPCT.getColumnModel().getColumn(7).setResizable(false);
+            tblSPCT.getColumnModel().getColumn(8).setResizable(false);
+            tblSPCT.getColumnModel().getColumn(9).setResizable(false);
+        }
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel12.setText("Tìm kiếm");
@@ -777,7 +860,7 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
     }// GEN-LAST:event_btnAddThuongHieuActionPerformed
 
     private void cboMauSacActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cboMauSacActionPerformed
-
+        
     }// GEN-LAST:event_cboMauSacActionPerformed
 
     private void cboKichThuocActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cboKichThuocActionPerformed
@@ -858,10 +941,68 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
 
     private void btnXuatExcelActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnXuatExcelActionPerformed
         // TODO add your handling code here:
+        
     }// GEN-LAST:event_btnXuatExcelActionPerformed
 
     private void btnImportExcelActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnImportExcelActionPerformed
         // TODO add your handling code here:
+         // 1. Xác định đường dẫn thư mục lưu file mặc định
+    String currentDirectoryFilePath = "A:\\";
+
+    // 2. Tạo cửa sổ chọn file cho người dùng
+    JFileChooser excelImportChooser = new JFileChooser(currentDirectoryFilePath);
+
+    // 3. Bộ lọc chỉ hiển thị các file Excel
+    FileNameExtensionFilter excelFNEF = new FileNameExtensionFilter("Tệp Excel", "xls", "xlsx", "xlsm");
+    excelImportChooser.setFileFilter(excelFNEF);
+
+    // 4. Đặt tiêu đề cho cửa sổ chọn file
+    excelImportChooser.setDialogTitle("Mở tập tin Excel");
+
+    // 5. Hiển thị cửa sổ chọn file và kiểm tra kết quả
+    int excelChooser = excelImportChooser.showOpenDialog(null);
+    if (excelChooser == JFileChooser.APPROVE_OPTION) {
+
+        // 6. Tạo Workbook và Sheet mới trong Excel
+        try {
+            XSSFWorkbook excelWorkbook = new XSSFWorkbook(new FileInputStream(excelImportChooser.getSelectedFile()));
+            XSSFSheet excelSheet = excelWorkbook.getSheetAt(0);
+
+            // 7. Lấy số hàng trong sheet
+            int rowCount = excelSheet.getLastRowNum() + 1;
+
+            // 8. Duyệt qua từng hàng trong sheet
+            for (int i = 1; i < rowCount; i++) {
+
+                // 9. Lấy dòng thứ i
+                XSSFRow excelRow = excelSheet.getRow(i);
+
+                // 10. Duyệt qua từng cột trong dòng
+                for (int j = 0; j < excelRow.getLastCellNum(); j++) {
+
+                    // 11. Lấy ô thứ j trong dòng thứ i
+                    XSSFCell excelCell = excelRow.getCell(j);
+
+                    // 12. Lấy giá trị của ô
+                    String cellValue = excelCell.getStringCellValue();
+
+                    // 13. Gán giá trị của ô vào bảng
+                    int stt = model.getRowCount() + 1;
+                    model.addRow(new Object[]{stt, cellValue});
+                }
+            }
+
+            // 14. Thông báo nhập dữ liệu thành công
+            JOptionPane.showMessageDialog(this, "Nhập dữ liệu thành công!");
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Hiển thị thông báo lỗi cho người dùng
+            JOptionPane.showMessageDialog(this, "Lỗi khi mở file Excel: " + e.getMessage());
+        }
+    } else {
+        // 15. Thông báo người dùng hủy chọn file
+        JOptionPane.showMessageDialog(this, "Bạn đã hủy chọn file!");
+    }
     }// GEN-LAST:event_btnImportExcelActionPerformed
 
     private void txtTimKiemKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtTimKiemKeyReleased
