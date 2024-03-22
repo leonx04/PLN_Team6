@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import raven.application.model.Auth;
 import raven.application.model.NhanVienModel;
 import raven.application.service.NhanVienService;
 
@@ -26,7 +27,7 @@ public class FormNhanVien extends javax.swing.JPanel {
     int index = 0;
 
     private List<NhanVienModel> listNV = new ArrayList<>();
-    
+
     public FormNhanVien() {
         initComponents();
         listNV = nhanVienService.selectAll();
@@ -53,7 +54,7 @@ public class FormNhanVien extends javax.swing.JPanel {
                     nv.getEmail(),
                     nv.getNamSinh(),
                     nv.getGioiTinh(),
-                    nv.getChucVu(),
+                    nv.isChucVu() == true ? "Quản lý" : "Nhân viên",
                     nv.getMatKhau(),
                     trangThai
                 };
@@ -85,7 +86,7 @@ public class FormNhanVien extends javax.swing.JPanel {
                     nv.getEmail(),
                     nv.getNamSinh(),
                     nv.getGioiTinh(),
-                    nv.getChucVu(),
+                    nv.isChucVu() == true ? "Quản lý" : "Nhân viên",
                     nv.getMatKhau(),
                     trangThai
                 };
@@ -117,7 +118,7 @@ public class FormNhanVien extends javax.swing.JPanel {
                     nv.getEmail(),
                     nv.getNamSinh(),
                     nv.getGioiTinh(),
-                    nv.getChucVu(),
+                    nv.isChucVu() == true ? "Quản lý" : "Nhân viên",
                     nv.getMatKhau(),
                     trangThai
                 };
@@ -136,19 +137,13 @@ public class FormNhanVien extends javax.swing.JPanel {
         txtNamSinh.setText(String.valueOf(model.getNamSinh()));
         txtDiaChi.setText(model.getDiaChi());
         txtMatKhau.setText(model.getMatKhau());
-
+        rbQuanLy.setSelected(model.isChucVu());
+        rbNhanVien.setSelected(!model.isChucVu());
         String gioiTinh = model.getGioiTinh();
         if (gioiTinh != null && gioiTinh.equals("Nam")) {
             rbNam.setSelected(true);
         } else if (gioiTinh != null && gioiTinh.equals("Nữ")) {
             rbNu.setSelected(true);
-        }
-
-        String chucVu = model.getChucVu();
-        if (chucVu != null && chucVu.equals("Nhân viên")) {
-            rbNhanVien.setSelected(true);
-        } else if (chucVu != null && chucVu.equals("Quản lý")) {
-            rbQuanLy.setSelected(true);
         }
 
     }
@@ -173,15 +168,7 @@ public class FormNhanVien extends javax.swing.JPanel {
         }
         model.setGioiTinh(gioiTinh);
 
-        String chucVu;
-        if (rbQuanLy.isSelected()) {
-            chucVu = "Quản lý";
-        } else if (rbNhanVien.isSelected()) {
-            chucVu = "Nhân viên";
-        } else {
-            chucVu = "";
-        }
-        model.setChucVu(chucVu);
+        model.setChucVu(rbQuanLy.isSelected());
 
         return model;
     }
@@ -202,6 +189,7 @@ public class FormNhanVien extends javax.swing.JPanel {
     }
 
     void insert() {
+        
         if (isAnyFieldEmpty()) {
             JOptionPane.showMessageDialog(this, "Có trường đang bị trống");
             return;
@@ -231,19 +219,27 @@ public class FormNhanVien extends javax.swing.JPanel {
         }
 
         NhanVienModel model = getModel();
-        if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn thêm mới?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            if (nhanVienService.insert(model)) {
-                listNV = nhanVienService.selectAll();
-                loadData(listNV);
-                JOptionPane.showMessageDialog(this, "Thêm mới thành công!");
-                this.clerForm();
-            } else {
-                JOptionPane.showMessageDialog(this, "Thêm mới thất bại!");
+
+        if (!Auth.isManager()) {
+            JOptionPane.showMessageDialog(this, "Bạn không có quyền thêm nv!");
+
+        } else {
+            if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn thêm mới?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                if (nhanVienService.insert(model)) {
+                    listNV = nhanVienService.selectAll();
+                    loadData(listNV);
+                    JOptionPane.showMessageDialog(this, "Thêm mới thành công!");
+                    this.clerForm();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Thêm mới thất bại!");
+                }
             }
         }
+
     }
 
     void update() {
+
         if (isAnyFieldEmpty()) {
             JOptionPane.showMessageDialog(this, "Có trường đang bị trống");
             return;
@@ -270,35 +266,46 @@ public class FormNhanVien extends javax.swing.JPanel {
         NhanVienModel model = getModel();
         setModel(model);
 
-        if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn cập nhật?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            if (nhanVienService.update(model)) {
-                listNV = nhanVienService.selectAll();
-                loadData(listNV);
-                JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
-            } else {
-                JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
+        if (!Auth.isManager()) {
+            JOptionPane.showMessageDialog(this, "Không có quyền cập nhật nhân viên!");
+        } else {
+            if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn cập nhật?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                if (nhanVienService.update(model)) {
+                    listNV = nhanVienService.selectAll();
+                    loadData(listNV);
+                    JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
+                }
             }
         }
+
     }
 
     void delete() {
-        if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            String manv = txtID.getText();
-            if (manv.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên muốn xóa!");
-                return;
-            }
 
-            try {
-                nhanVienService.delete(manv);
-                listNV = nhanVienService.selectAll();
-                loadData(listNV);
-                this.clerForm();
-                JOptionPane.showMessageDialog(this, "Xóa thành công!");
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Xóa thất bại!");
+        if (!Auth.isManager()) {
+            JOptionPane.showMessageDialog(this, "Không có quyền cho nhân viên nghỉ làm!");
+        } else {
+            if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn nghỉ làm?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                String manv = txtID.getText();
+                if (manv.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên muốn nghỉ làm!");
+                    return;
+                }
+
+                try {
+                    nhanVienService.delete(manv);
+                    listNV = nhanVienService.selectAll();
+                    loadData(listNV);
+                    this.clerForm();
+                    JOptionPane.showMessageDialog(this, "Nghỉ làm thành công!");
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Nghỉ làm thất bại!");
+                }
             }
         }
+
     }
 
     boolean isInvalidEmail(String email) {
@@ -751,7 +758,7 @@ public class FormNhanVien extends javax.swing.JPanel {
     }//GEN-LAST:event_rbNamActionPerformed
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
-         insert();
+        insert();
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed

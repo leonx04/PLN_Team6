@@ -9,6 +9,7 @@ import java.awt.Insets;
 import java.awt.LayoutManager;
 import javax.swing.JOptionPane;
 import raven.application.Application;
+import raven.application.model.Auth;
 import raven.application.model.NhanVienModel;
 import raven.application.service.NhanVienService;
 
@@ -160,7 +161,8 @@ public class LoginForm extends javax.swing.JPanel {
                 if (!nhanVienModel.getMatKhau().equals(hashedPassword)) {
                     JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu");
                 } else {
-                    JOptionPane.showMessageDialog(this, "Đăng nhập thành công");
+                    JOptionPane.showMessageDialog(this, "Đăng nhập thành công " + nhanVienModel.isChucVu());
+                    Auth.user = nhanVienModel;
                     Application.login();
                 }
             }
