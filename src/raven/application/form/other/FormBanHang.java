@@ -49,7 +49,7 @@ public class FormBanHang extends javax.swing.JPanel {
         initCBOHTTT();
         fillTable(ctsprp.getAllCTSP());
         fillTable2(hdrs.getAll());
-        fillTable3(cthdrs.getAllCTHD());
+        //fillTable3(cthdrs.getAllCTHD());
 
         lb1.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:$h1.font");
@@ -58,7 +58,7 @@ public class FormBanHang extends javax.swing.JPanel {
 
     void initCBOHTTT() {
         // Định nghĩa mảng chứa các lựa chọn cho combobox
-        String[] options = {"Kết hợp cả hai", "Tiền mặt", "Chuyển khoản"};
+        String[] options = { "Kết hợp cả hai", "Tiền mặt", "Chuyển khoản" };
 
         // Khởi tạo combobox với các giá trị từ mảng options
         cboHTTT.setModel(new DefaultComboBoxModel<>(options));
@@ -103,7 +103,7 @@ public class FormBanHang extends javax.swing.JPanel {
         }
         cboHang.setModel(new DefaultComboBoxModel<>(cbo));
     }
-    
+
     void fillTable2(List<HoaDonModel> list) {
         model = (DefaultTableModel) tblHoaDon.getModel();
         model.setRowCount(0);
@@ -113,8 +113,8 @@ public class FormBanHang extends javax.swing.JPanel {
             model.addRow(hoaDonModel.toData3());
         }
     }
-    
-    void fillTable3(List<ChiTietHoaDonModel> listCTHD){
+
+    void fillTable3(List<ChiTietHoaDonModel> listCTHD) {
         model = (DefaultTableModel) tblGioHang.getModel();
         model.setRowCount(0);
         int opition = 1;
@@ -362,7 +362,6 @@ public class FormBanHang extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
                                 .addContainerGap()));
-
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(
                 new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED), "Đơn hàng",
                 javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION,
@@ -874,7 +873,7 @@ public class FormBanHang extends javax.swing.JPanel {
 
             // Tạo một ô TextField để nhập số lượng
             JTextField txtSoLuong = new JTextField();
-            Object[] message = {"Nhập số lượng:", txtSoLuong};
+            Object[] message = { "Nhập số lượng:", txtSoLuong };
 
             // Hiển thị hộp thoại để nhập số lượng
             int option = JOptionPane.showConfirmDialog(this, message, "Nhập số lượng ", JOptionPane.OK_CANCEL_OPTION);
