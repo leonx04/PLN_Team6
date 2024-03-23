@@ -21,6 +21,7 @@ public class HoaDonModel {
     public VoucherModer tenVoucher = new VoucherModer();
     public BigDecimal tongTien;
     public String hinhThucThanhToan;
+    public String trangThai;
     private int stt;
 
     public HoaDonModel(String ID, Date ngayTao, NhanVienModel tenNV, KhachHangModel tenKH, BigDecimal tongTien, VoucherModer tenVoucher, String hinhThucThanhToan) {
@@ -31,12 +32,13 @@ public class HoaDonModel {
         this.tongTien = tongTien;
         this.tenVoucher = tenVoucher;
         this.hinhThucThanhToan = hinhThucThanhToan;
+        this.trangThai = trangThai;
     }
 
     public HoaDonModel() {
     }
 
-        public String getID() {
+    public String getID() {
         return ID;
     }
 
@@ -83,12 +85,20 @@ public class HoaDonModel {
     public void setTenVoucher(VoucherModer tenVoucher) {
         this.tenVoucher = tenVoucher;
     }
+
     public String getHinhThucThanhToan() {
         return hinhThucThanhToan;
     }
 
     public void setHinhThucThanhToan(String hinhThucThanhToan) {
         this.hinhThucThanhToan = hinhThucThanhToan;
+    }
+    public String getTrangThai() {
+        return trangThai;
+    }
+
+    public void setTrangThai(String trangThai) {
+        this.trangThai = trangThai;
     }
 
     public int getStt() {
@@ -98,7 +108,20 @@ public class HoaDonModel {
     public void setStt(int stt) {
         this.stt = stt;
     }
-    public Object[] toData(){
+
+    public Object[] toData() {
+        return new Object[]{
+            this.stt,
+            this.ID,
+            this.ngayTao,
+            this.tenNV.getHoTen(),
+            this.tenKH.getTen(),
+            this.tenVoucher.getTenVoucher(),
+            this.tongTien,
+            this.hinhThucThanhToan};
+    }
+
+    public Object[] toData3() {
         return new Object[]{
             this.stt,
             this.ID,
@@ -108,6 +131,7 @@ public class HoaDonModel {
             this.tenVoucher.getTenVoucher(),
             this.tongTien,
             this.hinhThucThanhToan,
+            this.trangThai = trangThai
         };
     }
 }

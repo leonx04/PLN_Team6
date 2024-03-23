@@ -304,6 +304,11 @@ public class FormHoaDon extends javax.swing.JPanel {
         jLabel8.setText("Tìm kiếm :");
 
         txtSeachHDCT.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtSeachHDCT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSeachHDCTActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -397,8 +402,8 @@ public class FormHoaDon extends javax.swing.JPanel {
 
     private void txtTimKiemHDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTimKiemHDActionPerformed
         // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) tblHoaDon.getModel();
-        TableRowSorter<DefaultTableModel> trs = new TableRowSorter<>(model);
+        DefaultTableModel modelHD = (DefaultTableModel) tblHoaDon.getModel();
+        TableRowSorter<DefaultTableModel> trs = new TableRowSorter<>(modelHD);
         tblHoaDon.setRowSorter(trs);
 
         String IDHD = txtTimKiemHD.getText().trim();
@@ -414,6 +419,27 @@ public class FormHoaDon extends javax.swing.JPanel {
             }
         });
     }//GEN-LAST:event_txtTimKiemHDActionPerformed
+
+    private void txtSeachHDCTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSeachHDCTActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel modelHDCT = (DefaultTableModel) tblHoaDonChiTiet.getModel();
+        TableRowSorter<DefaultTableModel> trs = new TableRowSorter<>(modelHDCT);
+        tblHoaDonChiTiet.setRowSorter(trs);
+        
+        String hoaDonID = txtSeachHDCT.getText().trim();
+        trs.setRowFilter(new RowFilter<DefaultTableModel, Object>(){
+            @Override
+            public boolean include(RowFilter.Entry<? extends DefaultTableModel, ? extends Object> entry) {
+                for (int i = 0; i < entry.getValueCount(); i++) {
+                    if (entry.getStringValue(i).toLowerCase().contains(hoaDonID.toLowerCase())) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            
+        });
+    }//GEN-LAST:event_txtSeachHDCTActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

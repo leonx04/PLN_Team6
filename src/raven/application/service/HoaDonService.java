@@ -65,8 +65,7 @@ public class HoaDonService {
                         new KhachHangModel(rs.getString(4)),
                         rs.getBigDecimal(6),
                         new VoucherModer(rs.getString(5)),
-                        rs.getString(7)
-                );
+                        rs.getString(7));
                 listHD.add(hoaDonModel);
             }
             return listHD;
@@ -119,8 +118,7 @@ public class HoaDonService {
                         new KhachHangModel(rs.getString(4)),
                         rs.getBigDecimal(5),
                         new VoucherModer(rs.getString(6)),
-                        rs.getString(7)
-                );
+                        rs.getString(7));
                 listHD.add(hoaDonModel);
             }
         } catch (Exception e) {
@@ -222,8 +220,7 @@ public class HoaDonService {
                         new KhachHangModel(rs.getString(4)),
                         rs.getBigDecimal(5),
                         new VoucherModer(rs.getString(6)),
-                        rs.getString(7)
-                );
+                        rs.getString(7));
                 listHD.add(hoaDonModel);
             }
             return listHD;

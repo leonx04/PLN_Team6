@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import raven.application.model.Auth;
 import raven.application.model.NhanVienModel;
 import raven.application.service.NhanVienService;
 
@@ -30,320 +31,326 @@ public class FormNhanVien extends javax.swing.JPanel {
     public FormNhanVien() {
         initComponents();
         listNV = nhanVienService.selectAll();
-        // loadData(listNV);
+         loadData(listNV);
     }
-//
-//    public void loadData(List<NhanVienModel> nhanVienModels) {
-//        DefaultTableModel model = (DefaultTableModel) tblNhanVien.getModel();
-//        model.setRowCount(0);
-//        try {
-//            for (NhanVienModel nv : nhanVienModels) {
-//                String trangThai = "";
-//                if (nv.getTrangThai().equals("0")) {
-//                    trangThai = "Đang làm";
-//                } else if (nv.getTrangThai().equals("1")) {
-//                    trangThai = "Nghỉ làm";
-//                }
-//
-//                Object[] row = {
-//                    nv.getId(),
-//                    nv.getHoTen(),
-//                    nv.getDiaChi(),
-//                    nv.getSdt(),
-//                    nv.getEmail(),
-//                    nv.getNamSinh(),
-//                    nv.getGioiTinh(),
-//                    nv.getChucVu(),
-//                    nv.getMatKhau(),
-//                    trangThai
-//                };
-//                model.addRow(row);
-//            }
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//
-//    public void loadData0() {
-//        DefaultTableModel model = (DefaultTableModel) tblNhanVien.getModel();
-//        model.setRowCount(0);
-//        try {
-//            List<NhanVienModel> nhanViens = nhanVienService.selectAll_0();
-//            for (NhanVienModel nv : nhanViens) {
-//                String trangThai = "";
-//                if (nv.getTrangThai().equals("0")) {
-//                    trangThai = "Đang làm";
-//                } else if (nv.getTrangThai().equals("1")) {
-//                    trangThai = "Nghỉ làm";
-//                }
-//
-//                Object[] row = {
-//                    nv.getId(),
-//                    nv.getHoTen(),
-//                    nv.getDiaChi(),
-//                    nv.getSdt(),
-//                    nv.getEmail(),
-//                    nv.getNamSinh(),
-//                    nv.getGioiTinh(),
-//                    nv.getChucVu(),
-//                    nv.getMatKhau(),
-//                    trangThai
-//                };
-//                model.addRow(row);
-//            }
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//
-//    public void loadData1() {
-//        DefaultTableModel model = (DefaultTableModel) tblNhanVien.getModel();
-//        model.setRowCount(0);
-//        try {
-//            List<NhanVienModel> nhanViens = nhanVienService.selectAll_1();
-//            for (NhanVienModel nv : nhanViens) {
-//                String trangThai = "";
-//                if (nv.getTrangThai().equals("0")) {
-//                    trangThai = "Đang làm";
-//                } else if (nv.getTrangThai().equals("1")) {
-//                    trangThai = "Nghỉ làm";
-//                }
-//
-//                Object[] row = {
-//                    nv.getId(),
-//                    nv.getHoTen(),
-//                    nv.getDiaChi(),
-//                    nv.getSdt(),
-//                    nv.getEmail(),
-//                    nv.getNamSinh(),
-//                    nv.getGioiTinh(),
-//                    nv.getChucVu(),
-//                    nv.getMatKhau(),
-//                    trangThai
-//                };
-//                model.addRow(row);
-//            }
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//
-//    void setModel(NhanVienModel model) {
-//        txtID.setText(model.getId());
-//        txtHoTen.setText(model.getHoTen());
-//        txtSDT.setText(model.getSdt());
-//        txtEmail.setText(model.getEmail());
-//        txtNamSinh.setText(String.valueOf(model.getNamSinh()));
-//        txtDiaChi.setText(model.getDiaChi());
-//        txtMatKhau.setText(model.getMatKhau());
-//
-//        String gioiTinh = model.getGioiTinh();
-//        if (gioiTinh != null && gioiTinh.equals("Nam")) {
-//            rbNam.setSelected(true);
-//        } else if (gioiTinh != null && gioiTinh.equals("Nữ")) {
-//            rbNu.setSelected(true);
-//        }
-//
-//        String chucVu = model.getChucVu();
-//        if (chucVu != null && chucVu.equals("Nhân viên")) {
-//            rbNhanVien.setSelected(true);
-//        } else if (chucVu != null && chucVu.equals("Quản lý")) {
-//            rbQuanLy.setSelected(true);
-//        }
-//
-//    }
-//
-////    NhanVienModel getModel() {
-////        NhanVienModel model = new NhanVienModel(rs.getString(3));
-////        model.setId(txtID.getText());
-////        model.setHoTen(txtHoTen.getText());
-////        model.setDiaChi(txtDiaChi.getText());
-////        model.setEmail(txtEmail.getText());
-////        model.setSdt(txtSDT.getText());
-////        model.setNamSinh(Integer.parseInt(txtNamSinh.getText()));
-////        model.setMatKhau(new String(txtMatKhau.getPassword()));
-////
-////        String gioiTinh;
-////        if (rbNam.isSelected()) {
-////            gioiTinh = "Nam";
-////        } else if (rbNu.isSelected()) {
-////            gioiTinh = "Nữ";
-////        } else {
-////            gioiTinh = "";
-////        }
-////        model.setGioiTinh(gioiTinh);
-////
-////        String chucVu;
-////        if (rbQuanLy.isSelected()) {
-////            chucVu = "Quản lý";
-////        } else if (rbNhanVien.isSelected()) {
-////            chucVu = "Nhân viên";
-////        } else {
-////            chucVu = "";
-////        }
-////        model.setChucVu(chucVu);
-////
-////        return model;
-////    }
-//
-//    void updateStatus() {
-//        boolean edit = (this.index >= 0);
-//        // Trạng thái form
-//        txtID.setEditable(!edit);
-//    }
-//
-////    void clerForm() {
-////        listNV = nhanVienService.selectAll();
-////        loadData(listNV);
-////        this.setModel(new NhanVienModel(rs.getString(3)));
-////        this.updateStatus();
-////        index = -1;
-////        updateStatus();
-////    }
-//
-//    void insert() {
-//        if (isAnyFieldEmpty()) {
-//            JOptionPane.showMessageDialog(this, "Có trường đang bị trống");
-//            return;
-//        }
-//
-//        if (isIDAlreadyExists()) {
-//            JOptionPane.showMessageDialog(this, "Không để trùng ID");
-//            return;
-//        }
-//
-//        String email = txtEmail.getText();
-//        if (isInvalidEmail(email)) {
-//            JOptionPane.showMessageDialog(this, "Địa chỉ email không hợp lệ.");
-//            return;
-//        }
-//
-//        String phoneNumber = txtSDT.getText();
-//        if (isInvalidPhoneNumber(phoneNumber)) {
-//            JOptionPane.showMessageDialog(this, "Số điện thoại không hợp lệ. Vui lòng nhập 10 chữ số.");
-//            return;
-//        }
-//
-//        String input = txtNamSinh.getText();
-//        if (isInvalidInput(input)) {
-//            JOptionPane.showMessageDialog(this, "Năm sinh chỉ được nhập số và không quá 4 số");
-//            return;
-//        }
-//
-//        NhanVienModel model = getModel();
-//        if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn thêm mới?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-//            if (nhanVienService.insert(model)) {
-//                listNV = nhanVienService.selectAll();
-//                loadData(listNV);
-//                JOptionPane.showMessageDialog(this, "Thêm mới thành công!");
-//                this.clerForm();
-//            } else {
-//                JOptionPane.showMessageDialog(this, "Thêm mới thất bại!");
-//            }
-//        }
-//    }
-//
-//    void update() {
-//        if (isAnyFieldEmpty()) {
-//            JOptionPane.showMessageDialog(this, "Có trường đang bị trống");
-//            return;
-//        }
-//
-//        String phoneNumber = txtSDT.getText();
-//        if (isInvalidPhoneNumber(phoneNumber)) {
-//            JOptionPane.showMessageDialog(this, "Số điện thoại không hợp lệ. Vui lòng nhập 10 chữ số.");
-//            return;
-//        }
-//
-//        String email = txtEmail.getText();
-//        if (isInvalidEmail(email)) {
-//            JOptionPane.showMessageDialog(this, "Địa chỉ email không hợp lệ.");
-//            return;
-//        }
-//
-//        String input = txtNamSinh.getText();
-//        if (isInvalidInput(input)) {
-//            JOptionPane.showMessageDialog(this, "Năm sinh chỉ được nhập số và không quá 4 số");
-//            return;
-//        }
-//
-//        NhanVienModel model = getModel();
-//        setModel(model);
-//
-//        if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn cập nhật?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-//            if (nhanVienService.update(model)) {
-//                listNV = nhanVienService.selectAll();
-//                loadData(listNV);
-//                JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
-//            } else {
-//                JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
-//            }
-//        }
-//    }
-//
-//    void delete() {
-//        if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-//            String manv = txtID.getText();
-//            if (manv.isEmpty()) {
-//                JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên muốn xóa!");
-//                return;
-//            }
-//
-//            try {
-//                nhanVienService.delete(manv);
-//                listNV = nhanVienService.selectAll();
-//                loadData(listNV);
-//                this.clerForm();
-//                JOptionPane.showMessageDialog(this, "Xóa thành công!");
-//            } catch (Exception e) {
-//                JOptionPane.showMessageDialog(this, "Xóa thất bại!");
-//            }
-//        }
-//    }
-//
-//    boolean isInvalidEmail(String email) {
-//        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
-//        return !email.matches(emailRegex);
-//    }
-//
-//    boolean isAnyFieldEmpty() {
-//        return txtID.getText().isEmpty()
-//                || txtHoTen.getText().isEmpty()
-//                || txtDiaChi.getText().isEmpty()
-//                || txtEmail.getText().isEmpty()
-//                || txtSDT.getText().isEmpty()
-//                || txtMatKhau.getText().isEmpty()
-//                || txtNamSinh.getText().isEmpty();
-//    }
-//
-//    boolean isIDAlreadyExists() {
-//        String id = txtID.getText();
-//        ArrayList<NhanVienModel> list = (ArrayList<NhanVienModel>) this.nhanVienService.selectAll();
-//        for (NhanVienModel model : list) {
-//            if (id.equals(model.getId() + "")) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//
-//    boolean isInvalidInput(String input) {
-//        return !input.matches("\\d{1,4}");
-//    }
-//
-//    boolean isInvalidPhoneNumber(String phoneNumber) {
-//        return !phoneNumber.matches("\\d{10}");
-//    }
-//
-//    void edit() {
-//        String maNV = (String) tblNhanVien.getValueAt(this.index, 0);
-//        NhanVienModel model = nhanVienService.selectById(maNV);
-//        if (model != null) {
-//            setModel(model);
-//            this.updateStatus();
-//        }
-//
-//    }
+
+    public void loadData(List<NhanVienModel> nhanVienModels) {
+        DefaultTableModel model = (DefaultTableModel) tblNhanVien.getModel();
+        model.setRowCount(0);
+        try {
+            for (NhanVienModel nv : nhanVienModels) {
+                String trangThai = "";
+                if (nv.getTrangThai().equals("0")) {
+                    trangThai = "Đang làm";
+                } else if (nv.getTrangThai().equals("1")) {
+                    trangThai = "Nghỉ làm";
+                }
+
+                Object[] row = {
+                    nv.getId(),
+                    nv.getHoTen(),
+                    nv.getDiaChi(),
+                    nv.getSdt(),
+                    nv.getEmail(),
+                    nv.getNamSinh(),
+                    nv.getGioiTinh(),
+                    nv.isChucVu() == true ? "Quản lý" : "Nhân viên",
+                    nv.getMatKhau(),
+                    trangThai
+                };
+                model.addRow(row);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void loadData0() {
+        DefaultTableModel model = (DefaultTableModel) tblNhanVien.getModel();
+        model.setRowCount(0);
+        try {
+            List<NhanVienModel> nhanViens = nhanVienService.selectAll_0();
+            for (NhanVienModel nv : nhanViens) {
+                String trangThai = "";
+                if (nv.getTrangThai().equals("0")) {
+                    trangThai = "Đang làm";
+                } else if (nv.getTrangThai().equals("1")) {
+                    trangThai = "Nghỉ làm";
+                }
+
+                Object[] row = {
+                    nv.getId(),
+                    nv.getHoTen(),
+                    nv.getDiaChi(),
+                    nv.getSdt(),
+                    nv.getEmail(),
+                    nv.getNamSinh(),
+                    nv.getGioiTinh(),
+                    nv.isChucVu() == true ? "Quản lý" : "Nhân viên",
+                    nv.getMatKhau(),
+                    trangThai
+                };
+                model.addRow(row);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void loadData1() {
+        DefaultTableModel model = (DefaultTableModel) tblNhanVien.getModel();
+        model.setRowCount(0);
+        try {
+            List<NhanVienModel> nhanViens = nhanVienService.selectAll_1();
+            for (NhanVienModel nv : nhanViens) {
+                String trangThai = "";
+                if (nv.getTrangThai().equals("0")) {
+                    trangThai = "Đang làm";
+                } else if (nv.getTrangThai().equals("1")) {
+                    trangThai = "Nghỉ làm";
+                }
+
+                Object[] row = {
+                    nv.getId(),
+                    nv.getHoTen(),
+                    nv.getDiaChi(),
+                    nv.getSdt(),
+                    nv.getEmail(),
+                    nv.getNamSinh(),
+                    nv.getGioiTinh(),
+                    nv.isChucVu() == true ? "Quản lý" : "Nhân viên",
+                    nv.getMatKhau(),
+                    trangThai
+                };
+                model.addRow(row);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    void setModel(NhanVienModel model) {
+        txtID.setText(model.getId());
+        txtHoTen.setText(model.getHoTen());
+        txtSDT.setText(model.getSdt());
+        txtEmail.setText(model.getEmail());
+        txtNamSinh.setText(String.valueOf(model.getNamSinh()));
+        txtDiaChi.setText(model.getDiaChi());
+        txtMatKhau.setText(model.getMatKhau());
+        rbQuanLy.setSelected(model.isChucVu());
+        rbNhanVien.setSelected(!model.isChucVu());
+        String gioiTinh = model.getGioiTinh();
+        if (gioiTinh != null && gioiTinh.equals("Nam")) {
+            rbNam.setSelected(true);
+        } else if (gioiTinh != null && gioiTinh.equals("Nữ")) {
+            rbNu.setSelected(true);
+        }
+
+    }
+
+    NhanVienModel getModel() {
+        NhanVienModel model = new NhanVienModel();
+        model.setId(txtID.getText());
+        model.setHoTen(txtHoTen.getText());
+        model.setDiaChi(txtDiaChi.getText());
+        model.setEmail(txtEmail.getText());
+        model.setSdt(txtSDT.getText());
+        model.setNamSinh(Integer.parseInt(txtNamSinh.getText()));
+        model.setMatKhau(new String(txtMatKhau.getPassword()));
+
+        String gioiTinh;
+        if (rbNam.isSelected()) {
+            gioiTinh = "Nam";
+        } else if (rbNu.isSelected()) {
+            gioiTinh = "Nữ";
+        } else {
+            gioiTinh = "";
+        }
+        model.setGioiTinh(gioiTinh);
+
+        model.setChucVu(rbQuanLy.isSelected());
+
+        return model;
+    }
+
+    void updateStatus() {
+        boolean edit = (this.index >= 0);
+        // Trạng thái form
+        txtID.setEditable(!edit);
+    }
+
+    void clerForm() {
+        listNV = nhanVienService.selectAll();
+        loadData(listNV);
+        this.setModel(new NhanVienModel());
+        this.updateStatus();
+        index = -1;
+        updateStatus();
+    }
+
+    void insert() {
+        
+        if (isAnyFieldEmpty()) {
+            JOptionPane.showMessageDialog(this, "Có trường đang bị trống");
+            return;
+        }
+
+        if (isIDAlreadyExists()) {
+            JOptionPane.showMessageDialog(this, "Không để trùng ID");
+            return;
+        }
+
+        String email = txtEmail.getText();
+        if (isInvalidEmail(email)) {
+            JOptionPane.showMessageDialog(this, "Địa chỉ email không hợp lệ.");
+            return;
+        }
+
+        String phoneNumber = txtSDT.getText();
+        if (isInvalidPhoneNumber(phoneNumber)) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại không hợp lệ. Vui lòng nhập 10 chữ số.");
+            return;
+        }
+
+        String input = txtNamSinh.getText();
+        if (isInvalidInput(input)) {
+            JOptionPane.showMessageDialog(this, "Năm sinh chỉ được nhập số và không quá 4 số");
+            return;
+        }
+
+        NhanVienModel model = getModel();
+
+        if (!Auth.isManager()) {
+            JOptionPane.showMessageDialog(this, "Bạn không có quyền thêm nv!");
+
+        } else {
+            if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn thêm mới?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                if (nhanVienService.insert(model)) {
+                    listNV = nhanVienService.selectAll();
+                    loadData(listNV);
+                    JOptionPane.showMessageDialog(this, "Thêm mới thành công!");
+                    this.clerForm();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Thêm mới thất bại!");
+                }
+            }
+        }
+
+    }
+
+    void update() {
+
+        if (isAnyFieldEmpty()) {
+            JOptionPane.showMessageDialog(this, "Có trường đang bị trống");
+            return;
+        }
+
+        String phoneNumber = txtSDT.getText();
+        if (isInvalidPhoneNumber(phoneNumber)) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại không hợp lệ. Vui lòng nhập 10 chữ số.");
+            return;
+        }
+
+        String email = txtEmail.getText();
+        if (isInvalidEmail(email)) {
+            JOptionPane.showMessageDialog(this, "Địa chỉ email không hợp lệ.");
+            return;
+        }
+
+        String input = txtNamSinh.getText();
+        if (isInvalidInput(input)) {
+            JOptionPane.showMessageDialog(this, "Năm sinh chỉ được nhập số và không quá 4 số");
+            return;
+        }
+
+        NhanVienModel model = getModel();
+        setModel(model);
+
+        if (!Auth.isManager()) {
+            JOptionPane.showMessageDialog(this, "Không có quyền cập nhật nhân viên!");
+        } else {
+            if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn cập nhật?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                if (nhanVienService.update(model)) {
+                    listNV = nhanVienService.selectAll();
+                    loadData(listNV);
+                    JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
+                }
+            }
+        }
+
+    }
+
+    void delete() {
+
+        if (!Auth.isManager()) {
+            JOptionPane.showMessageDialog(this, "Không có quyền cho nhân viên nghỉ làm!");
+        } else {
+            if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn nghỉ làm?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                String manv = txtID.getText();
+                if (manv.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên muốn nghỉ làm!");
+                    return;
+                }
+
+                try {
+                    nhanVienService.delete(manv);
+                    listNV = nhanVienService.selectAll();
+                    loadData(listNV);
+                    this.clerForm();
+                    JOptionPane.showMessageDialog(this, "Nghỉ làm thành công!");
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Nghỉ làm thất bại!");
+                }
+            }
+        }
+
+    }
+
+    boolean isInvalidEmail(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        return !email.matches(emailRegex);
+    }
+
+    boolean isAnyFieldEmpty() {
+        return txtID.getText().isEmpty()
+                || txtHoTen.getText().isEmpty()
+                || txtDiaChi.getText().isEmpty()
+                || txtEmail.getText().isEmpty()
+                || txtSDT.getText().isEmpty()
+                || txtMatKhau.getText().isEmpty()
+                || txtNamSinh.getText().isEmpty();
+    }
+
+    boolean isIDAlreadyExists() {
+        String id = txtID.getText();
+        ArrayList<NhanVienModel> list = (ArrayList<NhanVienModel>) this.nhanVienService.selectAll();
+        for (NhanVienModel model : list) {
+            if (id.equals(model.getId() + "")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    boolean isInvalidInput(String input) {
+        return !input.matches("\\d{1,4}");
+    }
+
+    boolean isInvalidPhoneNumber(String phoneNumber) {
+        return !phoneNumber.matches("\\d{10}");
+    }
+
+    void edit() {
+        String maNV = (String) tblNhanVien.getValueAt(this.index, 0);
+        NhanVienModel model = nhanVienService.selectById(maNV);
+        if (model != null) {
+            setModel(model);
+            this.updateStatus();
+        }
+
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -751,42 +758,42 @@ public class FormNhanVien extends javax.swing.JPanel {
     }//GEN-LAST:event_rbNamActionPerformed
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
-        //insert();
+        insert();
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
-        //update();
+        update();
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnLamMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLamMoiActionPerformed
-        //clerForm();
+        clerForm();
     }//GEN-LAST:event_btnLamMoiActionPerformed
 
     private void tblNhanVienMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblNhanVienMousePressed
         if (evt.getClickCount() == 1) {
             this.index = tblNhanVien.rowAtPoint(evt.getPoint());
-            //  edit();
+              edit();
         }
     }//GEN-LAST:event_tblNhanVienMousePressed
 
     private void rbDangLamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbDangLamActionPerformed
         // TODO add your handling code here:
-        //loadData0();
+        loadData0();
     }//GEN-LAST:event_rbDangLamActionPerformed
 
     private void rbDaNghiViecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbDaNghiViecActionPerformed
         // TODO add your handling code here:
-        //loadData1();
+        loadData1();
     }//GEN-LAST:event_rbDaNghiViecActionPerformed
 
     private void txtTimKiemCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtTimKiemCaretUpdate
         // TODO add your handling code here:
         listNV = nhanVienService.Search(txtTimKiem.getText());
-        //loadData(listNV);
+        loadData(listNV);
     }//GEN-LAST:event_txtTimKiemCaretUpdate
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
-        ///delete();
+        delete();
     }//GEN-LAST:event_btnXoaActionPerformed
 
 
