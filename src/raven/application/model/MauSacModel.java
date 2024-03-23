@@ -15,8 +15,8 @@ public class MauSacModel {
     public String MoTa;
     public int stt;
 
-    public MauSacModel(String tenMS) {
-        this.TenMS = tenMS;
+    public MauSacModel(String mausac) {
+        this.TenMS = mausac;
     }
 
     public MauSacModel() {

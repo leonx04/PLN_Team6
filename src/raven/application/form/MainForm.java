@@ -84,16 +84,16 @@ public class MainForm extends JLayeredPane {
             // subIndex));
             if (index == 0) {
                 Application.showForm(new FormBanHang());
-            } else if (index == 1) {
-                if (subIndex == 1) {
-                    Application.showForm(new FormSanPham());
-                } else if (subIndex == 2) {
-                    Application.showForm(new FormSanPhamChiTiet());
-                } else if (subIndex == 3) {
-                    Application.showForm(new FormThuocTinhSanPham());
-                } else {
-                    action.cancel();
-                }
+//            } else if (index == 1) {
+//                if (subIndex == 1) {
+//                    Application.showForm(new FormSanPham());
+//                } else if (subIndex == 2) {
+//                    Application.showForm(new FormSanPhamChiTiet());
+//                } else if (subIndex == 3) {
+//                    Application.showForm(new FormThuocTinhSanPham());
+//                } else {
+//                    action.cancel();
+//                }
             }else if (index == 2) {
                 Application.showForm(new FormHoaDon());
             } else if (index == 3) {

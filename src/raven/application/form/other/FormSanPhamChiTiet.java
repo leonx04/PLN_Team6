@@ -53,7 +53,7 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
 
     public FormSanPhamChiTiet() {
         initComponents();
-        this.fillTable(ctsprp.getAllCTSP());
+       fillTable(ctsprp.getAllCTSP());
         lb.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:$h1.font");
 

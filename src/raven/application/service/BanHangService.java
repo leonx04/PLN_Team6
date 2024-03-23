@@ -60,30 +60,67 @@ public class BanHangService {
         }
     }
 
-    public List<ChiTietHoaDonModel> getAllGH() {
-        sql = "SELECT        SANPHAM.ID AS MaSanPham, SANPHAM.TenSanPham as TenSanPham, SANPHAMCHITIET.GiaBan as DonGia, HOADONCHITIET.SoLuong as SoLuong, HOADONCHITIET.ThanhTien as ThanhTien\n"
-                + "FROM            HOADONCHITIET INNER JOIN\n"
-                + "                         SANPHAMCHITIET ON HOADONCHITIET.ID_SanPhamChiTiet = SANPHAMCHITIET.ID INNER JOIN\n"
-                + "                         SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID";
+//    public List<ChiTietHoaDonModel> getAllGH() {
+//        sql = "SELECT        SANPHAM.ID AS MaSanPham, SANPHAM.TenSanPham as TenSanPham, SANPHAMCHITIET.GiaBan as DonGia, HOADONCHITIET.SoLuong as SoLuong, HOADONCHITIET.ThanhTien as ThanhTien\n"
+//                + "FROM            HOADONCHITIET INNER JOIN\n"
+//                + "                         SANPHAMCHITIET ON HOADONCHITIET.ID_SanPhamChiTiet = SANPHAMCHITIET.ID INNER JOIN\n"
+//                + "                         SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID";
+//        try {
+//            con = DBConnect.getConnection();
+//            ps = con.prepareStatement(sql);
+//            rs = ps.executeQuery();
+//            List<ChiTietHoaDonModel> listCTHD = new ArrayList<>();
+//            while (rs.next()) {
+//                ChiTietHoaDonModel CTHDModel = new ChiTietHoaDonModel(
+//                        rs.getString(1), new SanPhamModel(rs.getString(1)),
+//                        new MauSacModel(rs.getString(3)), new KichCoModel(rs.getString(4)), new ChatLieuModel(rs.getString(5)), new ThuongHieuModel(rs.getString(6)),
+//                        new ChiTietSanPhamModel(rs.getBigDecimal(3)),
+//                        rs.getInt(4),
+//                        rs.getBigDecimal(5)
+//                );
+//                listCTHD.add(CTHDModel);
+//            }
+//            return listCTHD;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
+    public int themSPGioHang(ChiTietHoaDonModel CTHDModel) {
+        String sql = "CALL themSPGioHang(?,?,?,?,?)";
         try {
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
-            rs = ps.executeQuery();
-            List<ChiTietHoaDonModel> listCTHD = new ArrayList<>();
-            while (rs.next()) {
-                ChiTietHoaDonModel CTHDModel = new ChiTietHoaDonModel(
-                        rs.getString(1), new SanPhamModel(rs.getString(1)),
-                        new MauSacModel(rs.getString(3)), new KichCoModel(rs.getString(4)), new ChatLieuModel(rs.getString(5)), new ThuongHieuModel(rs.getString(6)),
-                        new ChiTietSanPhamModel(rs.getBigDecimal(3)),
-                        rs.getInt(4),
-                        rs.getBigDecimal(5)
-                );
-                listCTHD.add(CTHDModel);
+            if (CTHDModel != null) {
+                ps.setObject(1, CTHDModel.getMaSP());
+                ps.setObject(2, CTHDModel.getTenSP());
+                ps.setObject(3, CTHDModel.getDonGia());
+                ps.setObject(4, CTHDModel.getSoLuong());
+                ps.setObject(5, CTHDModel.getThanhTien());
+                return ps.executeUpdate();
             }
-            return listCTHD;
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
+        return 0;
     }
+
+//    public List<ChiTietHoaDonModel> selectHDCTByMaHD(String maHDCT) {
+//        List<ChiTietHoaDonModel> listHDCT = new ArrayList<>();
+//        String sql = "SELECT        SANPHAM.ID AS MaSanPham, SANPHAM.TenSanPham as TenSanPham, SANPHAMCHITIET.GiaBan as DonGia, HOADONCHITIET.SoLuong as SoLuong, HOADONCHITIET.ThanhTien as ThanhTien\\n\"\n"
+//                + "           + \"FROM            HOADONCHITIET INNER JOIN\\n\"\n"
+//                + "               + \"                         SANPHAMCHITIET ON HOADONCHITIET.ID_SanPhamChiTiet = SANPHAMCHITIET.ID INNER JOIN\\n\"\n"
+//                + "                + \"                         SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID "
+//                + "WHERE HOADON.ID = ?";
+//        try {
+//            con = DBConnect.getConnection();
+//            ps = con.prepareStatement(sql);
+//            rs = ps.executeQuery();
+//            while (rs.next()) {                
+//                ChiTietHoaDonModel CTHDModel = new ChiTietHoaDonModel();
+//                CTHDModel.setMaSP(rs.getString());
+//            }
+//        } catch (Exception e) {
+//        }
+//    }
 }

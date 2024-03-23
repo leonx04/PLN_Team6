@@ -49,7 +49,7 @@ public class FormBanHang extends javax.swing.JPanel {
         initCBOHTTT();
         fillTable(ctsprp.getAllCTSP());
         fillTable2(hdrs.getAll());
-        fillTable3(cthdrs.getAllCTHD());
+//        fillTable3(cthdrs.getAllCTHD());
 
         lb1.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:$h1.font");
@@ -82,7 +82,7 @@ public class FormBanHang extends javax.swing.JPanel {
         for (int i = 0; i < listMS.size(); i++) {
             cbo[i] = listMS.get(i).getTenMS();
         }
-        cboMauSac.setModel(new DefaultComboBoxModel<>(cbo));
+cboMauSac.setModel(new DefaultComboBoxModel<>(cbo));
 
     }
 
@@ -163,7 +163,7 @@ public class FormBanHang extends javax.swing.JPanel {
         txtMaKH = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         txtTenKH = new javax.swing.JTextField();
-        btnOpenKH = new javax.swing.JButton();
+btnOpenKH = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         txtTenNV = new javax.swing.JTextField();
@@ -220,7 +220,7 @@ public class FormBanHang extends javax.swing.JPanel {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(
                 new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED), "Hóa đơn",
-                javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION,
+javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION,
                 new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
 
         tblHoaDon.setModel(new javax.swing.table.DefaultTableModel(
@@ -272,7 +272,7 @@ public class FormBanHang extends javax.swing.JPanel {
                                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 814,
                                                 Short.MAX_VALUE)
                                         .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGap(0, 0, Short.MAX_VALUE)
+.addGap(0, 0, Short.MAX_VALUE)
                                                 .addComponent(cboTrangThai, javax.swing.GroupLayout.PREFERRED_SIZE, 190,
                                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addGap(48, 48, 48)
@@ -318,7 +318,7 @@ public class FormBanHang extends javax.swing.JPanel {
             }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit[columnIndex];
+return canEdit[columnIndex];
             }
         });
         jScrollPane2.setViewportView(tblGioHang);
@@ -362,8 +362,7 @@ public class FormBanHang extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
                                 .addContainerGap()));
-
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(
+jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(
                 new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED), "Đơn hàng",
                 javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION,
                 new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
@@ -408,7 +407,7 @@ public class FormBanHang extends javax.swing.JPanel {
         jPanel6Layout.setVerticalGroup(
                 jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addContainerGap()
+.addContainerGap()
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(btnOpenKH)
                                         .addGroup(jPanel6Layout
@@ -449,7 +448,7 @@ public class FormBanHang extends javax.swing.JPanel {
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap()));
         jPanel7Layout.setVerticalGroup(
-                jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel7Layout.createSequentialGroup()
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -506,7 +505,7 @@ public class FormBanHang extends javax.swing.JPanel {
         txtTienThua.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         jLabel17.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel17.setText("Tiền thừa");
+jLabel17.setText("Tiền thừa");
 
         cboHTGG.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cboHTGG.setModel(new javax.swing.DefaultComboBoxModel<>(
@@ -549,7 +548,7 @@ public class FormBanHang extends javax.swing.JPanel {
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
                                                         javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addComponent(txtTienThua, javax.swing.GroupLayout.PREFERRED_SIZE, 215,
-                                                        javax.swing.GroupLayout.PREFERRED_SIZE))
+javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addComponent(btnSuccesHoaDon, javax.swing.GroupLayout.DEFAULT_SIZE,
                                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGroup(jPanel8Layout.createSequentialGroup()
@@ -581,7 +580,7 @@ public class FormBanHang extends javax.swing.JPanel {
                                                 .addGroup(jPanel8Layout
                                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addComponent(jLabel14)
-                                                        .addComponent(jLabel15))
+.addComponent(jLabel15))
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
                                                         javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addGroup(jPanel8Layout
@@ -616,7 +615,7 @@ public class FormBanHang extends javax.swing.JPanel {
                                                 javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(10, 10, 10)
                                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel13)
+.addComponent(jLabel13)
                                         .addComponent(txtThanhToan, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
                                                 javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -653,7 +652,7 @@ public class FormBanHang extends javax.swing.JPanel {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
                 jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel4Layout.createSequentialGroup()
+.addGroup(jPanel4Layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE,
@@ -690,7 +689,7 @@ public class FormBanHang extends javax.swing.JPanel {
                 },
                 new String[] {
                         "Mã CTSP", "Tên sản phẩm", "Màu sắc", "Size", "Chất liệu", "Hãng", "Giá bán",
-                        "Số lượng", "Mô tả"
+"Số lượng", "Mô tả"
                 }) {
             boolean[] canEdit = new boolean[] {
                     false, false, false, false, false, false, false, false, false
@@ -746,7 +745,7 @@ public class FormBanHang extends javax.swing.JPanel {
                                                 .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 167,
                                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addGap(18, 18, 18)
-                                                .addComponent(jLabel2)
+.addComponent(jLabel2)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(cboMauSac, javax.swing.GroupLayout.PREFERRED_SIZE, 111,
                                                         javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -778,7 +777,7 @@ public class FormBanHang extends javax.swing.JPanel {
                                         .addComponent(cboSize, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel3)
+.addComponent(jLabel3)
                                         .addComponent(jLabel4)
                                         .addComponent(cboHang, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
@@ -813,7 +812,7 @@ public class FormBanHang extends javax.swing.JPanel {
                                                         .addComponent(jPanel5,
                                                                 javax.swing.GroupLayout.Alignment.LEADING,
                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                                 .addGap(2, 2, 2)
                                                 .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE,
                                                         javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))));
@@ -848,7 +847,7 @@ public class FormBanHang extends javax.swing.JPanel {
             String selectedOption = (String) cboHTTT.getSelectedItem();
 
             if (selectedOption.equals("Tiền mặt")) {
-                txtTienCK.setText(null);
+txtTienCK.setText(null);
                 txtTienCK.setEnabled(false); // Tắt ô txtTienCK
                 txtTienMat.setEnabled(true); // Bật ô txtTienMat (nếu đã tắt trước đó)
             } else if (selectedOption.equals("Chuyển khoản")) {
@@ -908,7 +907,7 @@ public class FormBanHang extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
+private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
