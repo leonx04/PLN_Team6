@@ -45,6 +45,14 @@ public class ChiTietHoaDonModel {
         this.maSP = maSP;
     }
 
+    public ChiTietHoaDonModel(String ID, SanPhamModel tenSP, ChiTietSanPhamModel donGia, int soLuong, BigDecimal thanhTien, HoaDonModel maHD) {
+        this.ID = ID;
+        this.tenSP = tenSP;
+        this.ctsp = donGia;
+        this.soLuong = soLuong;
+        this.thanhTien = thanhTien;
+    }
+    
     public ChiTietHoaDonModel() {
     }
 
@@ -159,7 +167,7 @@ public class ChiTietHoaDonModel {
     public Object[] toData4() {
         return new Object[]{
             this.stt,
-            this.maSP.ID,
+            this.ID,
             this.tenSP.getTenSP(),
             this.ctsp.getGiaBan(),
             this.soLuong,

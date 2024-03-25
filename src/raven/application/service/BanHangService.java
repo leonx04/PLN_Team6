@@ -105,22 +105,32 @@ public class BanHangService {
         return 0;
     }
 
-//    public List<ChiTietHoaDonModel> selectHDCTByMaHD(String maHDCT) {
-//        List<ChiTietHoaDonModel> listHDCT = new ArrayList<>();
-//        String sql = "SELECT        SANPHAM.ID AS MaSanPham, SANPHAM.TenSanPham as TenSanPham, SANPHAMCHITIET.GiaBan as DonGia, HOADONCHITIET.SoLuong as SoLuong, HOADONCHITIET.ThanhTien as ThanhTien\\n\"\n"
-//                + "           + \"FROM            HOADONCHITIET INNER JOIN\\n\"\n"
-//                + "               + \"                         SANPHAMCHITIET ON HOADONCHITIET.ID_SanPhamChiTiet = SANPHAMCHITIET.ID INNER JOIN\\n\"\n"
-//                + "                + \"                         SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID "
-//                + "WHERE HOADON.ID = ?";
-//        try {
-//            con = DBConnect.getConnection();
-//            ps = con.prepareStatement(sql);
-//            rs = ps.executeQuery();
-//            while (rs.next()) {                
-//                ChiTietHoaDonModel CTHDModel = new ChiTietHoaDonModel();
-//                CTHDModel.setMaSP(rs.getString());
-//            }
-//        } catch (Exception e) {
-//        }
-//    }
+    public List<ChiTietHoaDonModel> selectHDCTByMaHD(String maHDCT) {
+        List<ChiTietHoaDonModel> listHDCT = new ArrayList<>();
+        String sql = "SELECT        HOADONCHITIET.ID AS MaHDCT, SANPHAM.TenSanPham as TenSanPham, SANPHAMCHITIET.GiaBan as DonGia, HOADONCHITIET.SoLuong as SoLuong, HOADONCHITIET.ThanhTien as ThanhTien\\n\"\n"
+                + "           + \"FROM            HOADONCHITIET INNER JOIN\\n\"\n"
+                + "               + \"                         SANPHAMCHITIET ON HOADONCHITIET.ID_SanPhamChiTiet = SANPHAMCHITIET.ID INNER JOIN\\n\"\n"
+                + "                + \"                         SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID "
+                + "WHERE HOADON.ID = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietHoaDonModel CTHDModel = new ChiTietHoaDonModel(
+                        rs.getString(1),
+                        new SanPhamModel(rs.getString(2)),
+                        new ChiTietSanPhamModel(rs.getBigDecimal(3)),
+                        rs.getInt(4),
+                        rs.getBigDecimal(5),
+                        new HoaDonModel(rs.getString(6))
+                );
+                listHDCT.add(CTHDModel);
+            }
+            return listHDCT;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
