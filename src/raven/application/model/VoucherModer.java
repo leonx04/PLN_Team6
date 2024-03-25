@@ -26,13 +26,15 @@ public class VoucherModer {
 
     public VoucherModer() {
     }
+
+    
+    public VoucherModer(String tenVoucher) {
+        this.tenVoucher = tenVoucher;
+    }
     
 
     public VoucherModer(BigDecimal mucGiamGia) {
         this.mucGiamGia = mucGiamGia;
-    }
-     public VoucherModer(String loaiVoucher) {
-        this.loaiVoucher = loaiVoucher;
     }
     
 
@@ -47,7 +49,6 @@ public class VoucherModer {
         this.ngayKetThuc = ngayKetThuc;
     }
 
-    
     public String getID() {
         return ID;
     }

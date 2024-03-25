@@ -24,13 +24,21 @@ public class ChiTietHoaDonModel {
     public SanPhamModel maSP = new SanPhamModel();
     private int stt;
 
-    public ChiTietHoaDonModel(String ID, SanPhamModel tenSP, MauSacModel mauSacModel, KichCoModel kichCoModel, ChatLieuModel chatLieuModel, ThuongHieuModel thuongHieuModel, ChiTietSanPhamModel donGia, int soLuong, BigDecimal thanhTien) {
+    public ChiTietHoaDonModel(String ID,
+            SanPhamModel tenSP, 
+            MauSacModel mauSacModel,
+            KichCoModel kichCoModel,
+            ChatLieuModel chatLieuModel,
+            ThuongHieuModel thuongHieuModel,
+            ChiTietSanPhamModel donGia, 
+            int soLuong,
+            BigDecimal thanhTien) {
         this.ID = ID;
         this.tenSP = tenSP;
-        this.mauSac = mauSac;
-        this.size = size;
-        this.chatLieu = chatLieu;
-        this.thuongHieu = thuongHieu;
+        this.mauSac = mauSacModel;
+        this.size = kichCoModel;
+        this.chatLieu = chatLieuModel;
+        this.thuongHieu = thuongHieuModel;
         this.ctsp = donGia;
         this.soLuong = soLuong;
         this.thanhTien = thanhTien;
@@ -111,6 +119,7 @@ public class ChiTietHoaDonModel {
     public void setThanhTien(BigDecimal thanhTien) {
         this.thanhTien = thanhTien;
     }
+
     public SanPhamModel getMaSP() {
         return maSP;
     }
@@ -118,9 +127,11 @@ public class ChiTietHoaDonModel {
     public void setMaSP(SanPhamModel maSP) {
         this.maSP = maSP;
     }
+
     public int getStt() {
         return stt;
     }
+
     public void setStt(int stt) {
         this.stt = stt;
     }
@@ -139,7 +150,13 @@ public class ChiTietHoaDonModel {
             this.thanhTien
         };
     }
-    public Object[] toData4(){
+
+    @Override
+    public String toString() {
+        return "ChiTietHoaDonModel{" + "ID=" + ID + ", tenSP=" + tenSP + ", mauSac=" + mauSac + ", size=" + size + ", chatLieu=" + chatLieu + ", thuongHieu=" + thuongHieu + ", ctsp=" + ctsp + ", soLuong=" + soLuong + ", thanhTien=" + thanhTien + ", stt=" + stt + '}';
+    }
+
+    public Object[] toData4() {
         return new Object[]{
             this.stt,
             this.maSP.ID,

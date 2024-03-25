@@ -23,8 +23,15 @@ public class ChiTietSanPhamModel {
     public String MoTa;
     public int stt;
 
-    public ChiTietSanPhamModel(String ID, SanPhamModel tenSP, MauSacModel mauSac, KichCoModel kichCo,
-            ChatLieuModel chatLieu, ThuongHieuModel thuongHieu, BigDecimal giaBan, int SoLuongTon, String MoTa) {
+    public ChiTietSanPhamModel(String ID,
+            SanPhamModel tenSP,
+            MauSacModel mauSac,
+            KichCoModel kichCo,
+            ChatLieuModel chatLieu,
+            ThuongHieuModel thuongHieu,
+            BigDecimal giaBan,
+            int SoLuongTon,
+            String MoTa) {
         this.ID = ID;
         this.tenSP = tenSP;
         this.mauSac = mauSac;
