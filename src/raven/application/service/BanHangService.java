@@ -105,29 +105,65 @@ public class BanHangService {
         return 0;
     }
 
-    public List<ChiTietHoaDonModel> selectHDCTByMaHD(String maHDCT) {
-        List<ChiTietHoaDonModel> listHDCT = new ArrayList<>();
-        String sql = "SELECT        HOADONCHITIET.ID AS MaHDCT, SANPHAM.TenSanPham as TenSanPham, SANPHAMCHITIET.GiaBan as DonGia, HOADONCHITIET.SoLuong as SoLuong, HOADONCHITIET.ThanhTien as ThanhTien\\n\"\n"
-                + "           + \"FROM            HOADONCHITIET INNER JOIN\\n\"\n"
-                + "               + \"                         SANPHAMCHITIET ON HOADONCHITIET.ID_SanPhamChiTiet = SANPHAMCHITIET.ID INNER JOIN\\n\"\n"
-                + "                + \"                         SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID "
-                + "WHERE HOADON.ID = ?";
+    public List<ChiTietHoaDonModel> searchByHoaDonID(String idHoaDon) {
+        List<ChiTietHoaDonModel> chiTietHoaDons = new ArrayList<>();
+        String sql = "SELECT SANPHAMCHITIET.ID AS MaSanPhamChiTiet, SANPHAM.TenSanPham AS TenSanPham, SANPHAMCHITIET.GiaBan AS DonGia, HOADONCHITIET.SoLuong AS SoLuong, HOADONCHITIET.ThanhTien AS ThanhTien "
+                +
+                "FROM HOADONCHITIET " +
+                "INNER JOIN SANPHAMCHITIET ON HOADONCHITIET.ID_SanPhamChiTiet = SANPHAMCHITIET.ID " +
+                "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID " +
+                "WHERE HOADONCHITIET.ID_HoaDon = ?";
         try {
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
+            ps.setString(1, idHoaDon);
             rs = ps.executeQuery();
             while (rs.next()) {
-                ChiTietHoaDonModel CTHDModel = new ChiTietHoaDonModel(
-                        rs.getString(1),
-                        new SanPhamModel(rs.getString(2)),
-                        new ChiTietSanPhamModel(rs.getBigDecimal(3)),
-                        rs.getInt(4),
-                        rs.getBigDecimal(5),
-                        new HoaDonModel(rs.getString(6))
-                );
-                listHDCT.add(CTHDModel);
+                ChiTietHoaDonModel chiTietHoaDon = new ChiTietHoaDonModel();
+                chiTietHoaDon.setMactsp(new ChiTietSanPhamModel(rs.getString(1)));
+                chiTietHoaDon.setTenSP(new SanPhamModel(rs.getString(2)));
+                chiTietHoaDon.setDonGia(new ChiTietSanPhamModel(rs.getBigDecimal(3)));
+                chiTietHoaDon.setSoLuong(rs.getInt(4));
+                chiTietHoaDon.setThanhTien(rs.getBigDecimal(5));
+                chiTietHoaDons.add(chiTietHoaDon);
             }
-            return listHDCT;
+            return chiTietHoaDons;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String selectKhachHangLeByMa(String ma, String ten) {
+        String maKHle = null;
+        String sql = "SELECT id FROM KHACHHANG WHERE HoTen = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setObject(1, ma);
+            ps.setObject(2, ten);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                maKHle = rs.getString("id");
+            }
+            return maKHle;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public String selectIDHDBymaNV(String maHD){
+        String id = "";
+        String sql = "select ID from HOADON where ID_NhanVien = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setObject(1, maHD);
+            rs = ps.executeQuery();
+            while (rs.next()) {                
+                id = rs.getString("id");
+            }
+            return id;
         } catch (Exception e) {
             e.printStackTrace();
         }

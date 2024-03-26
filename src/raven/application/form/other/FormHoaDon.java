@@ -8,6 +8,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -27,8 +28,6 @@ public class FormHoaDon extends javax.swing.JPanel {
     /**
      * Creates new form FormHoaDon1
      */
-    private HoaDonModel HDModel = new HoaDonModel();
-    private ChiTietHoaDonModel CTHDModel = new ChiTietHoaDonModel();
     private DefaultTableModel model = new DefaultTableModel();
     private HoaDonService hdsr = new HoaDonService();
     private ChiTietHoaDonService cthd = new ChiTietHoaDonService();
@@ -47,7 +46,6 @@ public class FormHoaDon extends javax.swing.JPanel {
         loadHinhThuc();
         this.fillTable(hdsr.getAll());
         this.fillTable2(cthd.getAllCTHD());
-
     }
 
     void loadTrangThai() {
@@ -89,6 +87,32 @@ public class FormHoaDon extends javax.swing.JPanel {
             tblHoaDonChiTiet.scrollRectToVisible(tblHoaDonChiTiet.getCellRect(0, 0, true));
             tblHoaDonChiTiet.setRowSelectionInterval(0, 0);
         }
+    }
+
+    void locHoaDon() {
+        String trangThai = null;
+        String tenHinhThuc = null;
+        if (cboHinhThuc.getItemCount() == 3 && cboTrangThaiHD.getItemCount() == 4) {
+            if (cboTrangThaiHD.getSelectedItem().equals("Tất cả")) {
+                this.fillTable(hdsr.getAll());
+            } else if (cboTrangThaiHD.getSelectedItem().equals("Đã thanh toán")) {
+                trangThai = "Đã thanh toán";
+            } else if (cboTrangThaiHD.getSelectedItem().equals("Chờ thanh toán")) {
+                trangThai = "Chờ thanh toán";
+            } else if (cboTrangThaiHD.getSelectedItem().equals("Đã hủy")) {
+                trangThai = "Đã hủy";
+            }
+            if (cboHinhThuc.getSelectedItem().equals("Kết hợp")) {
+                tenHinhThuc = "Kết hợp";
+            } else if (cboHinhThuc.getSelectedItem().equals("Tiền mặt")) {
+                tenHinhThuc = "Tiền mặt";
+            } else {
+                tenHinhThuc = cboHinhThuc.getSelectedItem().toString();
+            }
+            this.fillTable(hdsr.getAllByTrangThaiAndHinhThuc(trangThai, tenHinhThuc));
+
+        }
+
     }
 
     /**
@@ -169,13 +193,23 @@ public class FormHoaDon extends javax.swing.JPanel {
         jLabel4.setText("Trạng thái hóa đơn:");
 
         cboTrangThaiHD.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cboTrangThaiHD.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Đã thanh toán", "Chưa thanh toán", "Đã hủy" }));
+        cboTrangThaiHD.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { null }));
+        cboTrangThaiHD.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboTrangThaiHDItemStateChanged(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel5.setText("Hình thức thanh toán:");
 
         cboHinhThuc.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cboHinhThuc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tiền mặt", "Chuyển khoản", "Kết hợp" }));
+        cboHinhThuc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { null }));
+        cboHinhThuc.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboHinhThucItemStateChanged(evt);
+            }
+        });
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel6.setText("Từ :");
@@ -337,7 +371,7 @@ public class FormHoaDon extends javax.swing.JPanel {
                     .addComponent(txtSeachHDCT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -394,11 +428,37 @@ public class FormHoaDon extends javax.swing.JPanel {
 
     private void tblHoaDonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHoaDonMouseClicked
         // TODO add your handling code here:
+        String maHoaDon = (String) tblHoaDon.getValueAt(tblHoaDon.getSelectedRow(), 1);
+        fillTable2(cthd.searchByHoaDonID(maHoaDon));
 
     }//GEN-LAST:event_tblHoaDonMouseClicked
 
     private void btnLocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLocActionPerformed
         // TODO add your handling code here:
+        if (dateBatDau.getDateFormatString().toString().trim().isEmpty() || dateKetThuc.getDateFormatString().toString().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn đủ ngày và giờ");
+            return;
+        } else {
+            List<HoaDonModel> listHD = hdsr.findDate(dateBatDau, dateBatDau);
+            DefaultTableModel model = (DefaultTableModel) tblHoaDon.getModel();
+            model.setRowCount(0);
+            int stt = 1;
+            for (HoaDonModel hoaDonModel : listHD) {
+                String trangThai = "";
+                String trangThaiValue = hoaDonModel.getTrangThai();
+                if (trangThaiValue == "Đã thanh toán") {
+                    trangThai = "Đã thanh toán";
+                } else if (trangThaiValue == "Chờ thanh toán") {
+                    trangThai = "Chờ thanh toán";
+                } else if (trangThaiValue == "Đã hủy") {
+                    trangThai = "Đã hủy";
+                }
+            }
+            for (HoaDonModel hdModel : listHD) {
+                hdModel.setStt(index++);
+                model.addRow(hdModel.toData());
+            }
+        }
     }//GEN-LAST:event_btnLocActionPerformed
 
     private void txtTimKiemHDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTimKiemHDActionPerformed
@@ -426,9 +486,9 @@ public class FormHoaDon extends javax.swing.JPanel {
         DefaultTableModel modelHDCT = (DefaultTableModel) tblHoaDonChiTiet.getModel();
         TableRowSorter<DefaultTableModel> trs = new TableRowSorter<>(modelHDCT);
         tblHoaDonChiTiet.setRowSorter(trs);
-        
+
         String hoaDonID = txtSeachHDCT.getText().trim();
-        trs.setRowFilter(new RowFilter<DefaultTableModel, Object>(){
+        trs.setRowFilter(new RowFilter<DefaultTableModel, Object>() {
             @Override
             public boolean include(RowFilter.Entry<? extends DefaultTableModel, ? extends Object> entry) {
                 for (int i = 0; i < entry.getValueCount(); i++) {
@@ -438,9 +498,19 @@ public class FormHoaDon extends javax.swing.JPanel {
                 }
                 return false;
             }
-            
+
         });
     }//GEN-LAST:event_txtSeachHDCTActionPerformed
+
+    private void cboHinhThucItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboHinhThucItemStateChanged
+        // TODO add your handling code here:
+        locHoaDon();
+    }//GEN-LAST:event_cboHinhThucItemStateChanged
+
+    private void cboTrangThaiHDItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboTrangThaiHDItemStateChanged
+        // TODO add your handling code here:
+        locHoaDon();
+    }//GEN-LAST:event_cboTrangThaiHDItemStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

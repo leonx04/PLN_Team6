@@ -52,8 +52,8 @@ public class ChiTietSanPhamService {
                         new ChatLieuModel(rs.getString(5)), // ChatLieu
                         new ThuongHieuModel(rs.getString(6)), // ThuongHieu
                         rs.getBigDecimal(7), // GiaBan
-                        rs.getInt(8), // SoLuongTon
-                        rs.getString(9)); // MoTa
+                        rs.getInt(8) // SoLuongTon
+                        ); // MoTa
                 listCTSP.add(ctsp);
             }
             return listCTSP;
@@ -92,8 +92,8 @@ public class ChiTietSanPhamService {
                         new ChatLieuModel(rs.getString(5)), // ChatLieu
                         new ThuongHieuModel(rs.getString(6)), // ThuongHieu
                         rs.getBigDecimal(7), // GiaBan
-                        rs.getInt(8), // SoLuongTon
-                        rs.getString(9)); // MoTa
+                        rs.getInt(8) // SoLuongTon
+                        ); // MoTa
                 listCTSP.add(ctsp);
             }
             return listCTSP;

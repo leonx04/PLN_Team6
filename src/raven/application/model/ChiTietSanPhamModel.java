@@ -23,15 +23,7 @@ public class ChiTietSanPhamModel {
     public String MoTa;
     public int stt;
 
-    public ChiTietSanPhamModel(String ID,
-            SanPhamModel tenSP,
-            MauSacModel mauSac,
-            KichCoModel kichCo,
-            ChatLieuModel chatLieu,
-            ThuongHieuModel thuongHieu,
-            BigDecimal giaBan,
-            int SoLuongTon,
-            String MoTa) {
+    public ChiTietSanPhamModel(String ID, SanPhamModel tenSP, MauSacModel mauSac, KichCoModel kichCo, ChatLieuModel chatLieu, ThuongHieuModel thuongHieu, BigDecimal giaBan, int SoLuongTon) {
         this.ID = ID;
         this.tenSP = tenSP;
         this.mauSac = mauSac;
@@ -50,6 +42,9 @@ public class ChiTietSanPhamModel {
     public ChiTietSanPhamModel() {
     }
     
+    public ChiTietSanPhamModel(String ID) {
+        this.ID = ID;
+    }
 
     public String getMoTa() {
         return MoTa;
@@ -130,8 +125,7 @@ public class ChiTietSanPhamModel {
     public void setStt(int stt) {
         this.stt = stt;
     }
-
-    public Object[] toData() {
+public Object[] toData() {
         return new Object[] { this.stt, this.ID, this.tenSP.getTenSP(), this.mauSac.getTenMS(),
                 this.kichCo.getTenSize(), this.chatLieu.getTenCL(), this.thuongHieu.getTenTH(), this.giaBan,
                 this.SoLuongTon, this.MoTa };

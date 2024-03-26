@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 public class ChiTietHoaDonModel {
 
     public String ID;
+    public ChiTietSanPhamModel mactsp = new ChiTietSanPhamModel();
     public SanPhamModel tenSP = new SanPhamModel();
     public MauSacModel mauSac = new MauSacModel();
     public KichCoModel size = new KichCoModel();
@@ -25,12 +26,12 @@ public class ChiTietHoaDonModel {
     private int stt;
 
     public ChiTietHoaDonModel(String ID,
-            SanPhamModel tenSP, 
+            SanPhamModel tenSP,
             MauSacModel mauSacModel,
             KichCoModel kichCoModel,
             ChatLieuModel chatLieuModel,
             ThuongHieuModel thuongHieuModel,
-            ChiTietSanPhamModel donGia, 
+            ChiTietSanPhamModel donGia,
             int soLuong,
             BigDecimal thanhTien) {
         this.ID = ID;
@@ -45,15 +46,23 @@ public class ChiTietHoaDonModel {
         this.maSP = maSP;
     }
 
-    public ChiTietHoaDonModel(String ID, SanPhamModel tenSP, ChiTietSanPhamModel donGia, int soLuong, BigDecimal thanhTien, HoaDonModel maHD) {
-        this.ID = ID;
-        this.tenSP = tenSP;
-        this.ctsp = donGia;
-        this.soLuong = soLuong;
-        this.thanhTien = thanhTien;
-    }
-    
     public ChiTietHoaDonModel() {
+    }
+
+    public ChiTietSanPhamModel getMactsp() {
+        return mactsp;
+    }
+
+    public ChiTietSanPhamModel getCtsp() {
+        return ctsp;
+    }
+
+    public void setMactsp(ChiTietSanPhamModel mactsp) {
+        this.mactsp = mactsp;
+    }
+
+    public void setCtsp(ChiTietSanPhamModel ctsp) {
+        this.ctsp = ctsp;
     }
 
     public String getID() {
@@ -159,19 +168,35 @@ public class ChiTietHoaDonModel {
         };
     }
 
+    public ChiTietHoaDonModel(ChiTietSanPhamModel mactsp, SanPhamModel tenSP, ChiTietSanPhamModel donGia, int soLuong, BigDecimal thanhTien) {
+        this.mactsp = mactsp;
+        this.tenSP = tenSP;
+        this.ctsp = donGia;
+        this.soLuong = soLuong;
+        this.thanhTien = thanhTien;
+    }
+    
+
+//    @Override
+//    public String toString() {
+//        return "ChiTietHoaDonModel{" + "ID=" + ID + ", tenSP=" + tenSP + ", mauSac=" + mauSac + ", size=" + size + ", chatLieu=" + chatLieu + ", thuongHieu=" + thuongHieu + ", ctsp=" + ctsp + ", soLuong=" + soLuong + ", thanhTien=" + thanhTien + ", stt=" + stt + '}';
+//    }
     @Override
     public String toString() {
-        return "ChiTietHoaDonModel{" + "ID=" + ID + ", tenSP=" + tenSP + ", mauSac=" + mauSac + ", size=" + size + ", chatLieu=" + chatLieu + ", thuongHieu=" + thuongHieu + ", ctsp=" + ctsp + ", soLuong=" + soLuong + ", thanhTien=" + thanhTien + ", stt=" + stt + '}';
+        return "ChiTietHoaDonModel{" + "ID=" + ID + ", mactsp=" + mactsp + ", tenSP=" + tenSP + ", mauSac=" + mauSac + ", size=" + size + ", chatLieu=" + chatLieu + ", thuongHieu=" + thuongHieu + ", ctsp=" + ctsp + ", soLuong=" + soLuong + ", thanhTien=" + thanhTien + ", maSP=" + maSP + ", stt=" + stt + '}';
     }
 
     public Object[] toData4() {
         return new Object[]{
-            this.stt,
-            this.ID,
+            this.mactsp.getID(),
             this.tenSP.getTenSP(),
             this.ctsp.getGiaBan(),
             this.soLuong,
             this.thanhTien
         };
+    }
+
+    public void add(ChiTietHoaDonModel chiTietHoaDon) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

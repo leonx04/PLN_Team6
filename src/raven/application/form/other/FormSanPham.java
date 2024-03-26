@@ -26,7 +26,7 @@ public class FormSanPham extends javax.swing.JPanel {
     public FormSanPham() {
         initComponents();
 
-        this.fillTable(spcl.getAllSanPham());
+        fillTable(spcl.getAllSanPham());
 
         lb.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:$h1.font");

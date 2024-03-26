@@ -37,10 +37,10 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
 
     public FormThuocTinhSanPham() {
         initComponents();
-
+        fillMS();
         lb.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:$h1.font");
-        fillMS();
+
     }
 
     // public void fillMS(List<MauSacModel> msmd) {
@@ -53,9 +53,7 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
     // model.addRow(md.toData());
     // }
     // this.fillMS(msrs.getALLMauSac());
-
     // }
-
     public void fillMS() {
         rdoMauSac.setSelected(true);
         model = (DefaultTableModel) this.TblTT.getModel();

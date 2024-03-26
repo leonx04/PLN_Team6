@@ -4,11 +4,14 @@
  */
 package raven.application.service;
 
+import com.barcodelib.barcode.a.f.e;
 import com.toedter.calendar.JDateChooser;
 import java.math.BigDecimal;
 import java.util.List;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import raven.application.model.HoaDonModel;
 import raven.application.model.KhachHangModel;
 import raven.application.model.NhanVienModel;
@@ -76,18 +79,19 @@ public class HoaDonService {
 
     }
 
-    public List<HoaDonModel> getAllByTrangThai(String trangThai) {
+    public List<HoaDonModel> getAllByTrangThaiAndHinhThuc(String trangThai, String tenHinhThuc) {
         sql = "SELECT        HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang, VOUCHER.TenVoucher, HOADON.TongTien, HOADON.HinhThucThanhToan\n"
                 + "FROM            HOADON INNER JOIN\n"
                 + "                         NHANVIEN ON HOADON.ID_NhanVien = NHANVIEN.ID INNER JOIN\n"
                 + "                         KHACHHANG ON HOADON.ID_KhachHang = KHACHHANG.ID INNER JOIN\n"
                 + "                         VOUCHER ON HOADON.ID_Voucher = VOUCHER.ID\n"
-                + "						 WHERE HOADON.TRANGTHAI = ?";
+                + "						 WHERE HOADON.TRANGTHAI = ? and HinhThucThanhToan = ?";
 
         try {
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
             ps.setString(1, trangThai);
+            ps.setString(2, tenHinhThuc);
             ps.execute();
             rs = ps.executeQuery();
             while (rs.next()) {
