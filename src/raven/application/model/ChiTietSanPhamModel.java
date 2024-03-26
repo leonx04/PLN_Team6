@@ -50,6 +50,9 @@ public class ChiTietSanPhamModel {
     public ChiTietSanPhamModel() {
     }
     
+    public ChiTietSanPhamModel(String ID) {
+        this.ID = ID;
+    }
 
     public String getMoTa() {
         return MoTa;
