@@ -414,6 +414,9 @@
             <Property name="toolTipText" type="java.lang.String" value="Xo&#x301;a sa&#x309;n ph&#xe2;&#x309;m &#x1a1;&#x309; gio&#x309; ha&#x300;ng"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteGHActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JCheckBox" name="selectAll">
           <Properties>

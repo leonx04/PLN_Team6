@@ -168,6 +168,8 @@ public class ChiTietHoaDonModel {
     public void setStt(int stt) {
         this.stt = stt;
     }
+    
+    
 
     public Object[] toData2() {
         return new Object[]{
@@ -204,4 +206,5 @@ public class ChiTietHoaDonModel {
             this.thanhTien
         };
     }
+
 }
