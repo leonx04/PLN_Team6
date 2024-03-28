@@ -64,7 +64,7 @@ public class FormBanHang extends javax.swing.JPanel {
 
     void initCBOHTTT() {
         // Định nghĩa mảng chứa các lựa chọn cho combobox
-        String[] options = { "Kết hợp cả hai", "Tiền mặt", "Chuyển khoản" };
+        String[] options = {"Kết hợp cả hai", "Tiền mặt", "Chuyển khoản"};
 
         // Khởi tạo combobox với các giá trị từ mảng options
         cboHTTT.setModel(new DefaultComboBoxModel<>(options));
@@ -134,11 +134,11 @@ public class FormBanHang extends javax.swing.JPanel {
         model.setRowCount(0); // Xóa tất cả dữ liệu cũ trong bảng
         for (ChiTietHoaDonModel chiTietHoaDon : chiTietHoaDons) {
             Object[] rowData = {
-                    chiTietHoaDon.getMactsp().getID(), // Hiển thị ID của SANPHAMCHITIET
-                    chiTietHoaDon.getTenSP().getTenSP(),
-                    chiTietHoaDon.getDonGia().getGiaBan(),
-                    chiTietHoaDon.getSoLuong(),
-                    chiTietHoaDon.getThanhTien()
+                chiTietHoaDon.getMactsp().getID(), // Hiển thị ID của SANPHAMCHITIET
+                chiTietHoaDon.getTenSP().getTenSP(),
+                chiTietHoaDon.getDonGia().getGiaBan(),
+                chiTietHoaDon.getSoLuong(),
+                chiTietHoaDon.getThanhTien()
             };
             model.addRow(rowData);
         }
@@ -970,7 +970,7 @@ public class FormBanHang extends javax.swing.JPanel {
                 for (int i = selectedRows.length - 1; i >= 0; i--) {
                     int selectedRow = selectedRows[i];
                     String maSanPhamChiTiet = model.getValueAt(selectedRow, 0).toString(); // Lấy mã sản phẩm chi tiết
-                                                                                           // từ bảng
+                    // từ bảng
                     int soLuong = Integer.parseInt(model.getValueAt(selectedRow, 3).toString()); // Lấy số lượng từ bảng
 
                     // Cập nhật số lượng tồn của sản phẩm
@@ -993,7 +993,8 @@ public class FormBanHang extends javax.swing.JPanel {
                 return;
             }
         }
-
+        fillTable2(bhrs.getAllHD2());
+        fillTable(bhrs.getAllCTSP());
         // Thông báo xóa thành công
         JOptionPane.showMessageDialog(this, "Xóa thành công!");
         // Tắt sự kiện "Select All"
@@ -1106,7 +1107,7 @@ public class FormBanHang extends javax.swing.JPanel {
         }
 
         JTextField txtSoLuong = new JTextField();
-        Object[] message = { "Nhập số lượng:", txtSoLuong };
+        Object[] message = {"Nhập số lượng:", txtSoLuong};
         int option = JOptionPane.showConfirmDialog(this, message, "Nhập số lượng", JOptionPane.OK_CANCEL_OPTION);
 
         if (option == JOptionPane.OK_OPTION) {
@@ -1118,6 +1119,13 @@ public class FormBanHang extends javax.swing.JPanel {
 
             try {
                 int quantity = Integer.parseInt(soLuongStr);
+                int currentQuantity = bhrs.laySoLuongTonByID(productID);
+
+                if (quantity > currentQuantity) {
+                    JOptionPane.showMessageDialog(this, "Số lượng nhập vào vượt quá số lượng tồn của sản phẩm!");
+                    return;
+                }
+
                 ChiTietHoaDonModel existingCTHD = bhrs.kiemTraTrungSanPhamChiTiet(productID, selectedHoaDonID);
 
                 if (existingCTHD != null) {
@@ -1127,7 +1135,7 @@ public class FormBanHang extends javax.swing.JPanel {
                             newTotal);
 
                     if (updatedRows > 0) {
-                        int remainingQuantity = bhrs.laySoLuongTonByID(productID) - quantity;
+                        int remainingQuantity = currentQuantity - quantity;
                         bhrs.updateSoLuongTon(productID, remainingQuantity);
                         refreshGioHangTable();
                         boolean updated = bhrs.capNhatTongTienHoaDon(selectedHoaDonID);
@@ -1149,7 +1157,7 @@ public class FormBanHang extends javax.swing.JPanel {
 
                     int result = bhrs.themSPGioHang(chiTietHoaDon, selectedHoaDonID);
                     if (result > 0) {
-                        int remainingQuantity = bhrs.laySoLuongTonByID(productID) - quantity;
+                        int remainingQuantity = currentQuantity - quantity;
                         bhrs.updateSoLuongTon(productID, remainingQuantity);
 
                         JOptionPane.showMessageDialog(this, "Thêm sản phẩm vào giỏ hàng thành công!");
