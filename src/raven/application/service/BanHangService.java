@@ -69,7 +69,17 @@ public class BanHangService {
                 + "INNER JOIN KHACHHANG ON HOADON.ID_KhachHang = KHACHHANG.ID\n"
                 + "LEFT JOIN VOUCHER ON HOADON.ID_Voucher = VOUCHER.ID\n"
                 + "INNER JOIN HOADONCHITIET ON HOADON.ID = HOADONCHITIET.ID_HoaDon\n"
+                + "GROUP BY HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen, VOUCHER.TenVoucher, HOADON.HinhThucThanhToan\n"
+                + "HAVING SUM(HOADONCHITIET.ThanhTien) > 0\n"
+                + "UNION ALL\n"
+                + "SELECT HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang, VOUCHER.TenVoucher, 0 AS TongTien, HOADON.HinhThucThanhToan\n"
+                + "FROM HOADON\n"
+                + "INNER JOIN NHANVIEN ON HOADON.ID_NhanVien = NHANVIEN.ID\n"
+                + "INNER JOIN KHACHHANG ON HOADON.ID_KhachHang = KHACHHANG.ID\n"
+                + "LEFT JOIN VOUCHER ON HOADON.ID_Voucher = VOUCHER.ID\n"
+                + "WHERE HOADON.ID NOT IN (SELECT ID_HoaDon FROM HOADONCHITIET)\n"
                 + "GROUP BY HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen, VOUCHER.TenVoucher, HOADON.HinhThucThanhToan";
+
         try {
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
@@ -94,19 +104,85 @@ public class BanHangService {
     }
 
     public boolean capNhatTongTienHoaDon(String maHoaDon) {
-        String sql = "UPDATE HOADON "
-                + "SET TongTien = (SELECT SUM(ThanhTien) FROM HOADONCHITIET WHERE ID_HoaDon = ?) "
-                + "WHERE ID = ?";
+        // Kiểm tra và gán giá trị mặc định là 0 nếu tổng tiền là null
+        String sqlUpdateNullTongTien = "UPDATE HOADON SET TongTien = 0 WHERE TongTien IS NULL AND ID = ?";
         try {
             con = DBConnect.getConnection();
-            ps = con.prepareStatement(sql);
+            ps = con.prepareStatement(sqlUpdateNullTongTien);
             ps.setString(1, maHoaDon);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        // Lấy tổng tiền từ bảng HOADONCHITIET
+        BigDecimal tongTien = BigDecimal.ZERO;
+        String sqlGetTongTien = "SELECT SUM(ThanhTien) AS TongTien FROM HOADONCHITIET WHERE ID_HoaDon = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sqlGetTongTien);
+            ps.setString(1, maHoaDon);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                BigDecimal sum = rs.getBigDecimal("TongTien");
+                if (sum != null) {
+                    tongTien = sum;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        // Cập nhật tổng tiền vào bảng HOADON
+        String sqlUpdateTongTien = "UPDATE HOADON SET TongTien = ? WHERE ID = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sqlUpdateTongTien);
+            ps.setBigDecimal(1, tongTien);
             ps.setString(2, maHoaDon);
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -334,6 +410,122 @@ public class BanHangService {
             e.printStackTrace();
             return 0;
         } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public int xoaHoaDonChiTiet(String maCTSP, String maHoaDon) {
+        String sql = "DELETE FROM HOADONCHITIET WHERE ID_SanPhamChiTiet = ? AND ID_HoaDon = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, maCTSP);
+            ps.setString(2, maHoaDon);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public int xoaToanBoHoaDonChiTiet(String maHoaDon) {
+        String sql = "DELETE FROM HOADONCHITIET WHERE ID_HoaDon = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, maHoaDon);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public boolean updateBillWhileDeleteALL(String maHoaDon) {
+        BigDecimal tongTien = null; // Tạo biến cục bộ tongTien
+        // Lấy giá trị tổng tiền hiện tại từ cơ sở dữ liệu
+        String sqlGetTongTien = "SELECT TongTien FROM HOADON WHERE ID = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sqlGetTongTien);
+            ps.setString(1, maHoaDon);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                tongTien = rs.getBigDecimal("TongTien");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        // Kiểm tra và gán giá trị mặc định cho tổng tiền nếu tổng tiền là null
+        if (tongTien == null) {
+            tongTien = BigDecimal.ZERO; // hoặc giá trị mặc định khác
+        }
+
+        // Tiến hành cập nhật tổng tiền thành 0 cho hóa đơn
+        String sqlUpdateTongTien = "UPDATE HOADON SET TongTien = 0 WHERE ID = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sqlUpdateTongTien);
+            ps.setString(1, maHoaDon);
+            int rowsAffected = ps.executeUpdate();
+
+            // Sau khi cập nhật tổng tiền thành 0, cần cập nhật thông tin này vào cơ sở dữ
+            // liệu
+            boolean updated = capNhatTongTienHoaDon(maHoaDon);
+
+            return rowsAffected > 0 && updated; // Trả về true nếu cả hai cập nhật đều thành công
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            // Đóng kết nối
             try {
                 if (ps != null) {
                     ps.close();
