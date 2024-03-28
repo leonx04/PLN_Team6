@@ -32,10 +32,20 @@ public class HoaDonModel {
         this.tongTien = tongTien;
         this.tenVoucher = tenVoucher;
         this.hinhThucThanhToan = hinhThucThanhToan;
-        this.trangThai = trangThai;
     }
 
     public HoaDonModel() {
+    }
+
+    public HoaDonModel(String ID, Date ngayTao, NhanVienModel tenNV, KhachHangModel tenKH, BigDecimal tongTien, VoucherModer tenVoucher, String hinhThucThanhToan, String trangThai) {
+        this.ID = ID;
+        this.ngayTao = ngayTao;
+        this.tenNV = tenNV;
+        this.tenKH = tenKH;
+        this.tongTien = tongTien;
+        this.tenVoucher = tenVoucher;
+        this.hinhThucThanhToan = hinhThucThanhToan;
+        this.trangThai = trangThai;
     }
 
     public String getID() {
