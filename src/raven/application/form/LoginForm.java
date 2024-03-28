@@ -19,9 +19,8 @@ import raven.application.service.NhanVienService;
  */
 public class LoginForm extends javax.swing.JPanel {
 
-    
     private NhanVienService nhanVienService = new NhanVienService();
-    
+
     public LoginForm() {
         initComponents();
         init();
@@ -170,6 +169,7 @@ public class LoginForm extends javax.swing.JPanel {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Lỗi truy vấn dữ liệu!");
         }
+//        Application.login();
     }//GEN-LAST:event_cmdLoginActionPerformed
 
     //khj

@@ -16,9 +16,9 @@ import java.sql.SQLException;
  */
 public class JdbcHelper {
     private static String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-    private static String connectionSql = "jdbc:sqlserver://localhost:1433;databaseName=DUAN1_SD18406;encrypt=true;trustservercertificate=true;";
+    private static String connectionSql = "jdbc:sqlserver://localhost:1433;databaseName=DUAN1_SD;encrypt=true;trustservercertificate=true;";
     private static String acc = "sa";
-    private static String pass = "123";
+    private static String pass = "123456";
 
     private static Connection conn;
 

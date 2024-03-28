@@ -31,7 +31,7 @@ public class FormNhanVien extends javax.swing.JPanel {
     public FormNhanVien() {
         initComponents();
         listNV = nhanVienService.selectAll();
-        loadData(listNV);
+         loadData(listNV);
     }
 
     public void loadData(List<NhanVienModel> nhanVienModels) {
@@ -772,7 +772,7 @@ public class FormNhanVien extends javax.swing.JPanel {
     private void tblNhanVienMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblNhanVienMousePressed
         if (evt.getClickCount() == 1) {
             this.index = tblNhanVien.rowAtPoint(evt.getPoint());
-            edit();
+              edit();
         }
     }//GEN-LAST:event_tblNhanVienMousePressed
 

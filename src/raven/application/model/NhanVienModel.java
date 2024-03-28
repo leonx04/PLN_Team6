@@ -28,6 +28,10 @@ public class NhanVienModel {
     public NhanVienModel() {
     }
 
+    public NhanVienModel(String tenNV) {
+        this.hoTen = tenNV;
+    }
+
     public NhanVienModel(String id, String hoTen, String diaChi, String sdt, String email, int namSinh, String gioiTinh, boolean chucVu, String matKhau, Date ngayTao, Date ngaySua, String trangThai) {
         this.id = id;
         this.hoTen = hoTen;
@@ -42,6 +46,7 @@ public class NhanVienModel {
         this.ngaySua = ngaySua;
         this.trangThai = trangThai;
     }
+
 
     public String getId() {
         return id;

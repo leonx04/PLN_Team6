@@ -23,8 +23,15 @@ public class ChiTietSanPhamModel {
     public String MoTa;
     public int stt;
 
-    public ChiTietSanPhamModel(String ID, SanPhamModel tenSP, MauSacModel mauSac, KichCoModel kichCo,
-            ChatLieuModel chatLieu, ThuongHieuModel thuongHieu, BigDecimal giaBan, int SoLuongTon, String MoTa) {
+    public ChiTietSanPhamModel(String ID,
+            SanPhamModel tenSP,
+            MauSacModel mauSac,
+            KichCoModel kichCo,
+            ChatLieuModel chatLieu,
+            ThuongHieuModel thuongHieu,
+            BigDecimal giaBan,
+            int SoLuongTon,
+            String MoTa) {
         this.ID = ID;
         this.tenSP = tenSP;
         this.mauSac = mauSac;
@@ -36,7 +43,15 @@ public class ChiTietSanPhamModel {
         this.MoTa = MoTa;
     }
 
+    public ChiTietSanPhamModel(BigDecimal donGia) {
+        this.giaBan = donGia;
+    }
+
     public ChiTietSanPhamModel() {
+    }
+    
+    public ChiTietSanPhamModel(String ID) {
+        this.ID = ID;
     }
 
     public String getMoTa() {
