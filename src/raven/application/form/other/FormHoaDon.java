@@ -83,10 +83,6 @@ public class FormHoaDon extends javax.swing.JPanel {
             chiTietHoaDon.setStt(index++);
             model.addRow(chiTietHoaDon.toData2());
         }
-        if (model.getRowCount() > 0) {
-            tblHoaDonChiTiet.scrollRectToVisible(tblHoaDonChiTiet.getCellRect(0, 0, true));
-            tblHoaDonChiTiet.setRowSelectionInterval(0, 0);
-        }
     }
 
     void locHoaDon() {
@@ -193,7 +189,6 @@ public class FormHoaDon extends javax.swing.JPanel {
         jLabel4.setText("Trạng thái hóa đơn:");
 
         cboTrangThaiHD.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cboTrangThaiHD.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { null }));
         cboTrangThaiHD.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cboTrangThaiHDItemStateChanged(evt);
@@ -204,7 +199,6 @@ public class FormHoaDon extends javax.swing.JPanel {
         jLabel5.setText("Hình thức thanh toán:");
 
         cboHinhThuc.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cboHinhThuc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { null }));
         cboHinhThuc.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cboHinhThucItemStateChanged(evt);
@@ -230,8 +224,8 @@ public class FormHoaDon extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1232, Short.MAX_VALUE)
+                .addGap(14, 14, 14))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -428,8 +422,14 @@ public class FormHoaDon extends javax.swing.JPanel {
 
     private void tblHoaDonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHoaDonMouseClicked
         // TODO add your handling code here:
-        String maHoaDon = (String) tblHoaDon.getValueAt(tblHoaDon.getSelectedRow(), 1);
-        fillTable2(cthd.searchByHoaDonID(maHoaDon));
+//        String maHoaDon = (String) tblHoaDon.getValueAt(tblHoaDon.getSelectedRow(), 1);
+//        fillTable2(cthd.searchByHoaDonID(maHoaDon));
+            int rowIndex = tblHoaDon.getSelectedRow();
+            if (rowIndex >= 0) {
+            String hoaDonID = (String) tblHoaDon.getValueAt(rowIndex, 1);
+            List<ChiTietHoaDonModel> listHDCT = cthd.searchByHoaDonID(hoaDonID);
+                fillTable2(listHDCT);
+        }
 
     }//GEN-LAST:event_tblHoaDonMouseClicked
 

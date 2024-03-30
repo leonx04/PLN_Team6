@@ -78,6 +78,7 @@ public class ChiTietHoaDonService {
         try {
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
+            ps.setObject(1, hoaDonID.trim());
             rs = ps.executeQuery();
             while (rs.next()) {
                 ChiTietHoaDonModel cthh = new ChiTietHoaDonModel(
