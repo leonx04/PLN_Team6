@@ -4,7 +4,6 @@
  */
 package raven.application.service;
 
-import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -170,33 +169,5 @@ public class VoucherService {
             e.printStackTrace();
             return 0;
         }
-    }
-    public int getDiscount(String tenV){
-        int mucGiamGia = 0;
-        sql = "SELECT MucGiamGia  FROM VOUCHER WHERE TenVoucher = ?";
-        try {
-            con = DBConnect.getConnection();
-            ps = con.prepareStatement(sql);
-            ps.setString(1, tenV);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                mucGiamGia = rs.getInt("mucGiamGia");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return mucGiamGia;
-    }
-
-    public Object getTenVoucher() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public String getLoaiVoucher() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public String getMucGiamGia() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
