@@ -32,14 +32,12 @@ public class HoaDonModel {
         this.tongTien = tongTien;
         this.tenVoucher = tenVoucher;
         this.hinhThucThanhToan = hinhThucThanhToan;
+        this.trangThai = trangThai;
     }
 
     public HoaDonModel(String maHD) {
     }
 
-    public HoaDonModel() {
-
-    }
 
     public String getID() {
         return ID;
@@ -96,7 +94,6 @@ public class HoaDonModel {
     public void setHinhThucThanhToan(String hinhThucThanhToan) {
         this.hinhThucThanhToan = hinhThucThanhToan;
     }
-
     public String getTrangThai() {
         return trangThai;
     }
@@ -138,13 +135,4 @@ public class HoaDonModel {
             this.trangThai = trangThai
         };
     }
-
-    public Object getTenNV(String id) {
-        return tenNV;
-    }
-
-    public void setTenNV(String tenNV) {
-        this.tenNV.setHoTen(tenNV);
-    }
-
 }

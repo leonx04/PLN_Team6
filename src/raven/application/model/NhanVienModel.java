@@ -11,7 +11,7 @@ import java.util.Date;
  * @author acer
  */
 public class NhanVienModel {
-
+    
     private String id;
     private String hoTen;
     private String diaChi;
@@ -46,6 +46,7 @@ public class NhanVienModel {
         this.ngaySua = ngaySua;
         this.trangThai = trangThai;
     }
+
 
     public String getId() {
         return id;
@@ -143,4 +144,8 @@ public class NhanVienModel {
         this.trangThai = trangThai;
     }
 
+    
+
+    
+    
 }
