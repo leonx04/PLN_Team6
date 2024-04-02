@@ -34,11 +34,18 @@ public class HoaDonModel {
         this.hinhThucThanhToan = hinhThucThanhToan;
     }
 
-    public HoaDonModel(String maHD) {
+    public HoaDonModel() {
     }
 
-    public HoaDonModel() {
-
+    public HoaDonModel(String ID, Date ngayTao, NhanVienModel tenNV, KhachHangModel tenKH, BigDecimal tongTien, VoucherModer tenVoucher, String hinhThucThanhToan, String trangThai) {
+        this.ID = ID;
+        this.ngayTao = ngayTao;
+        this.tenNV = tenNV;
+        this.tenKH = tenKH;
+        this.tongTien = tongTien;
+        this.tenVoucher = tenVoucher;
+        this.hinhThucThanhToan = hinhThucThanhToan;
+        this.trangThai = trangThai;
     }
 
     public String getID() {
@@ -96,7 +103,6 @@ public class HoaDonModel {
     public void setHinhThucThanhToan(String hinhThucThanhToan) {
         this.hinhThucThanhToan = hinhThucThanhToan;
     }
-
     public String getTrangThai() {
         return trangThai;
     }
@@ -112,8 +118,7 @@ public class HoaDonModel {
     public void setStt(int stt) {
         this.stt = stt;
     }
-
-    public Object[] toData() {
+public Object[] toData() {
         return new Object[]{
             this.stt,
             this.ID,
@@ -125,26 +130,17 @@ public class HoaDonModel {
             this.hinhThucThanhToan};
     }
 
-    public Object[] toData3() {
-        return new Object[]{
-            this.stt,
-            this.ID,
-            this.ngayTao,
-            this.tenNV.getHoTen(),
-            this.tenKH.getTen(),
-            this.tenVoucher.getTenVoucher(),
-            this.tongTien,
-            this.hinhThucThanhToan,
-            this.trangThai = trangThai
-        };
-    }
-
-    public Object getTenNV(String id) {
-        return tenNV;
-    }
-
-    public void setTenNV(String tenNV) {
-        this.tenNV.setHoTen(tenNV);
-    }
-
+//    public Object[] toData3() {
+//        return new Object[]{
+//            this.stt,
+//            this.ID,
+//            this.ngayTao,
+//            this.tenNV.getHoTen(),
+//            this.tenKH.getTen(),
+//            this.tenVoucher.getTenVoucher(),
+//            this.tongTien,
+//            this.hinhThucThanhToan,
+//            this.trangThai = trangThai
+//        };
+//    }
 }

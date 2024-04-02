@@ -42,7 +42,8 @@ public class ChiTietHoaDonModel {
         this.thuongHieu = thuongHieuModel;
         this.ctsp = donGia;
         this.soLuong = soLuong;
-        this.thanhTien = thanhTien;
+        this.thanhTien = thanhTien;        this.soLuong = soLuong;
+
         this.maSP = maSP;
     }
 
@@ -108,8 +109,7 @@ public class ChiTietHoaDonModel {
     public KichCoModel getSize() {
         return size;
     }
-
-    public void setSize(KichCoModel size) {
+public void setSize(KichCoModel size) {
         this.size = size;
     }
 
@@ -168,6 +168,8 @@ public class ChiTietHoaDonModel {
     public void setStt(int stt) {
         this.stt = stt;
     }
+    
+    
 
     public Object[] toData2() {
         return new Object[]{
@@ -204,4 +206,5 @@ public class ChiTietHoaDonModel {
             this.thanhTien
         };
     }
+
 }

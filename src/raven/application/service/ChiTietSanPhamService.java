@@ -52,8 +52,8 @@ public class ChiTietSanPhamService {
                         new ChatLieuModel(rs.getString(5)), // ChatLieu
                         new ThuongHieuModel(rs.getString(6)), // ThuongHieu
                         rs.getBigDecimal(7), // GiaBan
-                        rs.getInt(8) // SoLuongTon
-                        ); // MoTa
+                        rs.getInt(8), // SoLuongTon
+rs.getString(9)); // MoTa
                 listCTSP.add(ctsp);
             }
             return listCTSP;
@@ -92,8 +92,8 @@ public class ChiTietSanPhamService {
                         new ChatLieuModel(rs.getString(5)), // ChatLieu
                         new ThuongHieuModel(rs.getString(6)), // ThuongHieu
                         rs.getBigDecimal(7), // GiaBan
-                        rs.getInt(8) // SoLuongTon
-                        ); // MoTa
+                        rs.getInt(8), // SoLuongTon
+                        rs.getString(9)); // MoTa
                 listCTSP.add(ctsp);
             }
             return listCTSP;
@@ -114,7 +114,7 @@ public class ChiTietSanPhamService {
             // SUBSTRING(ID, 3, LEN(ID)) được sử dụng để cắt bỏ ba ký tự đầu tiên của mã sản
             // phẩm (trong trường hợp này là "SP"),
             // sau đó chuyển thành kiểu số nguyên bằng CAST.
-            // Kết nối đến cơ sở dữ liệu
+// Kết nối đến cơ sở dữ liệu
             con = DBConnect.getConnection();
             // Tạo đối tượng PreparedStatement từ truy vấn SQL
             ps = con.prepareStatement(sql);
@@ -177,7 +177,7 @@ public class ChiTietSanPhamService {
             ps.setObject(8, ctsp.getMoTa());
             ps.setObject(9, ctsp.getID());
             return ps.executeUpdate();
-        } catch (Exception e) {
+} catch (Exception e) {
             e.printStackTrace();
             return 0;
         }
@@ -194,6 +194,39 @@ public class ChiTietSanPhamService {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    
+    public boolean checkTrungId(String id) {
+        sql = "SELECT COUNT(*) AS count FROM SANPHAMCHITIET WHERE ID = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // Đóng các tài nguyên
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return false;
     }
 
 }

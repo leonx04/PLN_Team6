@@ -94,7 +94,7 @@ public class MainForm extends JLayeredPane {
             } else if (index == 2) {
                 Application.showForm(new FormHoaDon());
             } else if (index == 3) {
-                //  Application.showForm(new FormVoucher());
+                  Application.showForm(new FormVoucher());
             } else if (index == 4) {
                 Application.showForm(new FormNhanVien());
 

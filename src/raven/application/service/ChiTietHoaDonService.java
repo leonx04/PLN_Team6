@@ -64,6 +64,41 @@ public class ChiTietHoaDonService {
         }
     }
 
+    public List<ChiTietHoaDonModel> getAllCTHD2() {
+        sql = "SELECT        HOADONCHITIET.ID, SANPHAMCHITIET.ID AS Expr1, SANPHAM.TenSanPham, MAUSAC.TenMau, SIZE.Ten, THUONGHIEU.Ten AS Expr2, CHATLIEU.Ten AS Expr3, SANPHAMCHITIET.GiaBan, HOADONCHITIET.SoLuong, \n"
+                + "                         HOADONCHITIET.ThanhTien\n"
+                + "FROM            HOADONCHITIET INNER JOIN\n"
+                + "                         SANPHAMCHITIET ON HOADONCHITIET.ID_SanPhamChiTiet = SANPHAMCHITIET.ID INNER JOIN\n"
+                + "                         SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID INNER JOIN\n"
+                + "                         MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID INNER JOIN\n"
+                + "                         SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID INNER JOIN\n"
+                + "                         THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID INNER JOIN\n"
+                + "                         CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietHoaDonModel cthh = new ChiTietHoaDonModel(
+                        rs.getString(1),
+                        new SanPhamModel(rs.getString(2)),
+                        new MauSacModel(rs.getString(3)),
+                        new KichCoModel(rs.getString(4)),
+                        new ChatLieuModel(rs.getString(5)),
+                        new ThuongHieuModel(rs.getString(6)),
+                        new ChiTietSanPhamModel(rs.getBigDecimal(7)),
+                        rs.getInt(8),
+                        rs.getBigDecimal(9)
+                );
+                listCTHD.add(cthh);
+            }
+            return listCTHD;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public List<ChiTietHoaDonModel> searchByHoaDonID(String hoaDonID) {
         sql = "SELECT        HOADONCHITIET.ID, SANPHAM.TenSanPham AS TenSP, MAUSAC.TenMau AS TenMS, SIZE.Ten AS TenSize, THUONGHIEU.Ten AS TenTT, CHATLIEU.Ten AS TenCL, SANPHAMCHITIET.GiaBan AS DonGia, \n"
                 + "                         HOADONCHITIET.SoLuong, HOADONCHITIET.ThanhTien\n"
