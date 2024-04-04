@@ -52,7 +52,6 @@ public class FormHoaDon extends javax.swing.JPanel {
         dcb1.addElement("Đã thanh toán");
         dcb1.addElement("Đã hủy");
         dcb1.addElement("Chờ thanh toán");
-        dcb1.addElement("Chưa thanh toán");
     }
 
     void loadHinhThuc() {

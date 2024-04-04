@@ -5,9 +5,17 @@
         <group>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/form/other/FormBanHang.java</file>
             <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/connect/DBConnect.java</file>
             <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/connect/JdbcHelper.java</file>
+=======
+            <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/form/LoginForm.java</file>
+            <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/form/other/FormBanHang.java</file>
+            <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/form/other/FormNhanVien.java</file>
+            <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/connect/DBConnect.java</file>
+            <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/service/VoucherService.java</file>
+>>>>>>> origin/dev_linh
             <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/service/BanHangService.java</file>
 =======
 =======
