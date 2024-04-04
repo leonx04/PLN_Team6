@@ -76,7 +76,7 @@ public class BanHangService {
                 + "INNER JOIN NHANVIEN ON HOADON.ID_NhanVien = NHANVIEN.ID\n"
                 + "INNER JOIN KHACHHANG ON HOADON.ID_KhachHang = KHACHHANG.ID\n"
                 + "LEFT JOIN VOUCHER ON HOADON.ID_Voucher = VOUCHER.ID\n"
-                + "WHERE HOADON.TrangThai = N'Chờ thanh toán'\n" // Thêm điều kiện WHERE vào đây
+                + "WHERE HOADON.TrangThai = N'Chờ thanh toán'\n"
                 + "GROUP BY HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen, VOUCHER.TenVoucher, HOADON.HinhThucThanhToan, HOADON.TrangThai";
 
         try {
@@ -599,7 +599,7 @@ public class BanHangService {
     public String getNewHD() {
         String newID = "HD001";
         try {
-            sql = "SELECT MAX(CAST(SUBSTRING(ID, 5, LEN(ID)) AS INT)) AS maxID FROM HOADON";
+            sql = "SELECT MAX(CAST(SUBSTRING(ID, 4, LEN(ID)) AS INT)) AS maxID FROM HOADON";
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -637,9 +637,9 @@ public class BanHangService {
         }
     }
 
-    public int huyHDByID(String trangThai, String idHD) {
+    public boolean huyHDByID(String trangThai, String idHD) {
         sql = "UPDATE HOADON SET TrangThai = ? WHERE ID = ?";
-        int rowsUpdated = 0; // Số dòng được cập nhật
+        boolean isSuccess = false; // Biến để xác định việc cập nhật thành công hay không
 
         try {
             // Mở kết nối đến cơ sở dữ liệu
@@ -653,11 +653,49 @@ public class BanHangService {
             ps.setString(2, idHD);
 
             // Thực thi câu lệnh SQL và nhận số dòng được cập nhật
-            rowsUpdated = ps.executeUpdate();
+            int rowsUpdated = ps.executeUpdate();
+
+            // Nếu có ít nhất một dòng được cập nhật thành công, đặt isSuccess thành true
+            isSuccess = rowsUpdated > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return rowsUpdated;
+        return isSuccess;
     }
 
+    public boolean updateHTTTHoaDon(String hoaDonID, String HTTT) {
+        // Thực hiện cập nhật hình thức thanh toán cho hóa đơn có ID tương ứng
+        sql = "UPDATE HoaDon SET HinhThucThanhToan = ? WHERE ID = ?";
+        boolean isSuccess = false; // Biến để xác định việc cập nhật thành công hay không
+        try {
+            // Kết nối cơ sở dữ liệu và thực hiện cập nhật
+            con = DBConnect.getConnection();
+            
+            ps = con.prepareStatement(sql);
+            ps.setString(1, HTTT);
+            ps.setString(2, hoaDonID);
+
+            int rowsUpdated = ps.executeUpdate();
+            isSuccess = rowsUpdated > 0;
+        } catch (SQLException e) {
+             e.printStackTrace();
+        }
+        return isSuccess;
+    }
+
+    public int updateBillStatus(String maHoaDon, String trangThaiMoi) {
+        sql = "UPDATE HOADON SET  TrangThai = ? WHERE ID = ?";
+        int rowsAffected = 0;
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, trangThaiMoi);
+            ps.setString(2, maHoaDon);
+            rowsAffected = ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rowsAffected;
+    }
 }
