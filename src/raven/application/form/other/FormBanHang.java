@@ -1112,10 +1112,10 @@ public class FormBanHang extends javax.swing.JPanel {
         // Tính tổng số tiền thanh toán sau khi giảm giá
         BigDecimal thanhToan = tongTien.subtract(giamGia);
 
-        // Kiểm tra và validate số tiền mặt và chuyển khoản trước khi thực hiện các thao tác khác
-        if (!validateTxtTienMat() || !validateTxtChuyenKhoan()) {
-            return; // Nếu có lỗi, dừng lại và không thực hiện các thao tác tiếp theo
-        }
+//        // Kiểm tra và validate số tiền mặt và chuyển khoản trước khi thực hiện các thao tác khác
+//        if (!validateTxtTienMat() || !validateTxtChuyenKhoan()) {
+//            return; // Nếu có lỗi, dừng lại và không thực hiện các thao tác tiếp theo
+//        }
 
         // Xử lý số tiền mặt và chuyển khoản
         BigDecimal tienMat = txtTienMat.isEnabled() ? new BigDecimal(txtTienMat.getText()) : BigDecimal.ZERO;
@@ -1128,6 +1128,7 @@ public class FormBanHang extends javax.swing.JPanel {
             tienThua = tienMat.subtract(thanhToan);
         } else if (selectedHTTT.equals("Chuyển khoản")) {
             tienThua = tienChuyenKhoan.subtract(thanhToan);
+            
         } else if (selectedHTTT.equals("Kết hợp cả hai")) {
             BigDecimal tongTienThanhToan = tienMat.add(tienChuyenKhoan);
             tienThua = tongTienThanhToan.subtract(thanhToan);
