@@ -42,28 +42,28 @@ public class ChiTietHoaDonModel {
         this.thuongHieu = thuongHieuModel;
         this.ctsp = donGia;
         this.soLuong = soLuong;
-        this.thanhTien = thanhTien;        this.soLuong = soLuong;
+        this.thanhTien = thanhTien;
+        this.soLuong = soLuong;
 
-        this.maSP = maSP;
     }
 
     public ChiTietHoaDonModel() {
     }
-    
+
     public ChiTietHoaDonModel(String ID, SanPhamModel tenSP, ChiTietSanPhamModel donGia, int soLuong, BigDecimal thanhTien) {
-       this.ID = ID;
-       this.tenSP = tenSP;
-       this.ctsp = donGia;
-       this.soLuong = soLuong;
-       this.thanhTien = thanhTien;
+        this.ID = ID;
+        this.tenSP = tenSP;
+        this.ctsp = donGia;
+        this.soLuong = soLuong;
+        this.thanhTien = thanhTien;
     }
 
     public ChiTietHoaDonModel(ChiTietSanPhamModel mactsp, SanPhamModel tenSP, ChiTietSanPhamModel donGia, int soLuong, BigDecimal thanhTien) {
-       this.mactsp = mactsp;
-       this.tenSP = tenSP;
-       this.ctsp = donGia;
-       this.soLuong = soLuong;
-       this.thanhTien = thanhTien;
+        this.mactsp = mactsp;
+        this.tenSP = tenSP;
+        this.ctsp = donGia;
+        this.soLuong = soLuong;
+        this.thanhTien = thanhTien;
     }
 
     public ChiTietSanPhamModel getMactsp() {
@@ -109,7 +109,8 @@ public class ChiTietHoaDonModel {
     public KichCoModel getSize() {
         return size;
     }
-public void setSize(KichCoModel size) {
+
+    public void setSize(KichCoModel size) {
         this.size = size;
     }
 
@@ -168,8 +169,6 @@ public void setSize(KichCoModel size) {
     public void setStt(int stt) {
         this.stt = stt;
     }
-    
-    
 
     public Object[] toData2() {
         return new Object[]{
@@ -185,17 +184,11 @@ public void setSize(KichCoModel size) {
             this.thanhTien
         };
     }
-//
-//    @Override
-//    public String toString() {
-//        return "ChiTietHoaDonModel{" + "ID=" + ID + ", tenSP=" + tenSP + ", mauSac=" + mauSac + ", size=" + size + ", chatLieu=" + chatLieu + ", thuongHieu=" + thuongHieu + ", ctsp=" + ctsp + ", soLuong=" + soLuong + ", thanhTien=" + thanhTien + ", stt=" + stt + '}';
-//    }
 
     @Override
     public String toString() {
         return "ChiTietHoaDonModel{" + "ID=" + ID + ", mactsp=" + mactsp + ", tenSP=" + tenSP + ", mauSac=" + mauSac + ", size=" + size + ", chatLieu=" + chatLieu + ", thuongHieu=" + thuongHieu + ", ctsp=" + ctsp + ", soLuong=" + soLuong + ", thanhTien=" + thanhTien + ", maSP=" + maSP + ", stt=" + stt + '}';
     }
-    
 
     public Object[] toData4() {
         return new Object[]{
@@ -206,5 +199,7 @@ public void setSize(KichCoModel size) {
             this.thanhTien
         };
     }
+    
+    
 
 }

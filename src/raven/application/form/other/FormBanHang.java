@@ -300,13 +300,13 @@ public class FormBanHang extends javax.swing.JPanel {
     }
 
     private boolean validateTxtTienMat() {
-        String tienMatStr = txtTienMat.getText().trim();
-        if (tienMatStr.isEmpty()) {
+//        String tienMatStr = txtTienMat.getText().trim();
+        if (txtTienMat.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập số tiền.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         try {
-            BigDecimal tienMat = new BigDecimal(tienMatStr);
+            BigDecimal tienMat = new BigDecimal(txtTienMat.getText());
             if (tienMat.compareTo(BigDecimal.ZERO) <= 0) {
                 JOptionPane.showMessageDialog(this, "Số tiền phải lớn hơn 0.", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return false;
@@ -319,13 +319,13 @@ public class FormBanHang extends javax.swing.JPanel {
     }
 
     private boolean validateTxtChuyenKhoan() {
-        String chuyenKhoanStr = txtTienCK.getText().trim();
-        if (chuyenKhoanStr.isEmpty()) {
+//        String chuyenKhoanStr = txtTienCK.getText().trim();
+        if (txtTienCK.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập số tiền.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         try {
-            BigDecimal chuyenKhoan = new BigDecimal(chuyenKhoanStr);
+            BigDecimal chuyenKhoan = new BigDecimal(txtTienCK.getText());
             if (chuyenKhoan.compareTo(BigDecimal.ZERO) <= 0) {
                 JOptionPane.showMessageDialog(this, "Số tiền phải lớn hơn 0.", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return false;
@@ -1042,17 +1042,15 @@ public class FormBanHang extends javax.swing.JPanel {
 
         // Tính tổng số tiền thanh toán sau khi giảm giá
         BigDecimal thanhToan = tongTien.subtract(giamGia);
-
-        // Kiểm tra và validate số tiền mặt và chuyển khoản trước khi thực hiện các thao tác khác
-        if (!validateTxtTienMat() || !validateTxtChuyenKhoan()) {
-            return; // Nếu có lỗi, dừng lại và không thực hiện các thao tác tiếp theo
-        }
-
+        
         // Xử lý số tiền mặt và chuyển khoản
         BigDecimal tienMat = txtTienMat.isEnabled() ? new BigDecimal(txtTienMat.getText()) : BigDecimal.ZERO;
         BigDecimal tienChuyenKhoan = txtTienCK.isEnabled() ? new BigDecimal(txtTienCK.getText()) : BigDecimal.ZERO;
         BigDecimal tienThua = BigDecimal.ZERO;
-
+        // Kiểm tra và validate số tiền mặt và chuyển khoản trước khi thực hiện các thao tác khác
+        if (!validateTxtTienMat() || !validateTxtChuyenKhoan()) {
+            return; // Nếu có lỗi, dừng lại và không thực hiện các thao tác tiếp theo
+        }
         // Tính số tiền thừa hoặc thiếu
         String selectedHTTT = cboHTTT.getSelectedItem().toString();
         if (selectedHTTT.equals("Tiền mặt")) {

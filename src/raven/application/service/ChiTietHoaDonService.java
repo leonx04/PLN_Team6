@@ -99,41 +99,106 @@ public class ChiTietHoaDonService {
         }
     }
 
+    public List<ChiTietHoaDonModel> searchByHoaDonID1(String hoaDonID) {
+        System.out.println("id hóa đơn" + hoaDonID);
+        List<ChiTietHoaDonModel> listCTHD = new ArrayList<>();
+        String sql = "SELECT HOADONCHITIET.ID, SANPHAM.TenSanPham AS TenSP, MAUSAC.TenMau AS TenMS, SIZE.Ten AS TenSize, THUONGHIEU.Ten AS TenTT, CHATLIEU.Ten AS TenCL, SANPHAMCHITIET.GiaBan AS DonGia, "
+                + "HOADONCHITIET.SoLuong, HOADONCHITIET.ThanhTien "
+                + "FROM HOADONCHITIET INNER JOIN "
+                + "SANPHAMCHITIET ON HOADONCHITIET.ID_SanPhamChiTiet = SANPHAMCHITIET.ID INNER JOIN "
+                + "SANPHAM ON SANPHAM.ID = SANPHAMCHITIET.ID_SanPham INNER JOIN "
+                + "MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID INNER JOIN "
+                + "SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID INNER JOIN "
+                + "THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID INNER JOIN "
+                + "CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID "
+                + "WHERE HOADONCHITIET.ID_HoaDon = ? AND HOADONCHITIET.ID_HoaDon IN (SELECT ID FROM HOADON)";
+        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, hoaDonID.trim());
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ChiTietHoaDonModel cthd = new ChiTietHoaDonModel(
+                            rs.getString("ID"),
+                            new SanPhamModel(rs.getString("TenSP")),
+                            new MauSacModel(rs.getString("TenMS")),
+                            new KichCoModel(rs.getString("TenSize")),
+                            new ChatLieuModel(rs.getString("TenCL")),
+                            new ThuongHieuModel(rs.getString("TenTT")),
+                            new ChiTietSanPhamModel(rs.getBigDecimal("DonGia")),
+                            rs.getInt("SoLuong"),
+                            rs.getBigDecimal("ThanhTien")
+                    );
+                    listCTHD.add(cthd);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listCTHD;
+    }
+
     public List<ChiTietHoaDonModel> searchByHoaDonID(String hoaDonID) {
-        sql = "SELECT        HOADONCHITIET.ID, SANPHAM.TenSanPham AS TenSP, MAUSAC.TenMau AS TenMS, SIZE.Ten AS TenSize, THUONGHIEU.Ten AS TenTT, CHATLIEU.Ten AS TenCL, SANPHAMCHITIET.GiaBan AS DonGia, \n"
-                + "                         HOADONCHITIET.SoLuong, HOADONCHITIET.ThanhTien\n"
-                + "FROM            HOADONCHITIET INNER JOIN\n"
-                + "                          SANPHAMCHITIET ON HOADONCHITIET.ID_SanPhamChiTiet = SANPHAMCHITIET.ID INNER JOIN\n"
-                + "                         SANPHAM ON SANPHAM.ID = SANPHAMCHITIET.ID_SanPham INNER JOIN\n"
-                + "                         MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID INNER JOIN\n"
-                + "                         SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID INNER JOIN\n"
-                + "                         THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID INNER JOIN\n"
-                + "                         CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID\n"
-                + "						 where HOADONCHITIET.ID = ? ";
+        System.out.println("id hóa đơn: " + hoaDonID);
+        List<ChiTietHoaDonModel> listCTHD = new ArrayList<>();
+        String sql = "SELECT HOADONCHITIET.ID, SANPHAM.TenSanPham AS TenSP, MAUSAC.TenMau AS TenMS, SIZE.Ten AS TenSize, THUONGHIEU.Ten AS TenTT, CHATLIEU.Ten AS TenCL, SANPHAMCHITIET.GiaBan AS DonGia, "
+                + "HOADONCHITIET.SoLuong, HOADONCHITIET.ThanhTien "
+                + "FROM HOADONCHITIET INNER JOIN "
+                + "SANPHAMCHITIET ON HOADONCHITIET.ID_SanPhamChiTiet = SANPHAMCHITIET.ID INNER JOIN "
+                + "SANPHAM ON SANPHAM.ID = SANPHAMCHITIET.ID_SanPham INNER JOIN "
+                + "MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID INNER JOIN "
+                + "SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID INNER JOIN "
+                + "THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID INNER JOIN "
+                + "CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID "
+                + "WHERE HOADONCHITIET.ID_HoaDon = ? AND HOADONCHITIET.ID_HoaDon IN (SELECT ID FROM HOADON)";
         try {
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
-            ps.setObject(1, hoaDonID.trim());
+            // Kiểm tra hoaDonID trước khi sử dụng
+            if (hoaDonID != null) {
+                ps.setString(1, hoaDonID.trim());
+            } else {
+                // Xử lý tùy thuộc vào logic của bạn khi hoaDonID là null
+                // Ví dụ: không làm gì nếu hoaDonID là null
+                return listCTHD;
+            }
+            System.out.println("id hóa đơn " + hoaDonID);
             rs = ps.executeQuery();
             while (rs.next()) {
-                ChiTietHoaDonModel cthh = new ChiTietHoaDonModel(
-                        rs.getString(1),
-                        new SanPhamModel(rs.getString(2)),
-                        new MauSacModel(rs.getString(3)),
-                        new KichCoModel(rs.getString(4)),
-                        new ChatLieuModel(rs.getString(5)),
-                        new ThuongHieuModel(rs.getString(6)),
-                        new ChiTietSanPhamModel(rs.getBigDecimal(7)),
-                        rs.getInt(8),
-                        rs.getBigDecimal(9)
-                );
-                listCTHD.add(cthh);
+                ChiTietHoaDonModel chiTietHoaDon = new ChiTietHoaDonModel();
+                chiTietHoaDon.setMactsp(new ChiTietSanPhamModel(rs.getString("MaSanPhamChiTiet")));
+                chiTietHoaDon.setTenSP(new SanPhamModel(rs.getString("TenSanPham")));
+                chiTietHoaDon.setMauSac(new MauSacModel(rs.getString("TenMS")));
+                chiTietHoaDon.setSize(new KichCoModel(rs.getString("TenSize")));
+                chiTietHoaDon.setThuongHieu(new ThuongHieuModel(rs.getString("TenTT")));
+                chiTietHoaDon.setChatLieu(new ChatLieuModel(rs.getString("TenCL")));
+                chiTietHoaDon.setDonGia(new ChiTietSanPhamModel(rs.getBigDecimal("DonGia")));
+                chiTietHoaDon.setSoLuong(rs.getInt("SoLuong"));
+                chiTietHoaDon.setThanhTien(rs.getBigDecimal("ThanhTien"));
+                listCTHD.add(chiTietHoaDon);
             }
-            return listCTHD;
-        } catch (Exception e) {
-            e.printStackTrace();;
-            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Đóng kết nối và các resource
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                /* Xử lý exception */ }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+                /* Xử lý exception */ }
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                /* Xử lý exception */ }
         }
+        return listCTHD;
     }
 
     public String getNewHDCTByID() {

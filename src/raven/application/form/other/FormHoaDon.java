@@ -45,7 +45,7 @@ public class FormHoaDon extends javax.swing.JPanel {
         loadTrangThai();
         loadHinhThuc();
         this.fillTable(hdsr.getAll());
-        this.fillTable2(cthd.getAllCTHD());
+//        this.fillTable2(cthd.getAllCTHD());
     }
 
     void loadTrangThai() {
@@ -76,11 +76,41 @@ public class FormHoaDon extends javax.swing.JPanel {
 
     void fillTable2(List<ChiTietHoaDonModel> listHD) {
         model = (DefaultTableModel) tblHoaDonChiTiet.getModel();
+        // Xóa hết các dòng hiện tại trong bảng
         model.setRowCount(0);
-        int index = 1;
-        for (ChiTietHoaDonModel chiTietHoaDon : listHD) {
-            chiTietHoaDon.setStt(index++);
-            model.addRow(chiTietHoaDon.toData2());
+        for (ChiTietHoaDonModel cthd : listHD) {
+
+            Object[] rowData = {
+                model.getRowCount() + 1,
+                cthd.getID(),
+                cthd.getTenSP().getTenSP(),
+                cthd.getMauSac().getTenMS(),
+                cthd.getSize().getTenSize(),
+                cthd.getThuongHieu().getTenTH(),
+                cthd.getChatLieu().getTenCL(),
+                cthd.getDonGia().getGiaBan(),
+                cthd.getSoLuong(),
+                cthd.getThanhTien()
+            };
+
+            // Thêm dòng vào model của bảng
+            model.addRow(rowData);
+        }
+    }
+
+    private void fillChiTietHoaDonTable(String hoaDonID) {
+        try {
+            List<ChiTietHoaDonModel> chiTietHoaDons = cthd.searchByHoaDonID(hoaDonID);
+            if (chiTietHoaDons == null || chiTietHoaDons.isEmpty()) {
+                System.out.println("Không tìm thấy chi tiết hóa đơn cho ID: " + hoaDonID);
+                return;
+            }
+
+            fillTable2(chiTietHoaDons);
+            System.out.println("Đã chạy qua hàm fill");
+        } catch (Exception ex) {
+            System.out.println("Đã xảy ra lỗi khi điền dữ liệu vào bảng chi tiết hóa đơn: " + ex.getMessage());
+            ex.printStackTrace(); // In ra stack trace để debug
         }
     }
 
@@ -109,6 +139,19 @@ public class FormHoaDon extends javax.swing.JPanel {
         }
 
     }
+
+    void showData(int index) {
+        String maHD = String.valueOf(tblHoaDon.getValueAt(index, 1)).trim();
+        String tenNV = String.valueOf(tblHoaDon.getValueAt(index, 3)).trim();
+        String tenKH = String.valueOf(tblHoaDon.getValueAt(index, 4)).trim();
+
+        String tenVC = String.valueOf(tblHoaDon.getValueAt(index, 5)).trim();
+        String tongTien = String.valueOf(tblHoaDon.getValueAt(index, 6)).trim();
+        String HTTT = String.valueOf(tblHoaDon.getValueAt(index, 7)).trim();
+
+    }
+    // Biến để lưu trữ ID của hóa đơn được chọn
+    private String selectedHoaDonID;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -280,8 +323,8 @@ public class FormHoaDon extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(dateBatDau, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(2, 2, 2)))
-                .addGap(4, 4, 4)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -322,6 +365,11 @@ public class FormHoaDon extends javax.swing.JPanel {
             }
         });
         tblHoaDonChiTiet.setPreferredSize(new java.awt.Dimension(1900, 200));
+        tblHoaDonChiTiet.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblHoaDonChiTietMouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(tblHoaDonChiTiet);
         if (tblHoaDonChiTiet.getColumnModel().getColumnCount() > 0) {
             tblHoaDonChiTiet.getColumnModel().getColumn(1).setResizable(false);
@@ -420,16 +468,19 @@ public class FormHoaDon extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tblHoaDonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHoaDonMouseClicked
-        // TODO add your handling code here:
-//        String maHoaDon = (String) tblHoaDon.getValueAt(tblHoaDon.getSelectedRow(), 1);
-//        fillTable2(cthd.searchByHoaDonID(maHoaDon));
-            int rowIndex = tblHoaDon.getSelectedRow();
-            if (rowIndex >= 0) {
-            String hoaDonID = (String) tblHoaDon.getValueAt(rowIndex, 1);
-            List<ChiTietHoaDonModel> listHDCT = cthd.searchByHoaDonID(hoaDonID);
-                fillTable2(listHDCT);
+        int row = tblHoaDon.getSelectedRow();
+        if (row >= 0) {
+            String hoaDonID = tblHoaDon.getValueAt(row, 1).toString();
+            if (hoaDonID != null && !hoaDonID.isEmpty()) {
+                // Gọi phương thức searchByHoaDonID với hoaDonID đã được kiểm tra
+                List<ChiTietHoaDonModel> listCTHD = cthd.searchByHoaDonID(hoaDonID);
+                // Tiếp tục xử lý kết quả
+                fillTable2(listCTHD);
+            } else {
+                System.out.println("Hóa đơn ID không hợp lệ");
+                // Xử lý tùy theo logic của bạn khi hoaDonID là null hoặc rỗng
+            }
         }
-
     }//GEN-LAST:event_tblHoaDonMouseClicked
 
     private void btnLocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLocActionPerformed
@@ -510,6 +561,10 @@ public class FormHoaDon extends javax.swing.JPanel {
         // TODO add your handling code here:
         locHoaDon();
     }//GEN-LAST:event_cboTrangThaiHDItemStateChanged
+
+    private void tblHoaDonChiTietMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHoaDonChiTietMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblHoaDonChiTietMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
