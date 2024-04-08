@@ -74,13 +74,13 @@ public class FormHoaDon extends javax.swing.JPanel {
         }
     }
 
-    void fillTable2(List<ChiTietHoaDonModel> listHD) {
+    void fillTable2(List<ChiTietHoaDonModel> listCTHD) {
         model = (DefaultTableModel) tblHoaDonChiTiet.getModel();
         model.setRowCount(0);
         int index = 1;
-        for (ChiTietHoaDonModel chiTietHoaDon : listHD) {
-            chiTietHoaDon.setStt(index++);
-            model.addRow(chiTietHoaDon.toData2());
+        for (ChiTietHoaDonModel cthd : listCTHD) {
+            cthd.setStt(index++);
+            model.addRow(cthd.toData2());
         }
         if (model.getRowCount() > 0) {
             tblHoaDonChiTiet.scrollRectToVisible(tblHoaDonChiTiet.getCellRect(0, 0, true));
@@ -426,9 +426,36 @@ public class FormHoaDon extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tblHoaDonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHoaDonMouseClicked
-        // TODO add your handling code here:
-        String maHoaDon = (String) tblHoaDon.getValueAt(tblHoaDon.getSelectedRow(), 1);
-        fillTable2(cthd.searchByHoaDonID(maHoaDon));
+        // Lấy chỉ số hàng được chọn
+        int selectedRowIndex = tblHoaDon.getSelectedRow();
+
+        // Đảm bảo có hàng được chọn
+        if (selectedRowIndex >= 0) {
+            // Lấy giá trị cột "Mã Hóa Đơn" trong hàng được chọn
+            String maHoaDon = (String) tblHoaDon.getValueAt(selectedRowIndex, 1);
+
+            // Lấy danh sách chi tiết hóa đơn cho mã hóa đơn đã chọn
+            List<ChiTietHoaDonModel> listCTHD = cthd.searchByHoaDonID(maHoaDon);
+
+            // Xóa dữ liệu hiện có trong mô hình bảng chi tiết hóa đơn
+            DefaultTableModel modelCTHD = (DefaultTableModel) tblHoaDonChiTiet.getModel();
+            modelCTHD.setRowCount(0);
+
+            // Điền dữ liệu vào bảng chi tiết hóa đơn với các thông tin đã lấy được
+            int index = 1;
+            for (ChiTietHoaDonModel cthd : listCTHD) {
+                cthd.setStt(index++);
+                modelCTHD.addRow(cthd.toData2());
+            }
+
+            // Cuộn đến đầu bảng chi tiết hóa đơn
+            if (modelCTHD.getRowCount() > 0) {
+                tblHoaDonChiTiet.scrollRectToVisible(tblHoaDonChiTiet.getCellRect(0, 0, true));
+            }
+        } else {
+            // Không có hàng nào được chọn, có thể xử lý trường hợp này bằng thông báo hoặc logic khác
+            System.out.println("Không có hàng nào được chọn");
+        }
 
     }//GEN-LAST:event_tblHoaDonMouseClicked
 

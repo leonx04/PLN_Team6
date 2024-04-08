@@ -1133,6 +1133,9 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
             txtMaCTSP.requestFocus();
             return;
         }
+        if (!validatef()) {
+            return;
+        }
         ChiTietSanPhamModel md = this.readForm();
         String newID = ctsprp.getNewSPCTID();
         md.setID(newID);
@@ -1149,7 +1152,9 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn một sản phẩm để cập nhật.");
             return;
         }
-
+        if(!validatef()){
+            return;
+        }
         // Xác nhận cập nhật
         int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn cập nhật sản phẩm này?", "Xác nhận",
                 JOptionPane.YES_NO_OPTION);
