@@ -4,6 +4,7 @@
  */
 package raven.application.service;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,62 +27,35 @@ import raven.connect.DBConnect;
  */
 public class BanHangService {
 
+    private ChiTietHoaDonService cthdsv = new ChiTietHoaDonService();
     Connection con = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
     String sql = null;
 
-    public List<HoaDonModel> getAllHD() {
-        sql = "SELECT        HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang, VOUCHER.TenVoucher, HOADON.TongTien, HOADON.HinhThucThanhToan\n"
-                + "FROM            HOADON INNER JOIN\n"
-                + "                         NHANVIEN ON HOADON.ID_NhanVien = NHANVIEN.ID INNER JOIN\n"
-                + "                         KHACHHANG ON HOADON.ID_KhachHang = KHACHHANG.ID INNER JOIN\n"
-                + "                         VOUCHER ON HOADON.ID_Voucher = VOUCHER.ID";
-        try {
-            con = DBConnect.getConnection();
-            ps = con.prepareStatement(sql);
-            rs = ps.executeQuery();
-            List<HoaDonModel> listHD = new ArrayList<>();
-            while (rs.next()) {
-                HoaDonModel hdModel = new HoaDonModel(
-                        rs.getString(1),
-                        rs.getDate(2),
-                        new NhanVienModel(rs.getString(3)),
-                        new KhachHangModel(rs.getString(4)),
-                        rs.getBigDecimal(6),
-                        new VoucherModer(rs.getString(5)),
-                        rs.getString(7));
-                listHD.add(hdModel);
-            }
-            return listHD;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-<<<<<<< HEAD
-//    public List<ChiTietHoaDonModel> getAllGH() {
-//        sql = "SELECT        SANPHAM.ID AS MaSanPham, SANPHAM.TenSanPham as TenSanPham, SANPHAMCHITIET.GiaBan as DonGia, HOADONCHITIET.SoLuong as SoLuong, HOADONCHITIET.ThanhTien as ThanhTien\n"
-//                + "FROM            HOADONCHITIET INNER JOIN\n"
-//                + "                         SANPHAMCHITIET ON HOADONCHITIET.ID_SanPhamChiTiet = SANPHAMCHITIET.ID INNER JOIN\n"
-//                + "                         SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID";
+//    public List<HoaDonModel> getAllHD() {
+//        sql = "SELECT        HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang, VOUCHER.TenVoucher, HOADON.TongTien, HOADON.HinhThucThanhToan\n"
+//                + "FROM            HOADON INNER JOIN\n"
+//                + "                         NHANVIEN ON HOADON.ID_NhanVien = NHANVIEN.ID INNER JOIN\n"
+//                + "                         KHACHHANG ON HOADON.ID_KhachHang = KHACHHANG.ID INNER JOIN\n"
+//                + "                         VOUCHER ON HOADON.ID_Voucher = VOUCHER.ID";
 //        try {
 //            con = DBConnect.getConnection();
 //            ps = con.prepareStatement(sql);
 //            rs = ps.executeQuery();
-//            List<ChiTietHoaDonModel> listCTHD = new ArrayList<>();
+//            List<HoaDonModel> listHD = new ArrayList<>();
 //            while (rs.next()) {
-//                ChiTietHoaDonModel CTHDModel = new ChiTietHoaDonModel(
-//                        rs.getString(1), new SanPhamModel(rs.getString(1)),
-//                        new MauSacModel(rs.getString(3)), new KichCoModel(rs.getString(4)), new ChatLieuModel(rs.getString(5)), new ThuongHieuModel(rs.getString(6)),
-//                        new ChiTietSanPhamModel(rs.getBigDecimal(3)),
-//                        rs.getInt(4),
-//                        rs.getBigDecimal(5)
-//                );
-//                listCTHD.add(CTHDModel);
+//                HoaDonModel hdModel = new HoaDonModel(
+//                        rs.getString(1),
+//                        rs.getDate(2),
+//                        new NhanVienModel(rs.getString(3)),
+//                        new KhachHangModel(rs.getString(4)),
+//                        rs.getBigDecimal(6),
+//                        new VoucherModer(rs.getString(5)),
+//                        rs.getString(7));
+//                listHD.add(hdModel);
 //            }
-//            return listCTHD;
+//            return listHD;
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //            return null;
@@ -102,57 +76,32 @@ public class BanHangService {
                 + "INNER JOIN NHANVIEN ON HOADON.ID_NhanVien = NHANVIEN.ID\n"
                 + "INNER JOIN KHACHHANG ON HOADON.ID_KhachHang = KHACHHANG.ID\n"
                 + "LEFT JOIN VOUCHER ON HOADON.ID_Voucher = VOUCHER.ID\n"
-                + "WHERE HOADON.TrangThai = N'Chờ thanh toán'\n" // Thêm điều kiện WHERE vào đây
+                + "WHERE HOADON.TrangThai = N'Chờ thanh toán'\n"
                 + "GROUP BY HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen, VOUCHER.TenVoucher, HOADON.HinhThucThanhToan, HOADON.TrangThai";
 
-    try {
-        con = DBConnect.getConnection();
-        ps = con.prepareStatement(sql);
-        rs = ps.executeQuery();
-        List<HoaDonModel> listHD = new ArrayList<>();
-        while (rs.next()) {
-            HoaDonModel hdModel = new HoaDonModel(
-                    rs.getString(1),
-                    rs.getDate(2),
-                    new NhanVienModel(rs.getString(3)),
-                    new KhachHangModel(rs.getString(4)),
-                    rs.getBigDecimal(6),
-                    new VoucherModer(rs.getString(5)),
-                    rs.getString(7),
-                    rs.getString(8)); 
-            listHD.add(hdModel);
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            List<HoaDonModel> listHD = new ArrayList<>();
+            while (rs.next()) {
+                HoaDonModel hdModel = new HoaDonModel(
+                        rs.getString(1),
+                        rs.getDate(2),
+                        new NhanVienModel(rs.getString(3)),
+                        new KhachHangModel(rs.getString(4)),
+                        rs.getBigDecimal(6),
+                        new VoucherModer(rs.getString(5)),
+                        rs.getString(7),
+                        rs.getString(8));
+                listHD.add(hdModel);
+            }
+            return listHD;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        return listHD;
-    } catch (Exception e) {
-        e.printStackTrace();
-        return null;
     }
-}
-
-    try {
-        con = DBConnect.getConnection();
-        ps = con.prepareStatement(sql);
-        rs = ps.executeQuery();
-        List<HoaDonModel> listHD = new ArrayList<>();
-        while (rs.next()) {
-            HoaDonModel hdModel = new HoaDonModel(
-                    rs.getString(1),
-                    rs.getDate(2),
-                    new NhanVienModel(rs.getString(3)),
-                    new KhachHangModel(rs.getString(4)),
-                    rs.getBigDecimal(6),
-                    new VoucherModer(rs.getString(5)),
-                    rs.getString(7),
-                    rs.getString(8)); 
-            listHD.add(hdModel);
-        }
-        return listHD;
-    } catch (Exception e) {
-        e.printStackTrace();
-        return null;
-    }
-}
-
 
     public boolean capNhatTongTienHoaDon(String maHoaDon) {
         // Kiểm tra và gán giá trị mặc định là 0 nếu tổng tiền là null
@@ -274,6 +223,118 @@ public class BanHangService {
 
     }
 
+    public List<ChiTietSanPhamModel> getAllCTSPByColorID(String colorID) {
+        sql = "SELECT SANPHAMCHITIET.ID, SANPHAM.TenSanPham, MAUSAC.TenMau AS TenMau, SIZE.Ten AS TenKichCo, CHATLIEU.Ten AS TenChatLieu, THUONGHIEU.Ten AS TenThuongHieu , SANPHAMCHITIET.GiaBan, SANPHAMCHITIET.SoLuongTon, MAUSAC.MoTa\n"
+                + "FROM SANPHAMCHITIET\n"
+                + "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID\n"
+                + "INNER JOIN MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID\n"
+                + "INNER JOIN SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID\n"
+                + "INNER JOIN CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID\n"
+                + "INNER JOIN THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID\n"
+                + "WHERE SANPHAMCHITIET.SoLuongTon > 0 AND MAUSAC.ID = ?";
+
+        List<ChiTietSanPhamModel> listCTSP = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, colorID);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietSanPhamModel ctsp = new ChiTietSanPhamModel(
+                        rs.getString(1), // ID
+                        new SanPhamModel(rs.getString(2)), // TenSP
+                        new MauSacModel(rs.getString(3)), // MauSac
+                        new KichCoModel(rs.getString(4)), // Size
+                        new ChatLieuModel(rs.getString(5)), // ChatLieu
+                        new ThuongHieuModel(rs.getString(6)), // ThuongHieu
+                        rs.getBigDecimal(7), // GiaBan
+                        rs.getInt(8), // SoLuongTon
+                        rs.getString(9)); // MoTa
+                listCTSP.add(ctsp);
+            }
+            return listCTSP;
+        } catch (Exception e) {
+            // Xử lý ngoại lệ
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<ChiTietSanPhamModel> getAllCTSPBySizeID(String sizeID) {
+        sql = "SELECT SANPHAMCHITIET.ID, SANPHAM.TenSanPham, MAUSAC.TenMau AS TenMau, SIZE.Ten AS TenKichCo, CHATLIEU.Ten AS TenChatLieu, THUONGHIEU.Ten AS TenThuongHieu, SANPHAMCHITIET.GiaBan, SANPHAMCHITIET.SoLuongTon, MAUSAC.MoTa\n"
+                + "FROM SANPHAMCHITIET\n"
+                + "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID\n"
+                + "INNER JOIN MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID\n"
+                + "INNER JOIN SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID\n"
+                + "INNER JOIN CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID\n"
+                + "INNER JOIN THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID\n"
+                + "WHERE SANPHAMCHITIET.SoLuongTon > 0 AND SIZE.ID = ?"; // Thêm điều kiện tìm kiếm theo ID kích cỡ
+
+        List<ChiTietSanPhamModel> listCTSP = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, sizeID); // Thiết lập tham số cho ID kích cỡ
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietSanPhamModel ctsp = new ChiTietSanPhamModel(
+                        rs.getString(1), // ID
+                        new SanPhamModel(rs.getString(2)), // TenSP
+                        new MauSacModel(rs.getString(3)), // MauSac
+                        new KichCoModel(rs.getString(4)), // Size
+                        new ChatLieuModel(rs.getString(5)), // ChatLieu
+                        new ThuongHieuModel(rs.getString(6)), // ThuongHieu
+                        rs.getBigDecimal(7), // GiaBan
+                        rs.getInt(8), // SoLuongTon
+                        rs.getString(9)); // MoTa
+                listCTSP.add(ctsp);
+            }
+            return listCTSP;
+        } catch (Exception e) {
+            // Xử lý ngoại lệ
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<ChiTietSanPhamModel> getAllCTSPByBrandID(String brandID) {
+        sql = "SELECT SANPHAMCHITIET.ID, SANPHAM.TenSanPham, MAUSAC.TenMau AS TenMau, SIZE.Ten AS TenKichCo, CHATLIEU.Ten AS TenChatLieu, THUONGHIEU.Ten AS TenThuongHieu, SANPHAMCHITIET.GiaBan, SANPHAMCHITIET.SoLuongTon, MAUSAC.MoTa\n"
+                + "FROM SANPHAMCHITIET\n"
+                + "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID\n"
+                + "INNER JOIN MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID\n"
+                + "INNER JOIN SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID\n"
+                + "INNER JOIN CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID\n"
+                + "INNER JOIN THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID\n"
+                + "WHERE SANPHAMCHITIET.SoLuongTon > 0 AND THUONGHIEU.ID = ?"; // Thêm điều kiện tìm kiếm theo ID thương
+        // hiệu
+
+        List<ChiTietSanPhamModel> listCTSP = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, brandID); // Thiết lập tham số cho ID thương hiệu
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietSanPhamModel ctsp = new ChiTietSanPhamModel(
+                        rs.getString(1), // ID
+                        new SanPhamModel(rs.getString(2)), // TenSP
+                        new MauSacModel(rs.getString(3)), // MauSac
+                        new KichCoModel(rs.getString(4)), // Size
+                        new ChatLieuModel(rs.getString(5)), // ChatLieu
+                        new ThuongHieuModel(rs.getString(6)), // ThuongHieu
+                        rs.getBigDecimal(7), // GiaBan
+                        rs.getInt(8), // SoLuongTon
+                        rs.getString(9)); // MoTa
+                listCTSP.add(ctsp);
+            }
+            return listCTSP;
+        } catch (Exception e) {
+            // Xử lý ngoại lệ
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public int laySoLuongTonByID(String maCTSP) {
         int soLuongTon = 0;
         String sql = "SELECT SoLuongTon FROM SANPHAMCHITIET WHERE ID = ?";
@@ -284,43 +345,150 @@ public class BanHangService {
             rs = ps.executeQuery();
             if (rs.next()) {
                 soLuongTon = rs.getInt("SoLuongTon");
->>>>>>> parent of f305b80 (Update Create Bill and Mouseclicked table Bill  on Form Sell)
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return 0;
+        return soLuongTon;
+    }
+
+    public void updateSoLuongTon(String idSanPhamChiTiet, int soLuongMoi) {
+        String sql = "UPDATE SANPHAMCHITIET SET SoLuongTon = ? WHERE ID = ?";
+
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+
+            ps.setInt(1, soLuongMoi);
+            ps.setString(2, idSanPhamChiTiet);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Đóng kết nối
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public List<ChiTietHoaDonModel> getAllGH() {
+        sql = "SELECT        HOADONCHITIET.ID, SANPHAMCHITIET.ID AS Expr1, SANPHAMCHITIET.ID_SanPham, SANPHAMCHITIET.GiaBan, HOADONCHITIET.SoLuong, HOADONCHITIET.ThanhTien\n"
+                + "FROM            HOADONCHITIET INNER JOIN\n"
+                + "                         SANPHAMCHITIET ON HOADONCHITIET.ID_SanPhamChiTiet = SANPHAMCHITIET.ID";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            List<ChiTietHoaDonModel> listCTHD = new ArrayList<>();
+            while (rs.next()) {
+                ChiTietHoaDonModel CTHDModel = new ChiTietHoaDonModel(
+                        rs.getString(1), new SanPhamModel(rs.getString(1)),
+                        new MauSacModel(rs.getString(3)), new KichCoModel(rs.getString(4)),
+                        new ChatLieuModel(rs.getString(5)), new ThuongHieuModel(rs.getString(6)),
+                        new ChiTietSanPhamModel(rs.getBigDecimal(3)),
+                        rs.getInt(4),
+                        rs.getBigDecimal(5));
+                listCTHD.add(CTHDModel);
+            }
+            return listCTHD;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public List<ChiTietHoaDonModel> searchByHoaDonID(String idHoaDon) {
         List<ChiTietHoaDonModel> chiTietHoaDons = new ArrayList<>();
-        String sql = "SELECT SANPHAMCHITIET.ID AS MaSanPhamChiTiet, SANPHAM.TenSanPham AS TenSanPham, SANPHAMCHITIET.GiaBan AS DonGia, HOADONCHITIET.SoLuong AS SoLuong, HOADONCHITIET.ThanhTien AS ThanhTien "
-                +
-                "FROM HOADONCHITIET " +
-                "INNER JOIN SANPHAMCHITIET ON HOADONCHITIET.ID_SanPhamChiTiet = SANPHAMCHITIET.ID " +
-                "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID " +
-                "WHERE HOADONCHITIET.ID_HoaDon = ?";
+        String sql1 = "SELECT SANPHAMCHITIET.ID AS MaSanPhamChiTiet, SANPHAM.TenSanPham AS TenSanPham, SANPHAMCHITIET.GiaBan AS DonGia, HOADONCHITIET.SoLuong AS SoLuong, HOADONCHITIET.ThanhTien AS ThanhTien "
+                + "FROM HOADONCHITIET "
+                + "INNER JOIN SANPHAMCHITIET ON HOADONCHITIET.ID_SanPhamChiTiet = SANPHAMCHITIET.ID "
+                + "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID "
+                + "WHERE HOADONCHITIET.ID_HoaDon = ? AND HOADONCHITIET.ID_HoaDon IN (SELECT ID FROM HOADON)";
         try {
             con = DBConnect.getConnection();
-            ps = con.prepareStatement(sql);
-            ps.setString(1, idHoaDon);
+            ps = con.prepareStatement(sql1);
+            ps.setString(1, idHoaDon.trim());
             rs = ps.executeQuery();
             while (rs.next()) {
                 ChiTietHoaDonModel chiTietHoaDon = new ChiTietHoaDonModel();
-                chiTietHoaDon.setMactsp(new ChiTietSanPhamModel(rs.getString(1)));
-                chiTietHoaDon.setTenSP(new SanPhamModel(rs.getString(2)));
-                chiTietHoaDon.setDonGia(new ChiTietSanPhamModel(rs.getBigDecimal(3)));
-                chiTietHoaDon.setSoLuong(rs.getInt(4));
-                chiTietHoaDon.setThanhTien(rs.getBigDecimal(5));
+                chiTietHoaDon.setMactsp(new ChiTietSanPhamModel(rs.getString("MaSanPhamChiTiet")));
+                chiTietHoaDon.setTenSP(new SanPhamModel(rs.getString("TenSanPham")));
+                chiTietHoaDon.setDonGia(new ChiTietSanPhamModel(rs.getBigDecimal("DonGia")));
+                chiTietHoaDon.setSoLuong(rs.getInt("SoLuong"));
+                chiTietHoaDon.setThanhTien(rs.getBigDecimal("ThanhTien"));
                 chiTietHoaDons.add(chiTietHoaDon);
             }
-<<<<<<< HEAD
-            return chiTietHoaDons;
-=======
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return chiTietHoaDons;
+    }
+
+    public List<HoaDonModel> searchIDByHD(String idHD) {
+        List<HoaDonModel> hdms = new ArrayList<>();
+        sql = "SELECT HD.ID AS 'MaHoaDon', HD.NgayTao AS 'NgayTao', NV.HoTen AS 'NhanVien', KH.HoTen AS 'KhachHang', V.TenVoucher AS 'Voucher', HD.TongTien AS 'TongTien', HD.HinhThucThanhToan AS 'HinhThucThanhToan', HD.TrangThai AS 'TrangThai'\n"
+                + "FROM HOADON HD\n"
+                + "INNER JOIN NHANVIEN NV ON HD.ID_NhanVien = NV.ID\n"
+                + "INNER JOIN KHACHHANG KH ON HD.ID_KhachHang = KH.ID\n"
+                + "INNER JOIN VOUCHER V ON HD.ID_Voucher = V.ID\n"
+                + "WHERE HD.ID = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, idHD.trim());
+            rs = ps.executeQuery(); // Thực thi truy vấn SQL
+            while (rs.next()) {
+                HoaDonModel hdModel = new HoaDonModel();
+                hdModel.setID(rs.getString("MaHoaDon"));
+                hdModel.setNgayTao(rs.getDate("NgayTao"));
+                hdModel.setTenNV(new NhanVienModel(rs.getString("NhanVien")));
+                hdModel.setTenKH(new KhachHangModel(rs.getString("KhachHang")));
+                hdModel.setTenVoucher(new VoucherModer(rs.getString("Voucher")));
+                hdModel.setTongTien(rs.getBigDecimal("TongTien"));
+                hdModel.setHinhThucThanhToan(rs.getString("HinhThucThanhToan"));
+                hdModel.setTrangThai(rs.getString("TrangThai"));
+                hdms.add(hdModel); // Thêm đối tượng hdModel vào danh sách hdms
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return hdms;
+    }
+
+    public List<VoucherModer> getIDByTenVoucher(String ten) {
+        sql = "SELECT ID, TenVoucher, SoLuong, LoaiVoucher, MucGiamGia, MoTa, NgayBatDau, NgayKetThuc FROM VOUCHER WHERE TenVoucher = ?";
+        List<VoucherModer> list = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, ten);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                VoucherModer voucher = new VoucherModer(
+                        rs.getString("ID"),
+                        rs.getString("TenVoucher"),
+                        rs.getInt("SoLuong"),
+                        rs.getString("LoaiVoucher"),
+                        rs.getBigDecimal("MucGiamGia"),
+                        rs.getString("MoTa"),
+                        rs.getDate("NgayBatDau"),
+                        rs.getDate("NgayKetThuc")
+                );
+                list.add(voucher);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     public BigDecimal getGiaBanByMaCTSP(String maCTSP) {
@@ -346,8 +514,7 @@ public class BanHangService {
 
         // Tiến hành chèn dữ liệu vào bảng HOADONCHITIET
         String sql = "INSERT INTO HOADONCHITIET(ID, ID_HoaDon, ID_SanPhamChiTiet, SoLuong, ThanhTien, NgayTao, NgaySua, TrangThai) "
-                + "VALUES(?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, N'Đã thanh toán')";
-                + "VALUES(?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, N'Đã thanh toán')";
+                + "VALUES(?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, N'Chưa thanh toán')";
         try {
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
@@ -357,50 +524,133 @@ public class BanHangService {
             ps.setObject(4, chiTietHoaDon.getSoLuong());
             ps.setObject(5, chiTietHoaDon.getThanhTien());
             return ps.executeUpdate();
->>>>>>> parent of f305b80 (Update Create Bill and Mouseclicked table Bill  on Form Sell)
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return 0;
         }
     }
 
-    public String selectKhachHangLeByMa(String ma, String ten) {
-        String maKHle = null;
-        String sql = "SELECT id FROM KHACHHANG WHERE HoTen = ?";
+    public ChiTietHoaDonModel kiemTraTrungSanPhamChiTiet(String maCTSP, String maHoaDon) {
+        String sql = "SELECT ID, SoLuong FROM HOADONCHITIET WHERE ID_SanPhamChiTiet = ? AND ID_HoaDon = ?";
         try {
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
-            ps.setObject(1, ma);
-            ps.setObject(2, ten);
+            ps.setString(1, maCTSP);
+            ps.setString(2, maHoaDon);
             rs = ps.executeQuery();
-            while (rs.next()) {
-                maKHle = rs.getString("id");
+            if (rs.next()) {
+                ChiTietHoaDonModel chiTietHoaDon = new ChiTietHoaDonModel();
+                chiTietHoaDon.setID(rs.getString("ID"));
+                chiTietHoaDon.setSoLuong(rs.getInt("SoLuong"));
+                return chiTietHoaDon;
             }
-            return maKHle;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            // Đóng kết nối và các tài nguyên
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
         return null;
     }
-    public String selectIDHDBymaNV(String maHD){
-        String id = "";
-        String sql = "select ID from HOADON where ID_NhanVien = ?";
+
+    public int updateSoLuongVaThanhTienHoaDonChiTiet(String maHDCT, int soLuongMoi, BigDecimal thanhTienMoi) {
+        String sql = "UPDATE HOADONCHITIET SET SoLuong = ?, ThanhTien = ? WHERE ID = ?";
+
         try {
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
-            ps.setObject(1, maHD);
-            rs = ps.executeQuery();
-<<<<<<< HEAD
-            while (rs.next()) {                
-                id = rs.getString("id");
-            }
-            return id;
-        } catch (Exception e) {
+            ps.setInt(1, soLuongMoi);
+            ps.setBigDecimal(2, thanhTienMoi);
+            ps.setString(3, maHDCT);
+
+            return ps.executeUpdate();
+        } catch (SQLException e) {
             e.printStackTrace();
+            return 0;
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
-        return null;
     }
-=======
+
+    public int xoaHoaDonChiTiet(String maCTSP, String maHoaDon) {
+        String sql = "DELETE FROM HOADONCHITIET WHERE ID_SanPhamChiTiet = ? AND ID_HoaDon = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, maCTSP);
+            ps.setString(2, maHoaDon);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public int xoaToanBoHoaDonChiTiet(String maHoaDon) {
+        String sql = "DELETE FROM HOADONCHITIET WHERE ID_HoaDon = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, maHoaDon);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public boolean updateBillWhileDeleteALL(String maHoaDon) {
+        BigDecimal tongTien = null; // Tạo biến cục bộ tongTien
+        // Lấy giá trị tổng tiền hiện tại từ cơ sở dữ liệu
+        String sqlGetTongTien = "SELECT TongTien FROM HOADON WHERE ID = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sqlGetTongTien);
+            ps.setString(1, maHoaDon);
+            rs = ps.executeQuery();
             if (rs.next()) {
                 tongTien = rs.getBigDecimal("TongTien");
             }
@@ -435,8 +685,7 @@ public class BanHangService {
             ps = con.prepareStatement(sqlUpdateTongTien);
             ps.setString(1, maHoaDon);
             int rowsAffected = ps.executeUpdate();
-
-            // Sau khi cập nhật tổng tiền thành 0, cần cập nhật thông tin này vào cơ sở dữ
+// Sau khi cập nhật tổng tiền thành 0, cần cập nhật thông tin này vào cơ sở dữ
             // liệu
             boolean updated = capNhatTongTienHoaDon(maHoaDon);
 
@@ -462,7 +711,7 @@ public class BanHangService {
     public String getNewHD() {
         String newID = "HD001";
         try {
-            sql = "SELECT MAX(CAST(SUBSTRING(ID, 5, LEN(ID)) AS INT)) AS maxID FROM HOADON";
+            sql = "SELECT MAX(CAST(SUBSTRING(ID, 4, LEN(ID)) AS INT)) AS maxID FROM HOADON";
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -500,9 +749,9 @@ public class BanHangService {
         }
     }
 
-    public int huyHDByID(String trangThai, String idHD) {
+    public boolean huyHDByID(String trangThai, String idHD) {
         sql = "UPDATE HOADON SET TrangThai = ? WHERE ID = ?";
-        int rowsUpdated = 0; // Số dòng được cập nhật
+        boolean isSuccess = false; // Biến để xác định việc cập nhật thành công hay không
 
         try {
             // Mở kết nối đến cơ sở dữ liệu
@@ -516,11 +765,49 @@ public class BanHangService {
             ps.setString(2, idHD);
 
             // Thực thi câu lệnh SQL và nhận số dòng được cập nhật
-            rowsUpdated = ps.executeUpdate();
+            int rowsUpdated = ps.executeUpdate();
+
+            // Nếu có ít nhất một dòng được cập nhật thành công, đặt isSuccess thành true
+            isSuccess = rowsUpdated > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return rowsUpdated;
+        return isSuccess;
     }
 
+    public boolean updateHTTTHoaDon(String hoaDonID, String HTTT) {
+        // Thực hiện cập nhật hình thức thanh toán cho hóa đơn có ID tương ứng
+        sql = "UPDATE HoaDon SET HinhThucThanhToan = ? WHERE ID = ?";
+        boolean isSuccess = false; // Biến để xác định việc cập nhật thành công hay không
+        try {
+            // Kết nối cơ sở dữ liệu và thực hiện cập nhật
+            con = DBConnect.getConnection();
+
+            ps = con.prepareStatement(sql);
+            ps.setString(1, HTTT);
+            ps.setString(2, hoaDonID);
+
+            int rowsUpdated = ps.executeUpdate();
+            isSuccess = rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isSuccess;
+    }
+
+    public int updateBillStatus(String maHoaDon, String trangThaiMoi) {
+        sql = "UPDATE HOADON SET  TrangThai = ? WHERE ID = ?";
+        int rowsAffected = 0;
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, trangThaiMoi);
+            ps.setString(2, maHoaDon);
+            rowsAffected = ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rowsAffected;
+    }
 }

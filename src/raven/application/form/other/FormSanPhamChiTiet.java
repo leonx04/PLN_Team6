@@ -1,21 +1,27 @@
 package raven.application.form.other;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import java.awt.event.ItemEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import javax.swing.RowFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.TableRowSorter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import pagination.EventPagination;
+import pagination.style.PaginationItemRenderStyle1;
 
 import raven.application.model.ChatLieuModel;
 import raven.application.model.ChiTietSanPhamModel;
@@ -51,11 +57,18 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
     DefaultComboBoxModel dcb_KC;
     DefaultComboBoxModel dcb_SP;
 
+    // Định nghĩa số lượng bản ghi hiển thị trên mỗi trang
+    private static final int RECORDS_PER_PAGE = 10;
+    private int currentPage = 1; // Trang hiện tại
+
     public FormSanPhamChiTiet() {
         initComponents();
-       fillTable(ctsprp.getAllCTSP());
+        init();
+        fillTable(ctsprp.getAllCTSP());
         lb.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:$h1.font");
+
+        JComboBox<String> cboFilterTrangThai = new JComboBox<>(new String[]{"Tất cả", "Còn hàng", "Hết hàng"});
 
     }
 
@@ -67,11 +80,43 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
         Cbo_KichCo();
         Cbo_ThuongHieu();
         Cbo_ChatLieu();
-        int index = 1;
-        for (ChiTietSanPhamModel ctsp : listCTSP) {
+
+        int startIndex = (currentPage - 1) * RECORDS_PER_PAGE; // Bắt đầu từ bản ghi thứ startIndex
+        int endIndex = Math.min(startIndex + RECORDS_PER_PAGE, listCTSP.size()); // Lấy tối đa 10 bản ghi kể từ startIndex
+
+        int index = startIndex + 1; // Số thứ tự của bản ghi đầu tiên trên trang
+
+        for (int i = startIndex; i < endIndex; i++) {
+            ChiTietSanPhamModel ctsp = listCTSP.get(i);
             ctsp.setStt(index++);
             model.addRow(ctsp.toData());
         }
+    }
+
+    private void init() {
+        // Cài đặt thanh phân trang
+        pagination1.addEventPagination(new EventPagination() {
+            @Override
+            public void pageChanged(int page) {
+                currentPage = page; // Cập nhật trang hiện tại khi chuyển trang
+                fillTable(ctsprp.getAllCTSP()); // Hiển thị dữ liệu cho trang mới
+            }
+        });
+        pagination1.setPaginationItemRender(new PaginationItemRenderStyle1());
+        pagination1.setPagegination(1, 10); // Khởi tạo thanh trang với trang đầu tiên và tổng số trang
+    }
+
+    // Cập nhật phương thức setPagegination để cập nhật tổng số trang dựa trên số lượng bản ghi
+    public void setPagegination(int current, int totalRecords) {
+        int totalPages = (int) Math.ceil((double) totalRecords / RECORDS_PER_PAGE);
+        pagination1.setPagegination(current, totalPages);
+    }
+
+    // Phương thức này sẽ được gọi khi dữ liệu thay đổi hoặc khi chuyển trang
+    void refreshData() {
+        int totalRecords = ctsprp.getAllCTSP().size();
+        fillTable(ctsprp.getAllCTSP()); // Cập nhật dữ liệu cho bảng
+        setPagegination(currentPage, totalRecords); // Cập nhật thanh trang
     }
 
     void showData(int index) {
@@ -182,6 +227,16 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
 
     }
 
+    void Cbo_FilterMauSac() {
+        List<MauSacModel> listMS = msrs.getALLMauSac();
+        String[] cbo = new String[listMS.size()];
+        for (int i = 0; i < listMS.size(); i++) {
+            cbo[i] = listMS.get(i).getTenMS();
+        }
+        cboFilterMauSac.setModel(new DefaultComboBoxModel<>(cbo));
+
+    }
+
     void Cbo_KichCo() {
         List<KichCoModel> listKC = kcrs.getALLKichCo();
         String[] cbo = new String[listKC.size()];
@@ -189,6 +244,15 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
             cbo[i] = listKC.get(i).getTenSize();
         }
         cboKichThuoc.setModel(new DefaultComboBoxModel<>(cbo));
+        cboFilterKichThuoc.setModel(new DefaultComboBoxModel<>(cbo));
+    }
+
+    void Cbo_FilterKichCo() {
+        List<KichCoModel> listKC = kcrs.getALLKichCo();
+        String[] cbo = new String[listKC.size()];
+        for (int i = 0; i < listKC.size(); i++) {
+            cbo[i] = listKC.get(i).getTenSize();
+        }
         cboFilterKichThuoc.setModel(new DefaultComboBoxModel<>(cbo));
     }
 
@@ -202,6 +266,15 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
         cboFilterSP.setModel(new DefaultComboBoxModel<>(cbo));
     }
 
+    void Cbo_FilTerSanPham() {
+        List<SanPhamModel> listSP = sprs.getAllSP();
+        String[] cbo = new String[listSP.size()];
+        for (int i = 0; i < listSP.size(); i++) {
+            cbo[i] = listSP.get(i).getTenSP();
+        }
+        cboFilterSP.setModel(new DefaultComboBoxModel<>(cbo));
+    }
+
     void Cbo_ThuongHieu() {
         List<ThuongHieuModel> listTH = thrs.getALLThuongHieu();
         String[] cbo = new String[listTH.size()];
@@ -209,6 +282,15 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
             cbo[i] = listTH.get(i).getTenTH();
         }
         cboThuonHieu.setModel(new DefaultComboBoxModel<>(cbo));
+        cboFilterThuongHieu.setModel(new DefaultComboBoxModel<>(cbo));
+    }
+
+    void Cbo_FilterThuongHieu() {
+        List<ThuongHieuModel> listTH = thrs.getALLThuongHieu();
+        String[] cbo = new String[listTH.size()];
+        for (int i = 0; i < listTH.size(); i++) {
+            cbo[i] = listTH.get(i).getTenTH();
+        }
         cboFilterThuongHieu.setModel(new DefaultComboBoxModel<>(cbo));
     }
 
@@ -222,12 +304,28 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
         cboFilterChatLieu.setModel(new DefaultComboBoxModel<>(cbo));
     }
 
+    void Cbo_FilterChatLieu() {
+        List<ChatLieuModel> listCL = clrs.getALLChatLieu();
+        String[] cbo = new String[listCL.size()];
+        for (int i = 0; i < listCL.size(); i++) {
+            cbo[i] = listCL.get(i).getTenCL();
+        }
+        cboFilterChatLieu.setModel(new DefaultComboBoxModel<>(cbo));
+    }
+
     void clear() {
         txtMaCTSP.setText(null);
         txtGiaBan.setText(null);
         txtMoTaCTSP.setText(null);
         txtSoLuong.setText(null);
         txtTimKiem.setText(null);
+        fillTable(ctsprp.getAllCTSP());
+    }
+
+    private void filter(String querry) {
+        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(model);
+        tblSPCT.setRowSorter(tr);
+        tr.setRowFilter(RowFilter.regexFilter(querry));
     }
 
     void openMauSac() {
@@ -245,6 +343,17 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
     void openKichThuoc() {
         new FormKichThuoc().setVisible(true);
     }
+
+    private String selectedSanPhamID = null;
+    private String selectedFilterSPItem = null;
+    private String selectedMauSacID = null;
+    private String selectedFilterMSItem = null;
+    private String selectedSizeID = null;
+    private String selectedFilterSizeItem = null;
+    private String selectedChatLieuID = null;
+    private String selectedFilterChatLieuItem = null;
+    private String selectedThuongHieuID = null;
+    private String selectedFilterThuongHieuItem = null;
 
     public boolean validatef() {
         // Dữ liệu cần thiết từ các trường nhập liệu
@@ -374,6 +483,7 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
         jLabel14 = new javax.swing.JLabel();
         cboFilterTrangThai = new javax.swing.JComboBox<>();
         cboFilterSP = new javax.swing.JComboBox<>();
+        pagination1 = new raven.pagination.Pagination();
 
         setPreferredSize(new java.awt.Dimension(1295, 713));
 
@@ -747,24 +857,59 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
 
         cboFilterMauSac.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cboFilterMauSac.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboFilterMauSac.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboFilterMauSacActionPerformed(evt);
+            }
+        });
 
         cboFilterKichThuoc.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cboFilterKichThuoc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboFilterKichThuoc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboFilterKichThuocActionPerformed(evt);
+            }
+        });
 
         cboFilterChatLieu.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cboFilterChatLieu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboFilterChatLieu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboFilterChatLieuActionPerformed(evt);
+            }
+        });
 
         cboFilterThuongHieu.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cboFilterThuongHieu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboFilterThuongHieu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboFilterThuongHieuActionPerformed(evt);
+            }
+        });
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel14.setText("Trạng thái");
 
         cboFilterTrangThai.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cboFilterTrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hoạt động", "Không hoạt động" }));
+        cboFilterTrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Còn hàng", "Hết hàng" }));
+        cboFilterTrangThai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboFilterTrangThaiActionPerformed(evt);
+            }
+        });
 
         cboFilterSP.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cboFilterSP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboFilterSP.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboFilterSPItemStateChanged(evt);
+            }
+        });
+        cboFilterSP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboFilterSPActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -778,8 +923,8 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
                         .addComponent(jLabel12)
                         .addGap(18, 18, 18)
                         .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
-                        .addComponent(cboFilterSP, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cboFilterSP, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(cboFilterMauSac, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -809,7 +954,7 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
                     .addComponent(cboFilterTrangThai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cboFilterSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(22, 22, 22)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -823,9 +968,13 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(495, 495, 495)
+                .addComponent(pagination1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -838,9 +987,111 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(19, 19, 19))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pagination1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void cboFilterSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFilterSPActionPerformed
+        selectedFilterSPItem = (String) cboFilterSP.getSelectedItem();
+        String selectedSanPham = selectedFilterSPItem;
+        List<SanPhamModel> listSP = sprs.getIDByTenSP(selectedSanPham);
+        if (listSP.size() > 0) {
+            selectedSanPhamID = listSP.get(0).getID();
+            List<ChiTietSanPhamModel> listCTSP = ctsprp.searchBySanPhamID(selectedSanPhamID);
+            fillTable(listCTSP);
+            cboFilterSP.setSelectedItem(selectedFilterSPItem);
+        } else {
+            selectedSanPhamID = null;
+            fillTable(ctsprp.getAllCTSP());
+            cboFilterSP.setSelectedItem(selectedFilterSPItem);
+        }
+    }//GEN-LAST:event_cboFilterSPActionPerformed
+
+    private void cboFilterSPItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboFilterSPItemStateChanged
+
+    }//GEN-LAST:event_cboFilterSPItemStateChanged
+
+    private void cboFilterMauSacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFilterMauSacActionPerformed
+        selectedFilterMSItem = (String) cboFilterMauSac.getSelectedItem();
+        selectedMauSacID = selectedFilterMSItem;
+        List<MauSacModel> listMS = msrs.getIDByTenMS(selectedMauSacID);
+        if (listMS.size() > 0) {
+            selectedMauSacID = listMS.get(0).getID();
+            List<ChiTietSanPhamModel> listCTSP = ctsprp.searchByMauSacID(selectedMauSacID);
+            fillTable(listCTSP);
+            cboFilterMauSac.setSelectedItem(selectedFilterMSItem);
+        } else {
+            selectedMauSacID = null;
+            fillTable(ctsprp.getAllCTSP());
+            cboFilterMauSac.setSelectedItem(selectedFilterMSItem);
+        }
+    }//GEN-LAST:event_cboFilterMauSacActionPerformed
+
+    private void cboFilterKichThuocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFilterKichThuocActionPerformed
+        selectedFilterSizeItem = (String) cboFilterKichThuoc.getSelectedItem();
+        selectedSizeID = selectedFilterSizeItem;
+        List<KichCoModel> listKC = kcrs.getIDByTenKC(selectedSizeID);
+        if (listKC.size() > 0) {
+            selectedSizeID = listKC.get(0).getID();
+            List<ChiTietSanPhamModel> listCTSP = ctsprp.searchBySizeID(selectedSizeID);
+            fillTable(listCTSP);
+            cboFilterKichThuoc.setSelectedItem(selectedFilterSizeItem);
+        } else {
+            selectedMauSacID = null;
+            fillTable(ctsprp.getAllCTSP());
+            cboFilterKichThuoc.setSelectedItem(selectedFilterSizeItem);
+        }
+    }//GEN-LAST:event_cboFilterKichThuocActionPerformed
+
+    private void cboFilterChatLieuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFilterChatLieuActionPerformed
+        selectedFilterChatLieuItem = (String) cboFilterChatLieu.getSelectedItem();
+        selectedChatLieuID = selectedFilterChatLieuItem;
+        List<ChatLieuModel> listCL = clrs.getIDByTenCL(selectedChatLieuID);
+        if (listCL.size() > 0) {
+            selectedChatLieuID = listCL.get(0).getID();
+            List<ChiTietSanPhamModel> listCTSP = ctsprp.searchByChatLieuID(selectedChatLieuID);
+            fillTable(listCTSP);
+            cboFilterChatLieu.setSelectedItem(selectedFilterChatLieuItem);
+        } else {
+            selectedChatLieuID = null;
+            fillTable(ctsprp.getAllCTSP());
+            cboFilterChatLieu.setSelectedItem(selectedFilterChatLieuItem);
+        }
+    }//GEN-LAST:event_cboFilterChatLieuActionPerformed
+
+    private void cboFilterThuongHieuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFilterThuongHieuActionPerformed
+        selectedFilterThuongHieuItem = (String) cboFilterThuongHieu.getSelectedItem();
+        selectedThuongHieuID = selectedFilterThuongHieuItem;
+        List<ThuongHieuModel> listTH = thrs.getIDByTenTH(selectedThuongHieuID);
+        if (listTH.size() > 0) {
+            selectedThuongHieuID = listTH.get(0).getID();
+            List<ChiTietSanPhamModel> listCTSP = ctsprp.searchByThuonghieuID(selectedThuongHieuID);
+            fillTable(listCTSP);
+            cboFilterThuongHieu.setSelectedItem(selectedFilterThuongHieuItem);
+        } else {
+            selectedThuongHieuID = null;
+            fillTable(ctsprp.getAllCTSP());
+            cboFilterThuongHieu.setSelectedItem(selectedFilterThuongHieuItem); // Thiết lập lại giá trị của combobox
+        }
+    }//GEN-LAST:event_cboFilterThuongHieuActionPerformed
+
+    private void cboFilterTrangThaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFilterTrangThaiActionPerformed
+        String selectedTrangThai = (String) cboFilterTrangThai.getSelectedItem();
+        List<ChiTietSanPhamModel> listCTSP;
+
+        if (selectedTrangThai.equals("Còn hàng")) {
+            listCTSP = ctsprp.getAllCTSPSoluongLonHon0();
+        } else if (selectedTrangThai.equals("Hết hàng")) {
+            listCTSP = ctsprp.getAllCTSPSoluong0(); // Sử dụng phương thức getAllCTSPSoluong0 để lấy các sản phẩm có số
+            // lượng tồn bằng 0
+        } else {
+            listCTSP = ctsprp.getAllCTSP();
+        }
+
+        fillTable(listCTSP);
+    }//GEN-LAST:event_cboFilterTrangThaiActionPerformed
 
     private void btnAddMauSacActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnAddMauSacActionPerformed
         this.openMauSac();
@@ -860,7 +1111,7 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
     }// GEN-LAST:event_btnAddThuongHieuActionPerformed
 
     private void cboMauSacActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cboMauSacActionPerformed
-        
+
     }// GEN-LAST:event_cboMauSacActionPerformed
 
     private void cboKichThuocActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cboKichThuocActionPerformed
@@ -877,7 +1128,11 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
 
     private void btnAddCTSPActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnAddCTSPActionPerformed
         // TODO add your handling code here:
-
+        if (ctsprp.checkTrungId(txtMaCTSP.getText().trim())) {
+            JOptionPane.showMessageDialog(this, "Mã chi tiết sản phẩm đã tồn tại!");
+            txtMaCTSP.requestFocus();
+            return;
+        }
         ChiTietSanPhamModel md = this.readForm();
         String newID = ctsprp.getNewSPCTID();
         md.setID(newID);
@@ -941,72 +1196,73 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
 
     private void btnXuatExcelActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnXuatExcelActionPerformed
         // TODO add your handling code here:
-        
+
     }// GEN-LAST:event_btnXuatExcelActionPerformed
 
     private void btnImportExcelActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnImportExcelActionPerformed
         // TODO add your handling code here:
-         // 1. Xác định đường dẫn thư mục lưu file mặc định
-    String currentDirectoryFilePath = "A:\\";
+        // 1. Xác định đường dẫn thư mục lưu file mặc định
+        String currentDirectoryFilePath = "A:\\";
 
-    // 2. Tạo cửa sổ chọn file cho người dùng
-    JFileChooser excelImportChooser = new JFileChooser(currentDirectoryFilePath);
+        // 2. Tạo cửa sổ chọn file cho người dùng
+        JFileChooser excelImportChooser = new JFileChooser(currentDirectoryFilePath);
 
-    // 3. Bộ lọc chỉ hiển thị các file Excel
-    FileNameExtensionFilter excelFNEF = new FileNameExtensionFilter("Tệp Excel", "xls", "xlsx", "xlsm");
-    excelImportChooser.setFileFilter(excelFNEF);
+        // 3. Bộ lọc chỉ hiển thị các file Excel
+        FileNameExtensionFilter excelFNEF = new FileNameExtensionFilter("Tệp Excel", "xls", "xlsx", "xlsm");
+        excelImportChooser.setFileFilter(excelFNEF);
 
-    // 4. Đặt tiêu đề cho cửa sổ chọn file
-    excelImportChooser.setDialogTitle("Mở tập tin Excel");
+        // 4. Đặt tiêu đề cho cửa sổ chọn file
+        excelImportChooser.setDialogTitle("Mở tập tin Excel");
 
-    // 5. Hiển thị cửa sổ chọn file và kiểm tra kết quả
-    int excelChooser = excelImportChooser.showOpenDialog(null);
-    if (excelChooser == JFileChooser.APPROVE_OPTION) {
+        // 5. Hiển thị cửa sổ chọn file và kiểm tra kết quả
+        int excelChooser = excelImportChooser.showOpenDialog(null);
+        if (excelChooser == JFileChooser.APPROVE_OPTION) {
 
-        // 6. Tạo Workbook và Sheet mới trong Excel
-        try {
-            XSSFWorkbook excelWorkbook = new XSSFWorkbook(new FileInputStream(excelImportChooser.getSelectedFile()));
-            XSSFSheet excelSheet = excelWorkbook.getSheetAt(0);
+            // 6. Tạo Workbook và Sheet mới trong Excel
+            try {
+                XSSFWorkbook excelWorkbook = new XSSFWorkbook(new FileInputStream(excelImportChooser.getSelectedFile()));
+                XSSFSheet excelSheet = excelWorkbook.getSheetAt(0);
 
-            // 7. Lấy số hàng trong sheet
-            int rowCount = excelSheet.getLastRowNum() + 1;
+                // 7. Lấy số hàng trong sheet
+                int rowCount = excelSheet.getLastRowNum() + 1;
 
-            // 8. Duyệt qua từng hàng trong sheet
-            for (int i = 1; i < rowCount; i++) {
+                // 8. Duyệt qua từng hàng trong sheet
+                for (int i = 1; i < rowCount; i++) {
 
-                // 9. Lấy dòng thứ i
-                XSSFRow excelRow = excelSheet.getRow(i);
+                    // 9. Lấy dòng thứ i
+                    XSSFRow excelRow = excelSheet.getRow(i);
 
-                // 10. Duyệt qua từng cột trong dòng
-                for (int j = 0; j < excelRow.getLastCellNum(); j++) {
+                    // 10. Duyệt qua từng cột trong dòng
+                    for (int j = 0; j < excelRow.getLastCellNum(); j++) {
 
-                    // 11. Lấy ô thứ j trong dòng thứ i
-                    XSSFCell excelCell = excelRow.getCell(j);
+                        // 11. Lấy ô thứ j trong dòng thứ i
+                        XSSFCell excelCell = excelRow.getCell(j);
 
-                    // 12. Lấy giá trị của ô
-                    String cellValue = excelCell.getStringCellValue();
+                        // 12. Lấy giá trị của ô
+                        String cellValue = excelCell.getStringCellValue();
 
-                    // 13. Gán giá trị của ô vào bảng
-                    int stt = model.getRowCount() + 1;
-                    model.addRow(new Object[]{stt, cellValue});
+                        // 13. Gán giá trị của ô vào bảng
+                        int stt = model.getRowCount() + 1;
+                        model.addRow(new Object[]{stt, cellValue});
+                    }
                 }
-            }
 
-            // 14. Thông báo nhập dữ liệu thành công
-            JOptionPane.showMessageDialog(this, "Nhập dữ liệu thành công!");
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Hiển thị thông báo lỗi cho người dùng
-            JOptionPane.showMessageDialog(this, "Lỗi khi mở file Excel: " + e.getMessage());
+                // 14. Thông báo nhập dữ liệu thành công
+                JOptionPane.showMessageDialog(this, "Nhập dữ liệu thành công!");
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Hiển thị thông báo lỗi cho người dùng
+                JOptionPane.showMessageDialog(this, "Lỗi khi mở file Excel: " + e.getMessage());
+            }
+        } else {
+            // 15. Thông báo người dùng hủy chọn file
+            JOptionPane.showMessageDialog(this, "Bạn đã hủy chọn file!");
         }
-    } else {
-        // 15. Thông báo người dùng hủy chọn file
-        JOptionPane.showMessageDialog(this, "Bạn đã hủy chọn file!");
-    }
     }// GEN-LAST:event_btnImportExcelActionPerformed
 
     private void txtTimKiemKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtTimKiemKeyReleased
-        // TODO add your handling code here:
+        String query = txtTimKiem.getText();
+        filter(query);
     }// GEN-LAST:event_txtTimKiemKeyReleased
 
     private void tblSPCTMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_tblSPCTMouseClicked
@@ -1055,6 +1311,7 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lb;
+    private raven.pagination.Pagination pagination1;
     private javax.swing.JTable tblSPCT;
     private javax.swing.JTextField txtGiaBan;
     private javax.swing.JTextField txtMaCTSP;
