@@ -45,7 +45,7 @@ public class FormHoaDon extends javax.swing.JPanel {
         loadTrangThai();
         loadHinhThuc();
         this.fillTable(hdsr.getAll());
-        this.fillTable2(cthd.getAllCTHD());
+//        this.fillTable2(cthd.getAllCTHD());
     }
 
     void loadTrangThai() {
@@ -76,6 +76,7 @@ public class FormHoaDon extends javax.swing.JPanel {
 
     void fillTable2(List<ChiTietHoaDonModel> listCTHD) {
         model = (DefaultTableModel) tblHoaDonChiTiet.getModel();
+        // Xóa hết các dòng hiện tại trong bảng
         model.setRowCount(0);
         int index = 1;
         for (ChiTietHoaDonModel cthd : listCTHD) {
@@ -113,6 +114,19 @@ public class FormHoaDon extends javax.swing.JPanel {
         }
 
     }
+
+    void showData(int index) {
+        String maHD = String.valueOf(tblHoaDon.getValueAt(index, 1)).trim();
+        String tenNV = String.valueOf(tblHoaDon.getValueAt(index, 3)).trim();
+        String tenKH = String.valueOf(tblHoaDon.getValueAt(index, 4)).trim();
+
+        String tenVC = String.valueOf(tblHoaDon.getValueAt(index, 5)).trim();
+        String tongTien = String.valueOf(tblHoaDon.getValueAt(index, 6)).trim();
+        String HTTT = String.valueOf(tblHoaDon.getValueAt(index, 7)).trim();
+
+    }
+    // Biến để lưu trữ ID của hóa đơn được chọn
+    private String selectedHoaDonID;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -286,8 +300,8 @@ public class FormHoaDon extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(dateBatDau, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(2, 2, 2)))
-                .addGap(4, 4, 4)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -328,6 +342,11 @@ public class FormHoaDon extends javax.swing.JPanel {
             }
         });
         tblHoaDonChiTiet.setPreferredSize(new java.awt.Dimension(1900, 200));
+        tblHoaDonChiTiet.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblHoaDonChiTietMouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(tblHoaDonChiTiet);
         if (tblHoaDonChiTiet.getColumnModel().getColumnCount() > 0) {
             tblHoaDonChiTiet.getColumnModel().getColumn(1).setResizable(false);
@@ -537,6 +556,10 @@ public class FormHoaDon extends javax.swing.JPanel {
         // TODO add your handling code here:
         locHoaDon();
     }//GEN-LAST:event_cboTrangThaiHDItemStateChanged
+
+    private void tblHoaDonChiTietMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHoaDonChiTietMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblHoaDonChiTietMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

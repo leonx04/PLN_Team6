@@ -139,8 +139,7 @@
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="225" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="223" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -488,6 +487,9 @@
                   <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tblHoaDonChiTietMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
