@@ -8,11 +8,14 @@ import javax.swing.table.DefaultTableModel;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.event.ItemEvent;
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Vector;
 import javax.swing.RowFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableRowSorter;
@@ -1152,7 +1155,7 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn một sản phẩm để cập nhật.");
             return;
         }
-        if(!validatef()){
+        if (!validatef()) {
             return;
         }
         // Xác nhận cập nhật
@@ -1200,67 +1203,124 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
     }
 
     private void btnXuatExcelActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnXuatExcelActionPerformed
-        // TODO add your handling code here:
+        // 1. Xác định đường dẫn thư mục lưu file mặc định
+        String curentDirectoryFilePath = "A:\\";
+        // 2. Tạo cửa sổ chọn file cho người dùng
+        JFileChooser execlExportChooser = new JFileChooser(curentDirectoryFilePath);
+        // 3. Bộ lọc chỉ hiển thị các file Excel
+        FileNameExtensionFilter excelFNEF = new FileNameExtensionFilter("Tệp Excel", "xls", "xlsx", "xlsm");
+        execlExportChooser.setFileFilter(excelFNEF);
+        // 4. Đặt tiêu đề cho cửa sổ chọn file
+        execlExportChooser.setDialogTitle("Lưu tập tin Excel");
+        // 5. Hiển thị cửa sổ chọn file và kiểm tra kết quả
+        int excelChooser = execlExportChooser.showSaveDialog(null);
+        if (excelChooser == JFileChooser.APPROVE_OPTION) {
+            // 6. Tạo Workbook và Sheet mới trong Excel
+            XSSFWorkbook excelSSFWorkbook = new XSSFWorkbook();
+            XSSFSheet excelSheet = excelSSFWorkbook.createSheet("Danh sách sản phẩm");
+            // Tạo mảng chứa tên cột
+            String[] columnNames = {"STT", "Mã CTSP", "Tên Sản phẩm", " Màu sắc", "Size", "Chất liệu", "Thương hiệu", "Gia ban", "So Luong", "Mô tả"};
+            // Tạo dòng tiêu đề
+            XSSFRow headerRow = excelSheet.createRow(0);
+            for (int i = 0; i < columnNames.length; i++) {
+                XSSFCell headerCell = headerRow.createCell(i);
+                headerCell.setCellValue(columnNames[i]);
+            }
+            // Duyệt qua từng hàng và cột của model1 (bảng dữ liệu)
+            for (int i = 0; i < model.getRowCount(); i++) {
+                XSSFRow excelRow = excelSheet.createRow(i + 1);
+                for (int j = 0; j < model.getColumnCount(); j++) {
+                    XSSFCell excelCell = excelRow.createCell(j);
+                    excelCell.setCellValue(model.getValueAt(i, j).toString());
+                }
+            }
+            // 8. Tạo các luồng để ghi file Excel
+            FileOutputStream excelFIS;
+            BufferedOutputStream excelBOU;
+            try {
+                // 9. Tạo luồng ghi file theo đường dẫn đã chọn
+                excelFIS = new FileOutputStream(execlExportChooser.getSelectedFile() + ".xlsx");
+                excelBOU = new BufferedOutputStream(excelFIS);
+                // 10. Ghi Workbook vào file Excel
+                excelSSFWorkbook.write(excelBOU);
+                // 11. Đóng luồng ghi file
+                excelBOU.close();
+                excelSSFWorkbook.close();
+                JOptionPane.showMessageDialog(this, "Xuất file Excel thành công!");
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Lỗi khi xuất file Excel!");
+            }
+        }
 
     }// GEN-LAST:event_btnXuatExcelActionPerformed
 
     private void btnImportExcelActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnImportExcelActionPerformed
-        // TODO add your handling code here:
-        // 1. Xác định đường dẫn thư mục lưu file mặc định
+        // Xác định đường dẫn thư mục mặc định
         String currentDirectoryFilePath = "A:\\";
 
-        // 2. Tạo cửa sổ chọn file cho người dùng
+        // Tạo cửa sổ chọn file cho người dùng
         JFileChooser excelImportChooser = new JFileChooser(currentDirectoryFilePath);
 
-        // 3. Bộ lọc chỉ hiển thị các file Excel
+        // Bộ lọc chỉ hiển thị các file Excel
         FileNameExtensionFilter excelFNEF = new FileNameExtensionFilter("Tệp Excel", "xls", "xlsx", "xlsm");
         excelImportChooser.setFileFilter(excelFNEF);
 
-        // 4. Đặt tiêu đề cho cửa sổ chọn file
+        // Đặt tiêu đề cho cửa sổ chọn file
         excelImportChooser.setDialogTitle("Mở tập tin Excel");
 
-        // 5. Hiển thị cửa sổ chọn file và kiểm tra kết quả
+        // Hiển thị cửa sổ chọn file và kiểm tra kết quả
         int excelChooser = excelImportChooser.showOpenDialog(null);
         if (excelChooser == JFileChooser.APPROVE_OPTION) {
-
-            // 6. Tạo Workbook và Sheet mới trong Excel
             try {
+                // Tạo Workbook và Sheet mới trong Excel từ file đã chọn
                 XSSFWorkbook excelWorkbook = new XSSFWorkbook(new FileInputStream(excelImportChooser.getSelectedFile()));
                 XSSFSheet excelSheet = excelWorkbook.getSheetAt(0);
 
-                // 7. Lấy số hàng trong sheet
-                int rowCount = excelSheet.getLastRowNum() + 1;
+                // Xóa toàn bộ dữ liệu trong model trước khi import mới
+                DefaultTableModel model = (DefaultTableModel) tblSPCT.getModel();
+                model.setRowCount(0);
 
-                // 8. Duyệt qua từng hàng trong sheet
-                for (int i = 1; i < rowCount; i++) {
-
-                    // 9. Lấy dòng thứ i
+                // Duyệt qua từng hàng trong sheet (bắt đầu từ hàng 1 vì hàng 0 là header)
+                for (int i = 1; i <= excelSheet.getLastRowNum(); i++) {
                     XSSFRow excelRow = excelSheet.getRow(i);
-
-                    // 10. Duyệt qua từng cột trong dòng
-                    for (int j = 0; j < excelRow.getLastCellNum(); j++) {
-
-                        // 11. Lấy ô thứ j trong dòng thứ i
-                        XSSFCell excelCell = excelRow.getCell(j);
-
-                        // 12. Lấy giá trị của ô
-                        String cellValue = excelCell.getStringCellValue();
-
-                        // 13. Gán giá trị của ô vào bảng
-                        int stt = model.getRowCount() + 1;
-                        model.addRow(new Object[]{stt, cellValue});
+                    if (excelRow != null) {
+                        // Lấy giá trị từng ô trong dòng và thêm vào model
+                        Vector<Object> row = new Vector<>();
+                        for (int j = 0; j < excelRow.getLastCellNum(); j++) {
+                            XSSFCell excelCell = excelRow.getCell(j);
+                            if (excelCell != null) {
+                                // Kiểm tra kiểu dữ liệu của ô
+                                switch (excelCell.getCellType()) {
+                                    case STRING:
+                                        row.add(excelCell.getStringCellValue());
+                                        break;
+                                    case NUMERIC:
+                                        // Xử lý giá trị dạng số
+                                        row.add(excelCell.getNumericCellValue());
+                                        break;
+                                    default:
+                                        row.add(""); // Xử lý các trường hợp khác
+                                        break;
+                                }
+                            } else {
+                                row.add(""); // Nếu ô là null
+                            }
+                        }
+                        model.addRow(row);
                     }
                 }
 
-                // 14. Thông báo nhập dữ liệu thành công
+                // Thông báo nhập dữ liệu thành công
                 JOptionPane.showMessageDialog(this, "Nhập dữ liệu thành công!");
+
             } catch (IOException e) {
                 e.printStackTrace();
                 // Hiển thị thông báo lỗi cho người dùng
                 JOptionPane.showMessageDialog(this, "Lỗi khi mở file Excel: " + e.getMessage());
             }
         } else {
-            // 15. Thông báo người dùng hủy chọn file
+            // Thông báo người dùng hủy chọn file
             JOptionPane.showMessageDialog(this, "Bạn đã hủy chọn file!");
         }
     }// GEN-LAST:event_btnImportExcelActionPerformed
