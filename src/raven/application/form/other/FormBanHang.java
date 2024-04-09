@@ -63,6 +63,8 @@ public class FormBanHang extends javax.swing.JPanel {
     public FormBanHang() {
         initComponents();
         initCBOHTTT();
+        initCBOHTGG();
+        initCBOMucGiamGia();
         fillTable(bhrs.getAllCTSP());
         fillTable2(bhrs.getAllHD2());
         txtTenKH.setText("Khách bán lẻ");
@@ -72,7 +74,7 @@ public class FormBanHang extends javax.swing.JPanel {
 
     }
 
-    void initCBOHTTT() {
+    private void initCBOHTTT() {
         // Định nghĩa mảng chứa các lựa chọn cho combobox
         String[] options = {"Kết hợp cả hai", "Tiền mặt", "Chuyển khoản"};
 
@@ -81,7 +83,41 @@ public class FormBanHang extends javax.swing.JPanel {
 
     }
 
-    void fillTable(List<ChiTietSanPhamModel> listCTSP) {
+    private void initCBOHTGG() {
+        // Định nghĩa mảng chứa các lựa chọn cho combobox
+        String[] options = {"Giảm theo phần trăm", "Giảm theo giá tiền"};
+
+        // Khởi tạo combobox với các giá trị từ mảng options
+        cboHTGG.setModel(new DefaultComboBoxModel<>(options));
+
+    }
+
+    private void initCBOMucGiamGia() {
+        // Kiểm tra xem cboHTGG có null không
+        cboMucGiamGia.removeAllItems();
+        if (cboHTGG.getSelectedItem() != null) {
+            String selectedOption = cboHTGG.getSelectedItem().toString();
+            if (selectedOption.equals("Giảm theo giá tiền")) {
+                String[] moneyOptions = {"300000", "700000"};
+                for (String option : moneyOptions) {
+                    cboMucGiamGia.addItem(option);
+                }
+            } else if (selectedOption.equals("Giảm theo phần trăm")) {
+                String[] percentOptions = {"10", "20"};
+                for (String option : percentOptions) {
+                    cboMucGiamGia.addItem(option);
+                }
+            } else {
+                // Hiển thị thông báo khi không xác định được lựa chọn
+                JOptionPane.showMessageDialog(this, "Lựa chọn không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            // Hiển thị thông báo khi không xác định được lựa chọn
+            JOptionPane.showMessageDialog(this, "Lựa chọn không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void fillTable(List<ChiTietSanPhamModel> listCTSP) {
         model = (DefaultTableModel) tblCTSP.getModel();
         model.setRowCount(0);
         Cbo_MauSac();
@@ -92,7 +128,7 @@ public class FormBanHang extends javax.swing.JPanel {
         }
     }
 
-    void showData(int index) {
+    private void showData(int index) {
         String maHD = String.valueOf(tblHoaDon.getValueAt(index, 1)).trim();
         String tenNV = String.valueOf(tblHoaDon.getValueAt(index, 3)).trim();
         String tenKH = String.valueOf(tblHoaDon.getValueAt(index, 4)).trim();
@@ -109,20 +145,24 @@ public class FormBanHang extends javax.swing.JPanel {
         txtTongTien.setText(tongTien);
         // Lấy thông tin voucher từ tên voucher
         List<VoucherModer> listV = bhrs.getIDByTenVoucher(tenVC);
+        String loaiVoucher = "";
+        String discount = "";
         if (listV != null && !listV.isEmpty()) {
             VoucherModer selectedVoucher = listV.get(0); // Lấy đối tượng voucher đầu tiên từ danh sách
 
             // Hiển thị loại voucher lên ComboBox cboLoaiVoucher
-            String loaiVoucher = selectedVoucher.getLoaiVoucher();
-            cboHTGG.setSelectedItem(loaiVoucher);
-
+            loaiVoucher = selectedVoucher.getLoaiVoucher();
             // Hiển thị mức giảm giá lên ComboBox cboMucGiamGia
-            if (loaiVoucher.equals("Giảm theo phần trăm")) {
-                cboMucGiamGia.setSelectedItem(selectedVoucher.getMucGiamGia());
-            } else if (loaiVoucher.equals("Giảm theo giá tiền")) {
-                cboMucGiamGia.setSelectedItem(selectedVoucher.getMucGiamGia());
-            }
+
+            discount = selectedVoucher.getMucGiamGia().toBigInteger().toString();
+
         }
+        System.out.println("loaiVoucher: " + loaiVoucher);
+        System.out.println("discount: " + discount);
+        System.out.println("HTTT: " + HTTT);
+        cboHTGG.setSelectedItem(loaiVoucher);
+        cboMucGiamGia.setSelectedItem(discount);
+
     }
 
     HoaDonModel read() {
@@ -154,7 +194,7 @@ public class FormBanHang extends javax.swing.JPanel {
         return hdm;
     }
 
-    void Cbo_MauSac() {
+    private void Cbo_MauSac() {
         List<MauSacModel> listMS = msrs.getALLMauSac();
         String[] cbo = new String[listMS.size()];
         for (int i = 0; i < listMS.size(); i++) {
@@ -164,7 +204,7 @@ public class FormBanHang extends javax.swing.JPanel {
 
     }
 
-    void Cbo_KichCo() {
+    private void Cbo_KichCo() {
         List<KichCoModel> listKC = kcrs.getALLKichCo();
         String[] cbo = new String[listKC.size()];
         for (int i = 0; i < listKC.size(); i++) {
@@ -173,7 +213,7 @@ public class FormBanHang extends javax.swing.JPanel {
         cboSize.setModel(new DefaultComboBoxModel<>(cbo));
     }
 
-    void Cbo_ThuongHieu() {
+    private void Cbo_ThuongHieu() {
         List<ThuongHieuModel> listTH = thrs.getALLThuongHieu();
         String[] cbo = new String[listTH.size()];
         for (int i = 0; i < listTH.size(); i++) {
@@ -182,16 +222,7 @@ public class FormBanHang extends javax.swing.JPanel {
         cboHang.setModel(new DefaultComboBoxModel<>(cbo));
     }
 
-    void Cbo_Voucher() {
-        List<VoucherModer> listV = vcrs.getAllVoucher();
-        String[] cbo = new String[listV.size()];
-        for (int i = 0; i < listV.size(); i++) {
-            cbo[i] = listV.get(i).getLoaiVoucher();
-        }
-        cboHTGG.setModel(new DefaultComboBoxModel<>(cbo));
-    }
-
-    void fillTable2(List<HoaDonModel> list) {
+    private void fillTable2(List<HoaDonModel> list) {
         model = (DefaultTableModel) tblHoaDon.getModel();
         model.setRowCount(0); // Xóa tất cả các dòng cũ trước khi điền dữ liệu mới
         if (list != null && !list.isEmpty()) { // Kiểm tra list không rỗng
@@ -231,7 +262,7 @@ public class FormBanHang extends javax.swing.JPanel {
         }
     }
 
-    void cleanForm() {
+    private void cleanForm() {
         txtMaHD.setText(null);
         txtMaKH.setText(null);
         txtTenKH.setText(null);
@@ -299,44 +330,6 @@ public class FormBanHang extends javax.swing.JPanel {
         }
     }
 
-    private boolean validateTxtTienMat() {
-//        String tienMatStr = txtTienMat.getText().trim();
-        if (txtTienMat.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập số tiền.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        try {
-            BigDecimal tienMat = new BigDecimal(txtTienMat.getText());
-            if (tienMat.compareTo(BigDecimal.ZERO) <= 0) {
-                JOptionPane.showMessageDialog(this, "Số tiền phải lớn hơn 0.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Số tiền không hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        return true;
-    }
-
-    private boolean validateTxtChuyenKhoan() {
-//        String chuyenKhoanStr = txtTienCK.getText().trim();
-        if (txtTienCK.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập số tiền.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        try {
-            BigDecimal chuyenKhoan = new BigDecimal(txtTienCK.getText());
-            if (chuyenKhoan.compareTo(BigDecimal.ZERO) <= 0) {
-                JOptionPane.showMessageDialog(this, "Số tiền phải lớn hơn 0.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Số tiền không hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        return true;
-    }
-
     @SuppressWarnings("unchecked")
 // <editor-fold defaultstate="collapsed" desc="Generated
 // <editor-fold defaultstate="collapsed" desc="Generated
@@ -391,10 +384,10 @@ public class FormBanHang extends javax.swing.JPanel {
         jLabel16 = new javax.swing.JLabel();
         txtTienThua = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
-        cboHTGG = new javax.swing.JComboBox<>();
         btnSuccesHoaDon = new javax.swing.JButton();
-        cboMucGiamGia = new javax.swing.JComboBox<>();
         cboHTTT = new javax.swing.JComboBox<>();
+        cboHTGG = new javax.swing.JComboBox<>();
+        cboMucGiamGia = new javax.swing.JComboBox<>();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblCTSP = new javax.swing.JTable();
@@ -748,27 +741,12 @@ public class FormBanHang extends javax.swing.JPanel {
         jLabel17.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel17.setText("Tiền thừa");
 
-        cboHTGG.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cboHTGG.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Giảm giá theo phần trăm", "Giảm giá theo giá tiền" }));
-        cboHTGG.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-            }
-        });
-
         btnSuccesHoaDon.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnSuccesHoaDon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/raven/icon/png/succes.png"))); // NOI18N
         btnSuccesHoaDon.setText("Xác nhận thanh toán");
         btnSuccesHoaDon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSuccesHoaDonActionPerformed(evt);
-            }
-        });
-
-        cboMucGiamGia.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cboMucGiamGia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "20", "10", "300000", "700000" }));
-        cboMucGiamGia.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cboMucGiamGiaActionPerformed(evt);
             }
         });
 
@@ -781,6 +759,17 @@ public class FormBanHang extends javax.swing.JPanel {
             }
         });
 
+        cboHTGG.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cboHTGG.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboHTGG.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboHTGGItemStateChanged(evt);
+            }
+        });
+
+        cboMucGiamGia.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cboMucGiamGia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
@@ -790,7 +779,7 @@ public class FormBanHang extends javax.swing.JPanel {
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addComponent(jLabel16)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                         .addComponent(txtTienCK, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                         .addComponent(jLabel17)
@@ -805,13 +794,13 @@ public class FormBanHang extends javax.swing.JPanel {
                             .addComponent(jLabel13))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel8Layout.createSequentialGroup()
-                                .addComponent(cboHTGG, 0, 176, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cboMucGiamGia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(txtTongTien)
                             .addComponent(txtMaHD)
-                            .addComponent(txtThanhToan, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addComponent(txtThanhToan, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel8Layout.createSequentialGroup()
+                                .addComponent(cboHTGG, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cboMucGiamGia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel14)
@@ -833,12 +822,12 @@ public class FormBanHang extends javax.swing.JPanel {
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(txtTongTien, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(10, 10, 10)
+                .addGap(13, 13, 13)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
                     .addComponent(cboHTGG, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cboMucGiamGia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(10, 10, 10)
+                .addGap(11, 11, 11)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
                     .addComponent(txtThanhToan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1014,10 +1003,6 @@ public class FormBanHang extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cboMucGiamGiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboMucGiamGiaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cboMucGiamGiaActionPerformed
-
     private void txtThanhToanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtThanhToanActionPerformed
         // TODO add your handling code here:
 
@@ -1028,29 +1013,32 @@ public class FormBanHang extends javax.swing.JPanel {
         // Lấy tổng tiền từ txtTongTien
         BigDecimal tongTien = new BigDecimal(txtTongTien.getText());
 
+        // Khởi tạo ComboBox Mức giảm giá
+        initCBOMucGiamGia();
+
         // Xử lý giảm giá từ voucher 
         BigDecimal giamGia = BigDecimal.ZERO;
         String selectedVoucher = cboHTGG.getSelectedItem().toString();
-        if (selectedVoucher.equals("Giảm giá theo tiền mặt")) {
+        if (selectedVoucher.equals("Giảm theo giá tiền")) {
             BigDecimal giamGiaTienMat = new BigDecimal(cboMucGiamGia.getSelectedItem().toString());
             giamGia = giamGiaTienMat;
-
-        } else if (selectedVoucher.equals("Giảm giá theo phần trăm")) {
+        } else if (selectedVoucher.equals("Giảm theo phần trăm")) {
             BigDecimal phanTramGiamGia = new BigDecimal(cboMucGiamGia.getSelectedItem().toString());
             giamGia = tongTien.multiply(phanTramGiamGia).divide(new BigDecimal(100));
         }
 
         // Tính tổng số tiền thanh toán sau khi giảm giá
         BigDecimal thanhToan = tongTien.subtract(giamGia);
-        
+
+        // Hiển thị tổng tiền sau khi áp dụng giảm giá
+        System.out.println("Tổng tiền sau khi áp dụng giảm giá: " + thanhToan);
+
         // Xử lý số tiền mặt và chuyển khoản
         BigDecimal tienMat = txtTienMat.isEnabled() ? new BigDecimal(txtTienMat.getText()) : BigDecimal.ZERO;
         BigDecimal tienChuyenKhoan = txtTienCK.isEnabled() ? new BigDecimal(txtTienCK.getText()) : BigDecimal.ZERO;
         BigDecimal tienThua = BigDecimal.ZERO;
-        // Kiểm tra và validate số tiền mặt và chuyển khoản trước khi thực hiện các thao tác khác
-        if (!validateTxtTienMat() || !validateTxtChuyenKhoan()) {
-            return; // Nếu có lỗi, dừng lại và không thực hiện các thao tác tiếp theo
-        }
+        BigDecimal tienKetHop = tienMat.add(tienChuyenKhoan);
+
         // Tính số tiền thừa hoặc thiếu
         String selectedHTTT = cboHTTT.getSelectedItem().toString();
         if (selectedHTTT.equals("Tiền mặt")) {
@@ -1058,9 +1046,11 @@ public class FormBanHang extends javax.swing.JPanel {
         } else if (selectedHTTT.equals("Chuyển khoản")) {
             tienThua = tienChuyenKhoan.subtract(thanhToan);
         } else if (selectedHTTT.equals("Kết hợp cả hai")) {
-            BigDecimal tongTienThanhToan = tienMat.add(tienChuyenKhoan);
-            tienThua = tongTienThanhToan.subtract(thanhToan);
+            tienThua = tienKetHop.subtract(thanhToan);
         }
+
+        // Hiển thị số tiền thừa hoặc thiếu
+        txtTienThua.setText(tienThua.toString());
 
         // Lấy hình thức thanh toán từ cboHTTT
         String hinhThucThanhToan = cboHTTT.getSelectedItem().toString();
@@ -1143,6 +1133,24 @@ public class FormBanHang extends javax.swing.JPanel {
             txtTienThua.setText("");
         }
     }//GEN-LAST:event_btnSuccesHoaDonActionPerformed
+
+    private void cboHTGGItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboHTGGItemStateChanged
+        // TODO add your handling code here:
+        if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
+            initCBOHTGG();
+//            if (selectedOption.equals("Giảm theo phần trăm") || selectedOption.equals("Giảm theo giá tiền")) {
+//                // Nếu lựa chọn là "Giảm theo phần trăm" hoặc "Giảm theo giá tiền"
+//                // Cho phép và hiển thị combobox cboMucGiamGia
+//                cboMucGiamGia.setEnabled(true);
+//                cboMucGiamGia.setSelectedIndex(-1); // Bỏ chọn tất cả các mục trong combobox cboMucGiamGia
+//            } else {
+//                // Nếu lựa chọn không phải là "Giảm theo phần trăm" hoặc "Giảm theo giá tiền"
+//                // Vô hiệu hóa combobox cboMucGiamGia và không hiển thị nó
+//                cboMucGiamGia.setEnabled(false);
+//                cboMucGiamGia.setSelectedIndex(-1); // Bỏ chọn tất cả các mục trong combobox cboMucGiamGia
+//            }
+        }
+    }//GEN-LAST:event_cboHTGGItemStateChanged
 
     private void btnDeleteGHActionPerformed(java.awt.event.ActionEvent evt) {
         DefaultTableModel model = (DefaultTableModel) tblGioHang.getModel();
