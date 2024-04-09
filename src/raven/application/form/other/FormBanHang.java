@@ -102,6 +102,7 @@ public class FormBanHang extends javax.swing.JPanel {
     private String selectedFilterSizeItem = null;
     private String selectedMauSacID = null;
     private String selectedFilterMSItem = null;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     public FormBanHang() {
         initComponents();
@@ -364,103 +365,109 @@ public class FormBanHang extends javax.swing.JPanel {
     }
 
     private void exportToPDF(HoaDonModel hoaDon) {
+        Document document = new Document(PageSize.A5);
+
         try {
-            // Khởi tạo một tài liệu PDF mới với kích thước A4 (210mm x 297mm)
-            Document document = new Document(new Rectangle(PageSize.A4));
-
-            // Định nghĩa đường dẫn và tên file PDF đích
-            String filePath = "hoa_don.pdf";
-
-            // Tạo một đối tượng PdfWriter để ghi PDF vào file
+            // Đường dẫn đến tập tin PDF
+            String filePath = "A:\\PDF\\hoa_don.pdf";
             PdfWriter.getInstance(document, new FileOutputStream(filePath));
 
             // Mở tài liệu để bắt đầu thêm nội dung
             document.open();
 
-            // Thiết lập font chữ từ tệp Oswald-VariableFont_wght.ttf
+            // Thiết lập font chữ
             BaseFont baseFont = BaseFont.createFont("C:\\Windows\\Fonts\\arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-            Font font = new Font(baseFont, 12, Font.NORMAL);
+            Font titleFont = new Font(baseFont, 23, Font.BOLD);
+            Font normalFont = new Font(baseFont, 12, Font.NORMAL);
 
-            // Thêm tiêu đề "Hóa Đơn" vào tài liệu và căn giữa
-            Paragraph title = new Paragraph("HÓA ĐƠN", new Font(baseFont, 23, Font.BOLD));
+            // Tiêu đề hoá đơn
+            Paragraph title = new Paragraph("HOÁ ĐƠN", titleFont);
             title.setAlignment(Element.ALIGN_CENTER);
             document.add(title);
 
-            // Thêm dòng trống vào tài liệu để làm khoảng cách
-            document.add(new Paragraph(" "));
+            // Định dạng tiền tệ
+            DecimalFormat decimalFormat = new DecimalFormat("#,### VNĐ");
 
-            // Tạo bảng để hiển thị thông tin hóa đơn
-            PdfPTable table = new PdfPTable(8); // Tạo bảng có 8 cột để sắp xếp dữ liệu hóa đơn
-            table.setWidthPercentage(100); // Thiết lập chiều rộng của bảng bằng 100% của trang
-            table.setSpacingBefore(10f); // Khoảng cách phía trên bảng là 10 đơn vị
-            table.setSpacingAfter(10f); // Khoảng cách phía dưới bảng là 10 đơn vị
+            // Tạo bảng để chứa thông tin hoá đơn
+            PdfPTable table = new PdfPTable(2); // 2 cột (label và value)
+            table.setWidthPercentage(90); // Chiều rộng bảng là 80% của trang
+            table.setSpacingBefore(20); // Khoảng cách trước bảng là 20 điểm
 
-            // Thiết lập độ rộng của các cột trong bảng
-            float[] columnWidths = {3f, 4f, 3f, 3f, 3f, 3f, 4f, 2f};
-            table.setWidths(columnWidths);
+            // Thêm các mục thông tin hoá đơn vào bảng
+            addTableRow(table, "Mã Hóa Đơn", hoaDon.getID(), normalFont, Element.ALIGN_LEFT, Element.ALIGN_RIGHT);
+            document.add(new Paragraph("\n")); // Khoảng cách giữa các dòng
+            addTableRow(table, "Tên Nhân Viên", hoaDon.getTenNV().getHoTen(), normalFont, Element.ALIGN_LEFT, Element.ALIGN_RIGHT);
+            addTableRow(table, "Tên Khách Hàng", hoaDon.getTenKH().getTen(), normalFont, Element.ALIGN_LEFT, Element.ALIGN_RIGHT);
+            addTableRow(table, "Tổng Tiền", decimalFormat.format(hoaDon.getTongTien()), normalFont, Element.ALIGN_LEFT, Element.ALIGN_RIGHT);
+            addTableRow(table, "Voucher", hoaDon.getTenVoucher().getTenVoucher(), normalFont, Element.ALIGN_LEFT, Element.ALIGN_RIGHT);
+            addTableRow(table, "Thanh Toán", decimalFormat.format(Double.parseDouble(txtThanhToan.getText())), normalFont, Element.ALIGN_LEFT, Element.ALIGN_RIGHT);
+            addTableRow(table, "Hình Thức Thanh Toán", hoaDon.getHinhThucThanhToan(), normalFont, Element.ALIGN_LEFT, Element.ALIGN_RIGHT);
+            addTableRow(table, "Tiền Thừa", decimalFormat.format(Double.parseDouble(txtTienThua.getText())), normalFont, Element.ALIGN_LEFT, Element.ALIGN_RIGHT);
+            addTableRow(table, "Ngày tạo hóa đơn", dateFormat.format(new Date()), normalFont, Element.ALIGN_LEFT, Element.ALIGN_RIGHT);
 
-            // Thêm các cột vào bảng với font Unicode và in đậm
-            addTableCell(table, "Mã Hóa Đơn", font, false); // Cột "Mã Hóa Đơn"
-            addTableCell(table, "Tên Nhân Viên", font, false); // Cột "Tên Nhân Viên"
-            addTableCell(table, "Tên Khách Hàng", font, false); // Cột "Tên Khách Hàng"
-            addTableCell(table, "Tổng Tiền", font, false); // Cột "Tổng Tiền"
-            addTableCell(table, "Voucher", font, false); // Cột "Voucher"
-            addTableCell(table, "Thanh Toán", font, false); // Cột "Thanh Toán"
-            addTableCell(table, "Hình Thức Thanh Toán", font, false); // Cột "Hình Thức Thanh Toán"
-            addTableCell(table, "Tiền Thừa", font, false); // Cột "Tiền Thừa"
-
-            // Thêm dữ liệu vào từng ô của bảng với font Unicode
-            addTableCell(table, hoaDon.getID(), font, false); // Dữ liệu cho cột "Mã Hóa Đơn"
-            addTableCell(table, hoaDon.getTenNV().getHoTen(), font, false); // Dữ liệu cho cột "Tên Nhân Viên"
-            addTableCell(table, hoaDon.getTenKH().getTen(), font, false); // Dữ liệu cho cột "Tên Khách Hàng"
-            addTableCell(table, hoaDon.getTongTien().toString(), font, false); // Dữ liệu cho cột "Tổng Tiền"
-            addTableCell(table, hoaDon.getTenVoucher().getTenVoucher(), font, false); // Dữ liệu cho cột "Voucher"
-            addTableCell(table, txtThanhToan.getText(), font, false); // Dữ liệu cho cột "Thanh Toán" từ textbox txtThanhToan
-            addTableCell(table, hoaDon.getHinhThucThanhToan(), font, false); // Dữ liệu cho cột "Hình Thức Thanh Toán"
-            addTableCell(table, txtTienThua.getText(), font, false); // Dữ liệu cho cột "Tiền Thừa" từ textbox txtTienThua
-
-            // Thêm bảng đã tạo vào tài liệu PDF
+            // Thêm bảng vào tài liệu PDF
             document.add(table);
 
-            // Thêm thông tin ngày tạo hóa đơn
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            String currentDate = dateFormat.format(new Date());
-            Paragraph dateInfo = new Paragraph("Ngày tạo hóa đơn: " + currentDate, font);
-            dateInfo.setAlignment(Element.ALIGN_RIGHT);
-            document.add(dateInfo);
-            // Thêm dòng trống vào tài liệu để làm khoảng cách
-            document.add(new Paragraph(" "));
-            // Thêm câu "Cảm ơn quý khách đã mua hàng"
-            Paragraph thankYou = new Paragraph("--  Xin chân thành cảm ơn quý khách vì đã mua hàng <3  --", new Font(baseFont, 14));
+            // Cảm ơn khách hàng
+            document.add(new Paragraph("\n\n")); // Khoảng cách giữa các dòng
+            Paragraph thankYou = new Paragraph("--  Xin chân thành cảm ơn quý khách --", new Font(baseFont, 14));
             thankYou.setAlignment(Element.ALIGN_CENTER);
             document.add(thankYou);
-
-            // Đóng tài liệu PDF sau khi hoàn thành việc thêm nội dung
+            // Cảm ơn khách hàng
+            document.add(new Paragraph("\n")); // Khoảng cách giữa các dòng
+            Paragraph lienHe = new Paragraph("Nếu có vấn đề xin vui lòng liên hệ chúng tôi: 0123456789", new Font(baseFont, 11));
+            lienHe.setAlignment(Element.ALIGN_CENTER);
+            document.add(lienHe);
+            // Đóng tài liệu PDF
             document.close();
 
-            // Hiển thị thông báo xuất PDF thành công
-            JOptionPane.showMessageDialog(this, "Xuất hóa đơn sang PDF thành công!");
+            JOptionPane.showMessageDialog(null, "Xuất hoá đơn sang PDF thành công!");
         } catch (Exception e) {
-            // Hiển thị thông báo lỗi nếu có lỗi trong quá trình xuất PDF
-            JOptionPane.showMessageDialog(this, "Lỗi khi xuất hóa đơn sang PDF: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Lỗi khi xuất hoá đơn sang PDF: " + e.getMessage());
         }
     }
 
-    private void addTableCell(PdfPTable table, String text, Font font, boolean isBold) {
-        PdfPCell cell;
-        if (isBold) {
-            Font boldFont = FontFactory.getFont("C:\\Users\\dungn\\Downloads\\Oswald\\Oswald-VariableFont_wght.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 12, Font.BOLD);
-            cell = new PdfPCell(new Phrase(text, boldFont));
-        } else {
-            cell = new PdfPCell(new Phrase(text, font));
-        }
-        cell.setPadding(6f);
-        table.addCell(cell);
+    private void addTableRow(PdfPTable table, String label, String value, Font font, int labelAlignment, int valueAlignment) {
+        // Định dạng đối tượng label
+        Paragraph labelParagraph = new Paragraph(label + ": ", font);
+        labelParagraph.setAlignment(labelAlignment);
+
+        // Định dạng đối tượng value
+        Paragraph valueParagraph = new Paragraph(value, font);
+        valueParagraph.setAlignment(valueAlignment);
+
+        // Thêm label và value vào các ô của hàng trong bảng
+        PdfPCell labelCell = new PdfPCell(labelParagraph);
+        PdfPCell valueCell = new PdfPCell(valueParagraph);
+
+        // Thiết lập canh lề cho các ô
+        labelCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        labelCell.setBorder(Rectangle.NO_BORDER);
+
+        valueCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        valueCell.setHorizontalAlignment(valueAlignment);
+        valueCell.setBorder(Rectangle.NO_BORDER);
+
+        // Thêm các ô vào hàng trong bảng
+        table.addCell(labelCell);
+        table.addCell(valueCell);
+
+        // Thêm dòng line màu đen ngăn cách giữa các hàng
+        table.addCell(createSeparatorCell(2));
+
+    }
+
+    private PdfPCell createSeparatorCell(int colSpan) {
+        PdfPCell cell = new PdfPCell();
+        cell.setBorder(Rectangle.TOP); // Chỉ có border trên (tạo dòng line màu đen)
+        cell.setBorderColor(BaseColor.BLACK); // Màu đen cho border
+        cell.setColspan(colSpan); // Số cột của ô (bằng số cột của bảng)
+        return cell;
     }
 
     private void openPDFFile() {
         try {
-            String filePath = "hoa_don.pdf";
+            String filePath = "A:\\PDF\\hoa_don.pdf";
             File file = new File(filePath);
             if (file.exists()) {
                 Desktop.getDesktop().open(file);
