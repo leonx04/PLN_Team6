@@ -46,6 +46,26 @@ public class ThuongHieuService {
             return null;
         }
     }
+    
+    
+    
+     public boolean checkTrungID(String id) {
+        sql = "SELECT COUNT(*) AS count FROM THUONGHIEU WHERE ID = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                // Nếu count > 0, tức là ID đã tồn tại
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false; // Trả về false nếu có lỗi xảy ra
+    }
 
     public List<ThuongHieuModel> getIDByTenTH(String tenTH) {
         sql = "SELECT ID, Ten, MoTa FROM THUONGHIEU WHERE Ten = ?";

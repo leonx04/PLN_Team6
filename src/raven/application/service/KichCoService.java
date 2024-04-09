@@ -15,6 +15,7 @@ import raven.connect.DBConnect;
  * @author dungn
  */
 public class KichCoService {
+
     Connection con = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -32,7 +33,6 @@ public class KichCoService {
                         rs.getString(1),
                         rs.getString(2),
                         rs.getString(3)
-
                 );
                 listCL.add(kc);
 
@@ -43,6 +43,24 @@ public class KichCoService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public boolean checkTrungID(String id) {
+        sql = "SELECT COUNT(*) AS count FROM SIZE WHERE ID = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                // Nếu count > 0, tức là ID đã tồn tại
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false; // Trả về false nếu có lỗi xảy ra
     }
 
     public List<KichCoModel> getIDByTenKC(String tenKC) {

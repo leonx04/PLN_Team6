@@ -75,6 +75,12 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
 
     }
 
+    public void reloadForm() {
+        fillTable(ctsprp.getAllCTSP());
+        Cbo_MauSac(); // Cập nhật lại combobox màu sắc
+        // Cập nhật lại các combobox khác nếu cần
+    }
+
     void fillTable(List<ChiTietSanPhamModel> listCTSP) {
         model = (DefaultTableModel) tblSPCT.getModel();
         model.setRowCount(0);

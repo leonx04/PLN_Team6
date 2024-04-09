@@ -45,6 +45,24 @@ public class MauSacService {
             return null;
         }
     }
+    
+    public boolean checkTrungID(String id) {
+        sql = "SELECT COUNT(*) AS count FROM MAUSAC WHERE ID = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                // Nếu count > 0, tức là ID đã tồn tại
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false; // Trả về false nếu có lỗi xảy ra
+    }
 
     public List<MauSacModel> getIDByTenMS(String tenMS) {
         sql = "SELECT ID, TenMau, MoTa FROM MAUSAC WHERE TenMau = ?";

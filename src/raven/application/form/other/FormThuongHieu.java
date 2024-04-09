@@ -5,6 +5,7 @@
 package raven.application.form.other;
 
 import javax.swing.JOptionPane;
+import raven.application.Application;
 
 import raven.application.model.MauSacModel;
 import raven.application.model.ThuongHieuModel;
@@ -127,6 +128,7 @@ public class FormThuongHieu extends javax.swing.JFrame {
 
         if (thrs.insert(thuongHieu) > 0) {
             JOptionPane.showMessageDialog(this, "Thêm thành công !");
+            Application.showForm(new FormSanPhamChiTiet());
         } else {
             JOptionPane.showMessageDialog(this, "Thêm thất bại!");
         }

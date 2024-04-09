@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import raven.application.Application;
 
 import raven.application.model.ChatLieuModel;
 import raven.application.model.SanPhamModel;
@@ -124,6 +125,7 @@ public class FormChatLieu extends javax.swing.JFrame {
 
         if (clrs.insert(chatLieu) > 0) {
             JOptionPane.showMessageDialog(this, "Thêm thành công !");
+            Application.showForm(new FormSanPhamChiTiet());
         } else {
             JOptionPane.showMessageDialog(this, "Thêm thất bại!");
         }
