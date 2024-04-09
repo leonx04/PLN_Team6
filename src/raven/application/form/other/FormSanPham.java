@@ -1,5 +1,6 @@
 package raven.application.form.other;
 
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -7,8 +8,9 @@ import javax.swing.table.TableRowSorter;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import java.util.List;
+import pagination.EventPagination;
+import pagination.style.PaginationItemRenderStyle1;
 
-import raven.application.controller.SanPhamController;
 import raven.application.model.SanPhamModel;
 import raven.application.service.SanPhamService;
 
@@ -21,33 +23,62 @@ public class FormSanPham extends javax.swing.JPanel {
     private DefaultTableModel model = new DefaultTableModel();
     private SanPhamService sprs = new SanPhamService();
 
-    private SanPhamController spcl = new SanPhamController();
+// Định nghĩa số lượng bản ghi hiển thị trên mỗi trang
+    private static final int RECORDS_PER_PAGE = 10;
+    private int currentPage = 1; // Trang hiện tại
 
     public FormSanPham() {
         initComponents();
-
-        fillTable(spcl.getAllSanPham());
+        init();
+        fillTable(sprs.getAllSP());
 
         lb.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:$h1.font");
+
+        JComboBox<String> cboFilterTrangThai = new JComboBox<>(new String[]{"Tất cả", "Còn hàng", "Hết hàng"});
     }
 
     void fillTable(List<SanPhamModel> listSP) {
         model = (DefaultTableModel) tblSP.getModel();
         model.setRowCount(0);
 
-        int index = 1; // Biến đếm STT
+        int startIndex = (currentPage - 1) * RECORDS_PER_PAGE; // Bắt đầu từ bản ghi thứ startIndex
+        int endIndex = Math.min(startIndex + RECORDS_PER_PAGE, listSP.size()); // Lấy tối đa 10 bản ghi kể từ startIndex
 
-        for (SanPhamModel sp : listSP) {
-            sp.setStt(index++); // Đặt giá trị STT cho mỗi sản phẩm
+        int index = startIndex + 1; // Số thứ tự của bản ghi đầu tiên trên trang
+
+        for (int i = startIndex; i < endIndex; i++) {
+            SanPhamModel sp = listSP.get(i);
+            sp.setStt(index++);
             model.addRow(sp.toData());
         }
 
-        // Đảm bảo hiển thị sản phẩm mới thêm ở đầu tiên
-        if (model.getRowCount() > 0) {
-            tblSP.scrollRectToVisible(tblSP.getCellRect(0, 0, true));
-            tblSP.setRowSelectionInterval(0, 0);
-        }
+    }
+
+    private void init() {
+        // Cài đặt thanh phân trang
+        pagination1.addEventPagination(new EventPagination() {
+            @Override
+            public void pageChanged(int page) {
+                currentPage = page; // Cập nhật trang hiện tại khi chuyển trang
+                fillTable(sprs.getAllSP()); // Hiển thị dữ liệu cho trang mới
+            }
+        });
+        pagination1.setPaginationItemRender(new PaginationItemRenderStyle1());
+        pagination1.setPagegination(1, 10); // Khởi tạo thanh trang với trang đầu tiên và tổng số trang
+    }
+
+    // Cập nhật phương thức setPagegination để cập nhật tổng số trang dựa trên số lượng bản ghi
+    public void setPagegination(int current, int totalRecords) {
+        int totalPages = (int) Math.ceil((double) totalRecords / RECORDS_PER_PAGE);
+        pagination1.setPagegination(current, totalPages);
+    }
+
+    // Phương thức này sẽ được gọi khi dữ liệu thay đổi hoặc khi chuyển trang
+    void refreshData() {
+        int totalRecords = sprs.getAllSP().size();
+        fillTable(sprs.getAllSP()); // Cập nhật dữ liệu cho bảng
+        setPagegination(currentPage, totalRecords); // Cập nhật thanh trang
     }
 
     void showData(int index) {
@@ -92,17 +123,6 @@ public class FormSanPham extends javax.swing.JPanel {
         return true;
     }
 
-    public void Cbo_FilTrangThai() {
-        String trangThai = "";
-        if (Cbo_TrangThai.getSelectedItem().equals("Hết hàng")) {
-            trangThai = "Hết hàng";
-        } else {
-            trangThai = "Còn hàng";
-        }
-        List<SanPhamModel> list = spcl.getSanPhamByTrangThai(trangThai);
-        fillTable(list);
-    }
-
     /**
      * Lọc dữ liệu trong bảng theo biểu thức chính quy.
      *
@@ -119,6 +139,7 @@ public class FormSanPham extends javax.swing.JPanel {
     }
 
     @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
@@ -150,6 +171,7 @@ public class FormSanPham extends javax.swing.JPanel {
         txtTimKiem = new javax.swing.JTextField();
         Cbo_TrangThai = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
+        pagination1 = new raven.pagination.Pagination();
 
         setPreferredSize(new java.awt.Dimension(1295, 713));
 
@@ -213,7 +235,7 @@ public class FormSanPham extends javax.swing.JPanel {
                 .addGap(28, 28, 28)
                 .addComponent(jLabel4)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -348,7 +370,12 @@ public class FormSanPham extends javax.swing.JPanel {
         });
 
         Cbo_TrangThai.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        Cbo_TrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Còn hàng", "Hết Hàng" }));
+        Cbo_TrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Còn hàng", "Hết Hàng" }));
+        Cbo_TrangThai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Cbo_TrangThaiActionPerformed(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel5.setText("Trạng thái");
@@ -382,7 +409,7 @@ public class FormSanPham extends javax.swing.JPanel {
                     .addComponent(Cbo_TrangThai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addGap(22, 22, 22)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -399,6 +426,10 @@ public class FormSanPham extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(pagination1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(552, 552, 552))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -410,15 +441,32 @@ public class FormSanPham extends javax.swing.JPanel {
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(pagination1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(21, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtTimKiemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimKiemKeyReleased
+    private void Cbo_TrangThaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Cbo_TrangThaiActionPerformed
+        String selectedTrangThai = (String) Cbo_TrangThai.getSelectedItem();
+        List<SanPhamModel> listCTSP;
+
+        if (selectedTrangThai.equals("Còn hàng")) {
+            listCTSP = sprs.getAllSPSoluongLonHon0();
+        } else if (selectedTrangThai.equals("Hết hàng")) {
+            listCTSP = sprs.getAllSPSoluong0(); // Sử dụng phương thức getAllCTSPSoluong0 để lấy các sản phẩm có số lượng tồn bằng 0
+        } else {
+            listCTSP = sprs.getAllSP();
+        }
+
+        fillTable(listCTSP);
+    }//GEN-LAST:event_Cbo_TrangThaiActionPerformed
+
+    private void txtTimKiemKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtTimKiemKeyReleased
         String query = txtTimKiem.getText();
         filter(query);
-    }//GEN-LAST:event_txtTimKiemKeyReleased
+    }// GEN-LAST:event_txtTimKiemKeyReleased
 
     private void btnUpdateSPActionPerformed(java.awt.event.ActionEvent evt) {
         // Kiểm tra dữ liệu nhập vào
@@ -516,6 +564,7 @@ public class FormSanPham extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lb;
+    private raven.pagination.Pagination pagination1;
     private javax.swing.JTable tblSP;
     private javax.swing.JTextField txtMaSP;
     private javax.swing.JTextArea txtMoTa;

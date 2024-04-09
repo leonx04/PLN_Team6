@@ -53,7 +53,7 @@ public class ChiTietSanPhamService {
                         new ThuongHieuModel(rs.getString(6)), // ThuongHieu
                         rs.getBigDecimal(7), // GiaBan
                         rs.getInt(8), // SoLuongTon
-rs.getString(9)); // MoTa
+                        rs.getString(9)); // MoTa
                 listCTSP.add(ctsp);
             }
             return listCTSP;
@@ -63,6 +63,104 @@ rs.getString(9)); // MoTa
             return null;
         }
 
+    }
+
+    public List<ChiTietSanPhamModel> getAllCTSPSoluong0() {
+        String sql = "SELECT " +
+                "SANPHAMCHITIET.ID, " +
+                "SANPHAM.TenSanPham, " +
+                "MAUSAC.TenMau AS MauSac, " +
+                "SIZE.Ten AS Size, " +
+                "CHATLIEU.Ten AS ChatLieu, " +
+                "THUONGHIEU.Ten AS ThuongHieu, " +
+                "SANPHAMCHITIET.GiaBan, " +
+                "SANPHAMCHITIET.SoLuongTon, " +
+                "SANPHAMCHITIET.MoTa " +
+                "FROM " +
+                "SANPHAMCHITIET " +
+                "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID " +
+                "INNER JOIN MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID " +
+                "INNER JOIN SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID " +
+                "INNER JOIN CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID " +
+                "INNER JOIN THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID " +
+                "WHERE SANPHAMCHITIET.SoLuongTon = 0"; // Chỉ lấy các sản phẩm chi tiết có số lượng tồn bằng 0
+
+        List<ChiTietSanPhamModel> listCTSP = new ArrayList<>();
+        try (Connection con = DBConnect.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                int soLuongTon = rs.getInt("SoLuongTon");
+                if (soLuongTon == 0) { // Chỉ thêm vào danh sách nếu số lượng tồn là 0
+                    ChiTietSanPhamModel ctsp = new ChiTietSanPhamModel(
+                            rs.getString("ID"), // ID
+                            new SanPhamModel(rs.getString("TenSanPham")), // TenSP
+                            new MauSacModel(rs.getString("MauSac")), // MauSac
+                            new KichCoModel(rs.getString("Size")), // Size
+                            new ChatLieuModel(rs.getString("ChatLieu")), // ChatLieu
+                            new ThuongHieuModel(rs.getString("ThuongHieu")), // ThuongHieu
+                            rs.getBigDecimal("GiaBan"), // GiaBan
+                            soLuongTon, // SoLuongTon
+                            rs.getString("MoTa")); // MoTa
+                    listCTSP.add(ctsp);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listCTSP;
+    }
+
+    public List<ChiTietSanPhamModel> getAllCTSPSoluongLonHon0() {
+        String sql = "SELECT \n"
+                + "    SANPHAMCHITIET.ID,\n"
+                + "    SANPHAM.TenSanPham,\n"
+                + "    MAUSAC.TenMau AS MauSac,\n"
+                + "    SIZE.Ten AS Size,\n"
+                + "    CHATLIEU.Ten AS ChatLieu,\n"
+                + "    THUONGHIEU.Ten AS ThuongHieu,\n"
+                + "    SANPHAMCHITIET.GiaBan,\n"
+                + "    SANPHAMCHITIET.SoLuongTon,\n"
+                + "    SANPHAMCHITIET.MoTa\n"
+                + "FROM \n"
+                + "    SANPHAMCHITIET\n"
+                + "INNER JOIN \n"
+                + "    SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID\n"
+                + "INNER JOIN \n"
+                + "    MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID\n"
+                + "INNER JOIN \n"
+                + "    SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID\n"
+                + "INNER JOIN \n"
+                + "    CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID\n"
+                + "INNER JOIN \n"
+                + "    THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID\n"
+                + "WHERE \n"
+                + "    SANPHAMCHITIET.SoLuongTon > 0";
+
+        List<ChiTietSanPhamModel> listCTSP = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietSanPhamModel ctsp = new ChiTietSanPhamModel(
+                        rs.getString(1), // ID
+                        new SanPhamModel(rs.getString(2)), // TenSP
+                        new MauSacModel(rs.getString(3)), // MauSac
+                        new KichCoModel(rs.getString(4)), // Size
+                        new ChatLieuModel(rs.getString(5)), // ChatLieu
+                        new ThuongHieuModel(rs.getString(6)), // ThuongHieu
+                        rs.getBigDecimal(7), // GiaBan
+                        rs.getInt(8), // SoLuongTon
+                        rs.getString(9)); // MoTa
+                listCTSP.add(ctsp);
+            }
+            return listCTSP;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public List<ChiTietSanPhamModel> searchBySanPhamID(String sanPhamID) {
@@ -82,6 +180,158 @@ rs.getString(9)); // MoTa
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
             ps.setString(1, sanPhamID);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietSanPhamModel ctsp = new ChiTietSanPhamModel(
+                        rs.getString(1), // ID
+                        new SanPhamModel(rs.getString(2)), // TenSP
+                        new MauSacModel(rs.getString(3)), // MauSac
+                        new KichCoModel(rs.getString(4)), // Size
+                        new ChatLieuModel(rs.getString(5)), // ChatLieu
+                        new ThuongHieuModel(rs.getString(6)), // ThuongHieu
+                        rs.getBigDecimal(7), // GiaBan
+                        rs.getInt(8), // SoLuongTon
+                        rs.getString(9)); // MoTa
+                listCTSP.add(ctsp);
+            }
+            return listCTSP;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<ChiTietSanPhamModel> searchByMauSacID(String mausacID) {
+        sql = "SELECT SANPHAMCHITIET.ID, SANPHAM.TenSanPham, MAUSAC.TenMau AS MauSac, SIZE.Ten AS Size, "
+                + "CHATLIEU.Ten AS ChatLieu, THUONGHIEU.Ten AS ThuongHieu, SANPHAMCHITIET.GiaBan, "
+                + "SANPHAMCHITIET.SoLuongTon, SANPHAMCHITIET.MoTa "
+                + "FROM SANPHAMCHITIET "
+                + "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID "
+                + "INNER JOIN MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID "
+                + "INNER JOIN SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID "
+                + "INNER JOIN CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID "
+                + "INNER JOIN THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID "
+                + "WHERE MAUSAC.ID = ?";
+
+        List<ChiTietSanPhamModel> listCTSP = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, mausacID);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietSanPhamModel ctsp = new ChiTietSanPhamModel(
+                        rs.getString(1), // ID
+                        new SanPhamModel(rs.getString(2)), // TenSP
+                        new MauSacModel(rs.getString(3)), // MauSac
+                        new KichCoModel(rs.getString(4)), // Size
+                        new ChatLieuModel(rs.getString(5)), // ChatLieu
+                        new ThuongHieuModel(rs.getString(6)), // ThuongHieu
+                        rs.getBigDecimal(7), // GiaBan
+                        rs.getInt(8), // SoLuongTon
+                        rs.getString(9)); // MoTa
+                listCTSP.add(ctsp);
+            }
+            return listCTSP;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<ChiTietSanPhamModel> searchBySizeID(String sizeID) {
+        sql = "SELECT SANPHAMCHITIET.ID, SANPHAM.TenSanPham, MAUSAC.TenMau AS MauSac, SIZE.Ten AS Size, "
+                + "CHATLIEU.Ten AS ChatLieu, THUONGHIEU.Ten AS ThuongHieu, SANPHAMCHITIET.GiaBan, "
+                + "SANPHAMCHITIET.SoLuongTon, SANPHAMCHITIET.MoTa "
+                + "FROM SANPHAMCHITIET "
+                + "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID "
+                + "INNER JOIN MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID "
+                + "INNER JOIN SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID "
+                + "INNER JOIN CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID "
+                + "INNER JOIN THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID "
+                + "WHERE SIZE.ID = ?";
+
+        List<ChiTietSanPhamModel> listCTSP = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, sizeID);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietSanPhamModel ctsp = new ChiTietSanPhamModel(
+                        rs.getString(1), // ID
+                        new SanPhamModel(rs.getString(2)), // TenSP
+                        new MauSacModel(rs.getString(3)), // MauSac
+                        new KichCoModel(rs.getString(4)), // Size
+                        new ChatLieuModel(rs.getString(5)), // ChatLieu
+                        new ThuongHieuModel(rs.getString(6)), // ThuongHieu
+                        rs.getBigDecimal(7), // GiaBan
+                        rs.getInt(8), // SoLuongTon
+                        rs.getString(9)); // MoTa
+                listCTSP.add(ctsp);
+            }
+            return listCTSP;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<ChiTietSanPhamModel> searchByChatLieuID(String chatLieuID) {
+        sql = "SELECT SANPHAMCHITIET.ID, SANPHAM.TenSanPham, MAUSAC.TenMau AS MauSac, SIZE.Ten AS Size, "
+                + "CHATLIEU.Ten AS ChatLieu, THUONGHIEU.Ten AS ThuongHieu, SANPHAMCHITIET.GiaBan, "
+                + "SANPHAMCHITIET.SoLuongTon, SANPHAMCHITIET.MoTa "
+                + "FROM SANPHAMCHITIET "
+                + "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID "
+                + "INNER JOIN MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID "
+                + "INNER JOIN SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID "
+                + "INNER JOIN CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID "
+                + "INNER JOIN THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID "
+                + "WHERE CHATLIEU.ID = ?";
+
+        List<ChiTietSanPhamModel> listCTSP = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, chatLieuID);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietSanPhamModel ctsp = new ChiTietSanPhamModel(
+                        rs.getString(1), // ID
+                        new SanPhamModel(rs.getString(2)), // TenSP
+                        new MauSacModel(rs.getString(3)), // MauSac
+                        new KichCoModel(rs.getString(4)), // Size
+                        new ChatLieuModel(rs.getString(5)), // ChatLieu
+                        new ThuongHieuModel(rs.getString(6)), // ThuongHieu
+                        rs.getBigDecimal(7), // GiaBan
+                        rs.getInt(8), // SoLuongTon
+                        rs.getString(9)); // MoTa
+                listCTSP.add(ctsp);
+            }
+            return listCTSP;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<ChiTietSanPhamModel> searchByThuonghieuID(String thuonghieuID) {
+        sql = "SELECT SANPHAMCHITIET.ID, SANPHAM.TenSanPham, MAUSAC.TenMau AS MauSac, SIZE.Ten AS Size, "
+                + "CHATLIEU.Ten AS ChatLieu, THUONGHIEU.Ten AS ThuongHieu, SANPHAMCHITIET.GiaBan, "
+                + "SANPHAMCHITIET.SoLuongTon, SANPHAMCHITIET.MoTa "
+                + "FROM SANPHAMCHITIET "
+                + "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID "
+                + "INNER JOIN MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID "
+                + "INNER JOIN SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID "
+                + "INNER JOIN CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID "
+                + "INNER JOIN THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID "
+                + "WHERE THUONGHIEU.ID = ?";
+
+        List<ChiTietSanPhamModel> listCTSP = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, thuonghieuID);
             rs = ps.executeQuery();
             while (rs.next()) {
                 ChiTietSanPhamModel ctsp = new ChiTietSanPhamModel(
@@ -177,7 +427,7 @@ rs.getString(9)); // MoTa
             ps.setObject(8, ctsp.getMoTa());
             ps.setObject(9, ctsp.getID());
             return ps.executeUpdate();
-} catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return 0;
         }
@@ -196,7 +446,6 @@ rs.getString(9)); // MoTa
         }
     }
 
-    
     public boolean checkTrungId(String id) {
         sql = "SELECT COUNT(*) AS count FROM SANPHAMCHITIET WHERE ID = ?";
         try {

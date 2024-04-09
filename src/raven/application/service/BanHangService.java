@@ -223,6 +223,118 @@ public class BanHangService {
 
     }
 
+    public List<ChiTietSanPhamModel> getAllCTSPByColorID(String colorID) {
+        sql = "SELECT SANPHAMCHITIET.ID, SANPHAM.TenSanPham, MAUSAC.TenMau AS TenMau, SIZE.Ten AS TenKichCo, CHATLIEU.Ten AS TenChatLieu, THUONGHIEU.Ten AS TenThuongHieu , SANPHAMCHITIET.GiaBan, SANPHAMCHITIET.SoLuongTon, MAUSAC.MoTa\n"
+                + "FROM SANPHAMCHITIET\n"
+                + "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID\n"
+                + "INNER JOIN MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID\n"
+                + "INNER JOIN SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID\n"
+                + "INNER JOIN CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID\n"
+                + "INNER JOIN THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID\n"
+                + "WHERE SANPHAMCHITIET.SoLuongTon > 0 AND MAUSAC.ID = ?";
+
+        List<ChiTietSanPhamModel> listCTSP = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, colorID);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietSanPhamModel ctsp = new ChiTietSanPhamModel(
+                        rs.getString(1), // ID
+                        new SanPhamModel(rs.getString(2)), // TenSP
+                        new MauSacModel(rs.getString(3)), // MauSac
+                        new KichCoModel(rs.getString(4)), // Size
+                        new ChatLieuModel(rs.getString(5)), // ChatLieu
+                        new ThuongHieuModel(rs.getString(6)), // ThuongHieu
+                        rs.getBigDecimal(7), // GiaBan
+                        rs.getInt(8), // SoLuongTon
+                        rs.getString(9)); // MoTa
+                listCTSP.add(ctsp);
+            }
+            return listCTSP;
+        } catch (Exception e) {
+            // Xử lý ngoại lệ
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<ChiTietSanPhamModel> getAllCTSPBySizeID(String sizeID) {
+        sql = "SELECT SANPHAMCHITIET.ID, SANPHAM.TenSanPham, MAUSAC.TenMau AS TenMau, SIZE.Ten AS TenKichCo, CHATLIEU.Ten AS TenChatLieu, THUONGHIEU.Ten AS TenThuongHieu, SANPHAMCHITIET.GiaBan, SANPHAMCHITIET.SoLuongTon, MAUSAC.MoTa\n"
+                + "FROM SANPHAMCHITIET\n"
+                + "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID\n"
+                + "INNER JOIN MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID\n"
+                + "INNER JOIN SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID\n"
+                + "INNER JOIN CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID\n"
+                + "INNER JOIN THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID\n"
+                + "WHERE SANPHAMCHITIET.SoLuongTon > 0 AND SIZE.ID = ?"; // Thêm điều kiện tìm kiếm theo ID kích cỡ
+
+        List<ChiTietSanPhamModel> listCTSP = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, sizeID); // Thiết lập tham số cho ID kích cỡ
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietSanPhamModel ctsp = new ChiTietSanPhamModel(
+                        rs.getString(1), // ID
+                        new SanPhamModel(rs.getString(2)), // TenSP
+                        new MauSacModel(rs.getString(3)), // MauSac
+                        new KichCoModel(rs.getString(4)), // Size
+                        new ChatLieuModel(rs.getString(5)), // ChatLieu
+                        new ThuongHieuModel(rs.getString(6)), // ThuongHieu
+                        rs.getBigDecimal(7), // GiaBan
+                        rs.getInt(8), // SoLuongTon
+                        rs.getString(9)); // MoTa
+                listCTSP.add(ctsp);
+            }
+            return listCTSP;
+        } catch (Exception e) {
+            // Xử lý ngoại lệ
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<ChiTietSanPhamModel> getAllCTSPByBrandID(String brandID) {
+        sql = "SELECT SANPHAMCHITIET.ID, SANPHAM.TenSanPham, MAUSAC.TenMau AS TenMau, SIZE.Ten AS TenKichCo, CHATLIEU.Ten AS TenChatLieu, THUONGHIEU.Ten AS TenThuongHieu, SANPHAMCHITIET.GiaBan, SANPHAMCHITIET.SoLuongTon, MAUSAC.MoTa\n"
+                + "FROM SANPHAMCHITIET\n"
+                + "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID\n"
+                + "INNER JOIN MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID\n"
+                + "INNER JOIN SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID\n"
+                + "INNER JOIN CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID\n"
+                + "INNER JOIN THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID\n"
+                + "WHERE SANPHAMCHITIET.SoLuongTon > 0 AND THUONGHIEU.ID = ?"; // Thêm điều kiện tìm kiếm theo ID thương
+        // hiệu
+
+        List<ChiTietSanPhamModel> listCTSP = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, brandID); // Thiết lập tham số cho ID thương hiệu
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietSanPhamModel ctsp = new ChiTietSanPhamModel(
+                        rs.getString(1), // ID
+                        new SanPhamModel(rs.getString(2)), // TenSP
+                        new MauSacModel(rs.getString(3)), // MauSac
+                        new KichCoModel(rs.getString(4)), // Size
+                        new ChatLieuModel(rs.getString(5)), // ChatLieu
+                        new ThuongHieuModel(rs.getString(6)), // ThuongHieu
+                        rs.getBigDecimal(7), // GiaBan
+                        rs.getInt(8), // SoLuongTon
+                        rs.getString(9)); // MoTa
+                listCTSP.add(ctsp);
+            }
+            return listCTSP;
+        } catch (Exception e) {
+            // Xử lý ngoại lệ
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public int laySoLuongTonByID(String maCTSP) {
         int soLuongTon = 0;
         String sql = "SELECT SoLuongTon FROM SANPHAMCHITIET WHERE ID = ?";
@@ -670,7 +782,7 @@ public class BanHangService {
         try {
             // Kết nối cơ sở dữ liệu và thực hiện cập nhật
             con = DBConnect.getConnection();
-            
+
             ps = con.prepareStatement(sql);
             ps.setString(1, HTTT);
             ps.setString(2, hoaDonID);
@@ -678,7 +790,7 @@ public class BanHangService {
             int rowsUpdated = ps.executeUpdate();
             isSuccess = rowsUpdated > 0;
         } catch (SQLException e) {
-             e.printStackTrace();
+            e.printStackTrace();
         }
         return isSuccess;
     }

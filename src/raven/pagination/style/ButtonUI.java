@@ -1,5 +1,3 @@
-package raven.pagination.style;
-
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
@@ -27,17 +25,19 @@ public class ButtonUI extends BasicButtonUI {
             @Override
             public void mouseEntered(MouseEvent e) {
                 hover = true;
+                button.repaint(); // Yêu cầu vẽ lại khi di chuột vào
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 hover = false;
+                button.repaint(); // Yêu cầu vẽ lại khi di chuột ra
             }
         });
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.setOpaque(false);
-        button.setForeground(Color.YELLOW); // Màu font luôn là màu vàng
-        button.setBackground(Color.GRAY); // Màu nền luôn là màu xám
+        button.setForeground(Color.WHITE); // Màu chữ là màu trắng
+        button.setBackground(Color.BLACK); // Màu nền là màu đen
         button.setBorder(new EmptyBorder(5, 10, 5, 10));
     }
 
@@ -46,12 +46,17 @@ public class ButtonUI extends BasicButtonUI {
         if (button.isSelected() || hover) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            Color backgroundColor = button.isSelected() ? Color.DARK_GRAY : (hover ? Color.DARK_GRAY : button.getBackground());
-            g2.setColor(backgroundColor);
+            if (hover) {
+                g2.setColor(Color.WHITE); // Màu chữ khi di chuột vào là màu trắng
+            } else {
+                g2.setColor(Color.WHITE); // Màu chữ khi không di chuột vào là màu trắng
+            }
             int width = c.getWidth();
             int height = c.getHeight();
-            Shape shape = new RoundRectangle2D.Double(0, 0, width, height, 5, 5);
-            g2.fill(shape);
+            if (button.isSelected()) {
+                g2.setColor(Color.WHITE); // Màu chữ khi nút được chọn là màu trắng
+                g2.fillRect(0, 0, width, height); // Vẽ màu nền là màu trắng khi nút được chọn
+            }
             g2.dispose();
         }
         super.paint(g, c);

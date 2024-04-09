@@ -74,43 +74,18 @@ public class FormHoaDon extends javax.swing.JPanel {
         }
     }
 
-    void fillTable2(List<ChiTietHoaDonModel> listHD) {
+    void fillTable2(List<ChiTietHoaDonModel> listCTHD) {
         model = (DefaultTableModel) tblHoaDonChiTiet.getModel();
         // Xóa hết các dòng hiện tại trong bảng
         model.setRowCount(0);
-        for (ChiTietHoaDonModel cthd : listHD) {
-
-            Object[] rowData = {
-                model.getRowCount() + 1,
-                cthd.getID(),
-                cthd.getTenSP().getTenSP(),
-                cthd.getMauSac().getTenMS(),
-                cthd.getSize().getTenSize(),
-                cthd.getThuongHieu().getTenTH(),
-                cthd.getChatLieu().getTenCL(),
-                cthd.getDonGia().getGiaBan(),
-                cthd.getSoLuong(),
-                cthd.getThanhTien()
-            };
-
-            // Thêm dòng vào model của bảng
-            model.addRow(rowData);
+        int index = 1;
+        for (ChiTietHoaDonModel cthd : listCTHD) {
+            cthd.setStt(index++);
+            model.addRow(cthd.toData2());
         }
-    }
-
-    private void fillChiTietHoaDonTable(String hoaDonID) {
-        try {
-            List<ChiTietHoaDonModel> chiTietHoaDons = cthd.searchByHoaDonID(hoaDonID);
-            if (chiTietHoaDons == null || chiTietHoaDons.isEmpty()) {
-                System.out.println("Không tìm thấy chi tiết hóa đơn cho ID: " + hoaDonID);
-                return;
-            }
-
-            fillTable2(chiTietHoaDons);
-            System.out.println("Đã chạy qua hàm fill");
-        } catch (Exception ex) {
-            System.out.println("Đã xảy ra lỗi khi điền dữ liệu vào bảng chi tiết hóa đơn: " + ex.getMessage());
-            ex.printStackTrace(); // In ra stack trace để debug
+        if (model.getRowCount() > 0) {
+            tblHoaDonChiTiet.scrollRectToVisible(tblHoaDonChiTiet.getCellRect(0, 0, true));
+            tblHoaDonChiTiet.setRowSelectionInterval(0, 0);
         }
     }
 
@@ -231,6 +206,7 @@ public class FormHoaDon extends javax.swing.JPanel {
         jLabel4.setText("Trạng thái hóa đơn:");
 
         cboTrangThaiHD.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cboTrangThaiHD.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { null }));
         cboTrangThaiHD.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cboTrangThaiHDItemStateChanged(evt);
@@ -241,6 +217,7 @@ public class FormHoaDon extends javax.swing.JPanel {
         jLabel5.setText("Hình thức thanh toán:");
 
         cboHinhThuc.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cboHinhThuc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { null }));
         cboHinhThuc.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cboHinhThucItemStateChanged(evt);
@@ -266,8 +243,8 @@ public class FormHoaDon extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1232, Short.MAX_VALUE)
-                .addGap(14, 14, 14))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(14, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -468,19 +445,37 @@ public class FormHoaDon extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tblHoaDonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHoaDonMouseClicked
-        int row = tblHoaDon.getSelectedRow();
-        if (row >= 0) {
-            String hoaDonID = tblHoaDon.getValueAt(row, 1).toString();
-            if (hoaDonID != null && !hoaDonID.isEmpty()) {
-                // Gọi phương thức searchByHoaDonID với hoaDonID đã được kiểm tra
-                List<ChiTietHoaDonModel> listCTHD = cthd.searchByHoaDonID(hoaDonID);
-                // Tiếp tục xử lý kết quả
-                fillTable2(listCTHD);
-            } else {
-                System.out.println("Hóa đơn ID không hợp lệ");
-                // Xử lý tùy theo logic của bạn khi hoaDonID là null hoặc rỗng
+        // Lấy chỉ số hàng được chọn
+        int selectedRowIndex = tblHoaDon.getSelectedRow();
+
+        // Đảm bảo có hàng được chọn
+        if (selectedRowIndex >= 0) {
+            // Lấy giá trị cột "Mã Hóa Đơn" trong hàng được chọn
+            String maHoaDon = (String) tblHoaDon.getValueAt(selectedRowIndex, 1);
+
+            // Lấy danh sách chi tiết hóa đơn cho mã hóa đơn đã chọn
+            List<ChiTietHoaDonModel> listCTHD = cthd.searchByHoaDonID(maHoaDon);
+
+            // Xóa dữ liệu hiện có trong mô hình bảng chi tiết hóa đơn
+            DefaultTableModel modelCTHD = (DefaultTableModel) tblHoaDonChiTiet.getModel();
+            modelCTHD.setRowCount(0);
+
+            // Điền dữ liệu vào bảng chi tiết hóa đơn với các thông tin đã lấy được
+            int index = 1;
+            for (ChiTietHoaDonModel cthd : listCTHD) {
+                cthd.setStt(index++);
+                modelCTHD.addRow(cthd.toData2());
             }
+
+            // Cuộn đến đầu bảng chi tiết hóa đơn
+            if (modelCTHD.getRowCount() > 0) {
+                tblHoaDonChiTiet.scrollRectToVisible(tblHoaDonChiTiet.getCellRect(0, 0, true));
+            }
+        } else {
+            // Không có hàng nào được chọn, có thể xử lý trường hợp này bằng thông báo hoặc logic khác
+            System.out.println("Không có hàng nào được chọn");
         }
+
     }//GEN-LAST:event_tblHoaDonMouseClicked
 
     private void btnLocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLocActionPerformed

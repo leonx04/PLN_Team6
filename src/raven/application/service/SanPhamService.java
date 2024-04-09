@@ -45,6 +45,60 @@ public class SanPhamService {
         }
     }
 
+    public List<SanPhamModel> getAllSPSoluongLonHon0() {
+        sql = "SELECT ID, TenSanPham, MoTa\n"
+                + "FROM SANPHAM\n"
+                + "WHERE ID IN (\n"
+                + "    SELECT ID_SanPham\n"
+                + "    FROM SANPHAMCHITIET\n"
+                + "    GROUP BY ID_SanPham\n"
+                + "    HAVING COUNT(*) > 0";
+        List<SanPhamModel> listSP = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                SanPhamModel sp = new SanPhamModel(
+                        rs.getString(1),
+                        rs.getString(2),
+                        rs.getString(3));
+                listSP.add(sp);
+            }
+            return listSP;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<SanPhamModel> getAllSPSoluong0() {
+        sql = "SELECT ID, TenSanPham, MoTa\n"
+                + "FROM SANPHAM\n"
+                + "WHERE ID NOT IN (\n"
+                + "    SELECT ID_SanPham\n"
+                + "    FROM SANPHAMCHITIET\n"
+                + "    GROUP BY ID_SanPham\n"
+                + "    HAVING COUNT(*) > 0";
+        List<SanPhamModel> listSP = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                SanPhamModel sp = new SanPhamModel(
+                        rs.getString(1),
+                        rs.getString(2),
+                        rs.getString(3));
+                listSP.add(sp);
+            }
+            return listSP;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public List<SanPhamModel> getAllSPByTrangThai(String trangthai) {
         sql = "SELECT ID, TenSanPham, MoTa FROM SANPHAM WHERE TrangThai = ?";
         List<SanPhamModel> listSPTT = new ArrayList<>();
