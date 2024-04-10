@@ -120,19 +120,41 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
     }
 
     private boolean checkForm() {
-        if (txtTenTT.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên thuộc tính !", "Cảnh báo",
+        String tenTT = txtTenTT.getText().trim();
+        String moTaTT = txtMoTaTT.getText().trim();
+
+        // Kiểm tra tên thuộc tính không được rỗng
+        if (tenTT.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên thuộc tính!", "Cảnh báo",
                     JOptionPane.WARNING_MESSAGE);
             txtTenTT.requestFocus();
             return false;
         }
 
-        if (txtMoTaTT.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập mô tả thuộc tính !", "Cảnh báo",
+        // Kiểm tra độ dài tối đa của tên thuộc tính là 100 ký tự
+        if (tenTT.length() > 100) {
+            JOptionPane.showMessageDialog(this, "Tên thuộc tính không được vượt quá 100 ký tự!", "Cảnh báo",
+                    JOptionPane.WARNING_MESSAGE);
+            txtTenTT.requestFocus();
+            return false;
+        }
+
+        // Kiểm tra mô tả thuộc tính không được rỗng
+        if (moTaTT.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mô tả thuộc tính!", "Cảnh báo",
                     JOptionPane.WARNING_MESSAGE);
             txtMoTaTT.requestFocus();
             return false;
         }
+
+        // Kiểm tra độ dài tối đa của mô tả thuộc tính là 255 ký tự
+        if (moTaTT.length() > 255) {
+            JOptionPane.showMessageDialog(this, "Mô tả thuộc tính không được vượt quá 255 ký tự!", "Cảnh báo",
+                    JOptionPane.WARNING_MESSAGE);
+            txtMoTaTT.requestFocus();
+            return false;
+        }
+
         return true;
     }
 

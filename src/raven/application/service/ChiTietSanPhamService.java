@@ -36,7 +36,7 @@ public class ChiTietSanPhamService {
                 + "                         CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID INNER JOIN\n"
                 + "                         THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID INNER JOIN\n"
                 + "                         SANPHAMCHITIET AS SANPHAMCHITIET_1 ON SANPHAM.ID = SANPHAMCHITIET_1.ID_SanPham AND MAUSAC.ID = SANPHAMCHITIET_1.ID_MauSac AND SIZE.ID = SANPHAMCHITIET_1.ID_Size AND \n"
-                + "                         CHATLIEU.ID = SANPHAMCHITIET_1.ID_ChatLieu AND THUONGHIEU.ID = SANPHAMCHITIET_1.ID_ThuongHieu ";
+                + "                         CHATLIEU.ID = SANPHAMCHITIET_1.ID_ChatLieu AND THUONGHIEU.ID = SANPHAMCHITIET_1.ID_ThuongHieu  ";
 
         List<ChiTietSanPhamModel> listCTSP = new ArrayList<>();
         try {
@@ -66,29 +66,27 @@ public class ChiTietSanPhamService {
     }
 
     public List<ChiTietSanPhamModel> getAllCTSPSoluong0() {
-        String sql = "SELECT " +
-                "SANPHAMCHITIET.ID, " +
-                "SANPHAM.TenSanPham, " +
-                "MAUSAC.TenMau AS MauSac, " +
-                "SIZE.Ten AS Size, " +
-                "CHATLIEU.Ten AS ChatLieu, " +
-                "THUONGHIEU.Ten AS ThuongHieu, " +
-                "SANPHAMCHITIET.GiaBan, " +
-                "SANPHAMCHITIET.SoLuongTon, " +
-                "SANPHAMCHITIET.MoTa " +
-                "FROM " +
-                "SANPHAMCHITIET " +
-                "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID " +
-                "INNER JOIN MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID " +
-                "INNER JOIN SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID " +
-                "INNER JOIN CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID " +
-                "INNER JOIN THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID " +
-                "WHERE SANPHAMCHITIET.SoLuongTon = 0"; // Chỉ lấy các sản phẩm chi tiết có số lượng tồn bằng 0
+        String sql = "SELECT "
+                + "SANPHAMCHITIET.ID, "
+                + "SANPHAM.TenSanPham, "
+                + "MAUSAC.TenMau AS MauSac, "
+                + "SIZE.Ten AS Size, "
+                + "CHATLIEU.Ten AS ChatLieu, "
+                + "THUONGHIEU.Ten AS ThuongHieu, "
+                + "SANPHAMCHITIET.GiaBan, "
+                + "SANPHAMCHITIET.SoLuongTon, "
+                + "SANPHAMCHITIET.MoTa "
+                + "FROM "
+                + "SANPHAMCHITIET "
+                + "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID "
+                + "INNER JOIN MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID "
+                + "INNER JOIN SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID "
+                + "INNER JOIN CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID "
+                + "INNER JOIN THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID "
+                + "WHERE SANPHAMCHITIET.SoLuongTon = 0"; // Chỉ lấy các sản phẩm chi tiết có số lượng tồn bằng 0
 
         List<ChiTietSanPhamModel> listCTSP = new ArrayList<>();
-        try (Connection con = DBConnect.getConnection();
-                PreparedStatement ps = con.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 int soLuongTon = rs.getInt("SoLuongTon");
@@ -411,6 +409,44 @@ public class ChiTietSanPhamService {
         }
     }
 
+    public boolean checkTrungId(String id) {
+        sql = "SELECT COUNT(*) AS count FROM SANPHAMCHITIET WHERE ID = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean checkTrungIdCTSP(String maSPM) {
+        String sql = "SELECT ID FROM SANPHAMCHITIET WHERE ID = ?";
+
+        try {
+            Connection con = DBConnect.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, maSPM);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                // Nếu có kết quả trả về => Mã SP đã tồn tại
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Không tìm thấy mã SP trùng
+        return false;
+    }
+
     public int update(ChiTietSanPhamModel ctsp) {
         sql = "UPDATE SANPHAMCHITIET SET ID_SanPham=?, ID_MauSac=?, ID_Size=?, ID_ChatLieu=?, ID_ThuongHieu=?, GiaBan=?, SoLuongTon=?, MoTa=?, NgaySua = CURRENT_TIMESTAMP WHERE ID=?";
 
@@ -446,36 +482,20 @@ public class ChiTietSanPhamService {
         }
     }
 
-    public boolean checkTrungId(String id) {
-        sql = "SELECT COUNT(*) AS count FROM SANPHAMCHITIET WHERE ID = ?";
+    public boolean checkTonTaiHDCT(String idSPCT) {
+        sql = "SELECT COUNT(*) FROM HOADONCHITIET WHERE ID_SanPhamChiTiet = ?";
         try {
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
-            ps.setString(1, id);
+            ps.setString(1, idSPCT);
             rs = ps.executeQuery();
             if (rs.next()) {
-                int count = rs.getInt("count");
+                int count = rs.getInt(1);
                 return count > 0;
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            // Đóng các tài nguyên
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
         }
         return false;
     }
-
 }

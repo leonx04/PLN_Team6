@@ -109,7 +109,7 @@ public class FormBanHang extends javax.swing.JPanel {
         initCBOHTTT();
         initCBOVoucher();
         fillTable(bhrs.getAllCTSP());
-        fillTable2(bhrs.getAllHD1());
+        fillTable2(bhrs.getHoaDonChoThanhToan());
         txtTenKH.setText("Khách bán lẻ");
         txtTenNV.setText(Auth.user.getHoTen());
         lb1.putClientProperty(FlatClientProperties.STYLE, ""
@@ -663,7 +663,7 @@ public class FormBanHang extends javax.swing.JPanel {
         }
 
         cboTrangThai.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cboTrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Chờ thanh toán", "Đã thanh toán", "Đã hủy" }));
+        cboTrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chờ thanh toán", "Tất cả", "Đã thanh toán", "Đã hủy" }));
         cboTrangThai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboTrangThaiActionPerformed(evt);
@@ -879,7 +879,6 @@ public class FormBanHang extends javax.swing.JPanel {
         txtTenNV.setEditable(false);
         txtTenNV.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtTenNV.setEnabled(false);
-
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -1420,7 +1419,7 @@ public class FormBanHang extends javax.swing.JPanel {
         // Hiển thị kết quả
         txtThanhToan.setText(tongTienSauGiamGia.toString());
         txtTienThua.setText(tienThua.toString());
-        this.fillTable2(bhrs.getAllHD1());
+        this.fillTable2(bhrs.getHoaDonChoThanhToan());
 
         // Validate các trường liên quan
         validateTienMat();
@@ -1540,7 +1539,7 @@ public class FormBanHang extends javax.swing.JPanel {
         }
 
         // Cập nhật lại bảng hiển thị
-        fillTable2(bhrs.getAllHD1()); // Cập nhật lại bảng hoá đơn chính
+        fillTable2(bhrs.getHoaDonChoThanhToan()); // Cập nhật lại bảng hoá đơn chính
         fillTable(bhrs.getAllCTSP()); // Cập nhật lại bảng sản phẩm chi tiết
 
         // Thông báo xóa thành công
@@ -1587,20 +1586,19 @@ public class FormBanHang extends javax.swing.JPanel {
             this.showData(rowIndex);
             selectedHoaDonID = tblHoaDon.getValueAt(rowIndex, 1).toString(); // Lấy ID hóa đơn được chọn từ cột thứ hai
 
-            // Kiểm tra trạng thái của hoá đơn
-            String trangThai = tblHoaDon.getValueAt(rowIndex, 8).toString().trim();
-            if (trangThai.equals("Đã thanh toán") || trangThai.equals("Đã hủy")) {
-                // Nếu trạng thái là "Đã thanh toán" hoặc "Đã hủy", tắt đi các nút
-                btnHuyDon.setEnabled(false);
-                btnSuccesHoaDon.setEnabled(false);
-                btnDeleteGH.setEnabled(false);
-            } else {
-                // Nếu trạng thái không phải là "Đã thanh toán" hoặc "Đã hủy", bật lại các nút 
-                btnHuyDon.setEnabled(true);
-                btnSuccesHoaDon.setEnabled(true);
-                btnDeleteGH.setEnabled(true);
-            }
-
+//            // Kiểm tra trạng thái của hoá đơn
+//            String trangThai = tblHoaDon.getValueAt(rowIndex, 8).toString().trim();
+//            if (trangThai.equals("Đã thanh toán") || trangThai.equals("Đã hủy")) {
+//                // Nếu trạng thái là "Đã thanh toán" hoặc "Đã hủy", tắt đi các nút
+//                btnHuyDon.setEnabled(false);
+//                btnSuccesHoaDon.setEnabled(false);
+//                btnDeleteGH.setEnabled(false);
+//            } else {
+//                // Nếu trạng thái không phải là "Đã thanh toán" hoặc "Đã hủy", bật lại các nút 
+//                btnHuyDon.setEnabled(true);
+//                btnSuccesHoaDon.setEnabled(true);
+//                btnDeleteGH.setEnabled(true);
+//            }
             System.out.println("BẠN ĐÃ NHẤN:  " + selectedHoaDonID);
 
             // Cập nhật lại bảng tblGioHang với dữ liệu của hóa đơn đã chọn
@@ -1681,9 +1679,9 @@ public class FormBanHang extends javax.swing.JPanel {
                     // Xoá hoá đơn chi tiết
                     bhrs.xoaHoaDonChiTiet(maSanPhamChiTiet, selectedHoaDonID);
                     boolean update = bhrs.updateBillWhileDeleteALL(selectedHoaDonID);
-                    fillTable2(bhrs.getDaThanhToanHoaDon());
                 }
-
+                fillTable2(bhrs.getHoaDonChoThanhToan());
+                fillToTable(chiTietHoaDons);
                 cleanForm();
 
             } else {
@@ -1719,7 +1717,7 @@ public class FormBanHang extends javax.swing.JPanel {
             model.setRowCount(0);
             selectedHoaDonID = null;
             fillTable(bhrs.getAllCTSP());
-            fillTable2(bhrs.getAllHD1());
+            fillTable2(bhrs.getHoaDonChoThanhToan());
         } else {
             DefaultTableModel model = (DefaultTableModel) tblGioHang.getModel();
             model.setRowCount(0);
@@ -1780,7 +1778,7 @@ public class FormBanHang extends javax.swing.JPanel {
                         bhrs.updateSoLuongTon(productID, remainingQuantity);
                         refreshGioHangTable();
                         boolean updated = bhrs.capNhatTongTienHoaDon(selectedHoaDonID);
-                        fillTable2(bhrs.getAllHD1());
+                        fillTable2(bhrs.getHoaDonChoThanhToan());
                         fillTable(bhrs.getAllCTSP());
                         if (updated) {
                             // Cập nhật lại bảng giỏ hàng
@@ -1806,7 +1804,7 @@ public class FormBanHang extends javax.swing.JPanel {
                         JOptionPane.showMessageDialog(this, "Thêm sản phẩm vào giỏ hàng thành công!");
                         boolean updated = bhrs.capNhatTongTienHoaDon(selectedHoaDonID);
                         refreshGioHangTable();
-                        fillTable2(bhrs.getAllHD1());
+                        fillTable2(bhrs.getHoaDonChoThanhToan());
                         fillTable(bhrs.getAllCTSP());
                         if (updated) {
                             // Cập nhật lại bảng giỏ hàng

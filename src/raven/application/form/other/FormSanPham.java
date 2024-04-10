@@ -35,24 +35,43 @@ public class FormSanPham extends javax.swing.JPanel {
         lb.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:$h1.font");
 
-        JComboBox<String> cboFilterTrangThai = new JComboBox<>(new String[]{"Tất cả", "Còn hàng", "Hết hàng"});
+        JComboBox<String> cboFilterTrangThai = new JComboBox<>(new String[]{"Tất cả", "Đang kinh doanh", "Ngừng kinh doanh"});
     }
 
+    void refreshData() {
+        List<SanPhamModel> allSP = sprs.getAllSP(); // Lấy tất cả sản phẩm
+        int totalRecords = allSP.size(); // Tổng số lượng bản ghi
+        int totalPages = (int) Math.ceil((double) totalRecords / RECORDS_PER_PAGE);
+
+        // Nếu currentPage hiện tại lớn hơn totalPages sau khi tính lại, điều chỉnh currentPage
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+
+        setPagegination(currentPage, totalRecords); // Cập nhật thanh phân trang
+        fillTable(allSP); // Hiển thị dữ liệu cho trang hiện tại
+    }
+
+    public void setPagegination(int current, int totalRecords) {
+        int totalPages = (int) Math.ceil((double) totalRecords / RECORDS_PER_PAGE);
+        pagination1.setPagegination(current, totalPages); // Cập nhật thanh phân trang
+    }
+
+// Thêm bộ lọc và phân trang mới khi số lượng bản ghi trên mỗi trang được thay đổi
     void fillTable(List<SanPhamModel> listSP) {
         model = (DefaultTableModel) tblSP.getModel();
         model.setRowCount(0);
 
-        int startIndex = (currentPage - 1) * RECORDS_PER_PAGE; // Bắt đầu từ bản ghi thứ startIndex
-        int endIndex = Math.min(startIndex + RECORDS_PER_PAGE, listSP.size()); // Lấy tối đa 10 bản ghi kể từ startIndex
+        int startIndex = (currentPage - 1) * RECORDS_PER_PAGE;
+        int endIndex = Math.min(startIndex + RECORDS_PER_PAGE, listSP.size());
 
-        int index = startIndex + 1; // Số thứ tự của bản ghi đầu tiên trên trang
+        int index = startIndex + 1;
 
         for (int i = startIndex; i < endIndex; i++) {
             SanPhamModel sp = listSP.get(i);
             sp.setStt(index++);
             model.addRow(sp.toData());
         }
-
     }
 
     private void init() {
@@ -61,24 +80,11 @@ public class FormSanPham extends javax.swing.JPanel {
             @Override
             public void pageChanged(int page) {
                 currentPage = page; // Cập nhật trang hiện tại khi chuyển trang
-                fillTable(sprs.getAllSP()); // Hiển thị dữ liệu cho trang mới
+                refreshData(); // Hiển thị dữ liệu cho trang mới
             }
         });
         pagination1.setPaginationItemRender(new PaginationItemRenderStyle1());
-        pagination1.setPagegination(1, 100); // Khởi tạo thanh trang với trang đầu tiên và tổng số trang
-    }
-
-    // Cập nhật phương thức setPagegination để cập nhật tổng số trang dựa trên số lượng bản ghi
-    public void setPagegination(int current, int totalRecords) {
-        int totalPages = (int) Math.ceil((double) totalRecords / RECORDS_PER_PAGE);
-        pagination1.setPagegination(current, totalPages);
-    }
-
-    // Phương thức này sẽ được gọi khi dữ liệu thay đổi hoặc khi chuyển trang
-    void refreshData() {
-        int totalRecords = sprs.getAllSP().size();
-        fillTable(sprs.getAllSP()); // Cập nhật dữ liệu cho bảng
-        setPagegination(currentPage, totalRecords); // Cập nhật thanh trang
+        refreshData(); // Hiển thị dữ liệu ban đầu khi khởi động
     }
 
     void showData(int index) {
@@ -107,19 +113,37 @@ public class FormSanPham extends javax.swing.JPanel {
     }
 
     private boolean checkForm() {
-        if (txtTenSP.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên sản phẩm !", "Cảnh báo",
+        String tenSP = txtTenSP.getText().trim();
+        String moTa = txtMoTa.getText().trim();
+
+        if (tenSP.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên sản phẩm!", "Cảnh báo",
                     JOptionPane.WARNING_MESSAGE);
             txtTenSP.requestFocus();
             return false;
         }
 
-        if (txtMoTa.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập mô tả sản phẩm !", "Cảnh báo",
+        if (tenSP.length() > 100) {
+            JOptionPane.showMessageDialog(this, "Tên sản phẩm không được vượt quá 100 ký tự!", "Cảnh báo",
+                    JOptionPane.WARNING_MESSAGE);
+            txtTenSP.requestFocus();
+            return false;
+        }
+
+        if (moTa.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mô tả sản phẩm!", "Cảnh báo",
                     JOptionPane.WARNING_MESSAGE);
             txtMoTa.requestFocus();
             return false;
         }
+
+        if (moTa.length() > 255) {
+            JOptionPane.showMessageDialog(this, "Mô tả sản phẩm không được vượt quá 255 ký tự!", "Cảnh báo",
+                    JOptionPane.WARNING_MESSAGE);
+            txtMoTa.requestFocus();
+            return false;
+        }
+
         return true;
     }
 
@@ -164,6 +188,7 @@ public class FormSanPham extends javax.swing.JPanel {
         btnUpdateSP = new javax.swing.JButton();
         btnReset = new javax.swing.JButton();
         btnDeleteSP = new javax.swing.JButton();
+        btnHuySP = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblSP = new javax.swing.JTable();
@@ -296,6 +321,15 @@ public class FormSanPham extends javax.swing.JPanel {
             }
         });
 
+        btnHuySP.setBackground(new java.awt.Color(255, 153, 153));
+        btnHuySP.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnHuySP.setText("Hủy");
+        btnHuySP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHuySPActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -306,7 +340,8 @@ public class FormSanPham extends javax.swing.JPanel {
                     .addComponent(btnAddSP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnUpdateSP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnReset, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnDeleteSP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnDeleteSP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnHuySP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -314,12 +349,14 @@ public class FormSanPham extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnAddSP)
-                .addGap(27, 27, 27)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnUpdateSP)
-                .addGap(28, 28, 28)
+                .addGap(18, 18, 18)
                 .addComponent(btnReset)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(btnDeleteSP)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnHuySP)
                 .addContainerGap())
         );
 
@@ -370,7 +407,7 @@ public class FormSanPham extends javax.swing.JPanel {
         });
 
         Cbo_TrangThai.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        Cbo_TrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Còn hàng", "Hết Hàng" }));
+        Cbo_TrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Đang kinh doanh", "Ngừng kinh doanh" }));
         Cbo_TrangThai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Cbo_TrangThaiActionPerformed(evt);
@@ -450,18 +487,44 @@ public class FormSanPham extends javax.swing.JPanel {
 
     private void Cbo_TrangThaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Cbo_TrangThaiActionPerformed
         String selectedTrangThai = (String) Cbo_TrangThai.getSelectedItem();
-        List<SanPhamModel> listCTSP;
+        List<SanPhamModel> listSP;
 
-        if (selectedTrangThai.equals("Còn hàng")) {
-            listCTSP = sprs.getAllSPSoluongLonHon0();
-        } else if (selectedTrangThai.equals("Hết hàng")) {
-            listCTSP = sprs.getAllSPSoluong0(); // Sử dụng phương thức getAllCTSPSoluong0 để lấy các sản phẩm có số lượng tồn bằng 0
+        if (selectedTrangThai.equals("Đang kinh doanh")) {
+            listSP = sprs.getAllSPDangKinhDoanh();
+        } else if (selectedTrangThai.equals("Ngừng kinh doanh")) {
+            listSP = sprs.getAllSPNgungKinhDoanh();
         } else {
-            listCTSP = sprs.getAllSP();
+            listSP = sprs.getAllSP();
         }
 
-        fillTable(listCTSP);
+        fillTable(listSP);
     }//GEN-LAST:event_Cbo_TrangThaiActionPerformed
+
+    private void btnHuySPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHuySPActionPerformed
+        // Lấy chỉ mục của dòng được chọn trong bảng
+        int rowDC = tblSP.getSelectedRow();
+        if (rowDC >= 0) {
+            // Lấy ID của sản phẩm từ cột thứ hai (index 1)
+            String ID = tblSP.getValueAt(rowDC, 1).toString();
+
+            // Hiển thị hộp thoại xác nhận
+            int option = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn ngừng kinh doanh sản phẩm này?",
+                    "Xác nhận ngừng kinh doanh", JOptionPane.YES_NO_OPTION);
+            if (option == JOptionPane.YES_OPTION) {
+                SanPhamModel sp = new SanPhamModel();
+                if (sprs.updateTrangThai(sp, ID) > 0) {
+                    JOptionPane.showMessageDialog(this, "Đã ngừng kinh doanh sản phẩm!");
+                    refreshData();
+                    fillTable(sprs.getAllSP());
+                    clear();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Cập nhật trạng thái thất bại");
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một sản phẩm để ngừng kinh doanh");
+        }
+    }//GEN-LAST:event_btnHuySPActionPerformed
 
     private void txtTimKiemKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtTimKiemKeyReleased
         String query = txtTimKiem.getText();
@@ -500,12 +563,19 @@ public class FormSanPham extends javax.swing.JPanel {
             // Lấy ID của sản phẩm từ cột thứ hai (index 1)
             String ID = tblSP.getValueAt(rowDC, 1).toString();
 
+            // Kiểm tra xem sản phẩm có tồn tại trong bảng sản phẩm chi tiết không
+            if (sprs.checkTonTaiSPCT(ID)) {
+                JOptionPane.showMessageDialog(this, "Không thể xóa sản phẩm này vì đang tồn tại sản phẩm chi tiết!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
             // Hiển thị hộp thoại xác nhận
             int option = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa sản phẩm này?",
                     "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
             if (option == JOptionPane.YES_OPTION) {
                 if (sprs.delete(ID) > 0) {
                     JOptionPane.showMessageDialog(this, "Xoá thành công sản phẩm!");
+                    refreshData();
                     fillTable(sprs.getAllSP());
                     clear();
                 } else {
@@ -532,24 +602,39 @@ public class FormSanPham extends javax.swing.JPanel {
     }// GEN-LAST:event_tblSPMouseClicked
 
     private void btnAddSPActionPerformed(java.awt.event.ActionEvent evt) {
-        String newID = sprs.getNewSanPhamID();
-        SanPhamModel spmd = this.read();
+        if (sprs.checkTrungMa(txtMaSP.getText().trim())) {
+            JOptionPane.showMessageDialog(this, "Mã sản phẩm đã tồn tại!");
+            txtMaSP.requestFocus();
+            return;
+        }
+        if (sprs.checkTrungTen(txtTenSP.getText().trim())) {
+            JOptionPane.showMessageDialog(this, "Tên sản phẩm đã tồn tại!");
+            txtMaSP.requestFocus();
+            return;
+        }
         if (!checkForm()) {
             return;
-        } else {
-            spmd.setID(newID);
-            if (sprs.insert(spmd) > 0) {
-                JOptionPane.showMessageDialog(this, "Thêm thành công");
-                this.fillTable(sprs.getAllSP());
-                clear();
-            }
         }
+        String newID = sprs.getNewSanPhamID();
+        SanPhamModel spmd = this.read();
+
+        spmd.setID(newID);
+        if (sprs.insert(spmd) > 0) {
+            JOptionPane.showMessageDialog(this, "Thêm thành công");
+            refreshData();
+            this.fillTable(sprs.getAllSP());
+            clear();
+        } else {
+            JOptionPane.showMessageDialog(this, "Thêm thất bại");
+        }
+
     }// GEN-LAST:event_btnAddSPActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> Cbo_TrangThai;
     private javax.swing.JButton btnAddSP;
     private javax.swing.JButton btnDeleteSP;
+    private javax.swing.JButton btnHuySP;
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnUpdateSP;
     private javax.swing.JLabel jLabel1;

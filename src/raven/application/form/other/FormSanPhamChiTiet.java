@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.RowFilter;
@@ -68,37 +69,47 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
         initComponents();
         init();
         fillTable(ctsprp.getAllCTSP());
-        lb.putClientProperty(FlatClientProperties.STYLE, ""
-                + "font:$h1.font");
-
+        Cbo_ChatLieu();
+        Cbo_KichCo();
+        Cbo_MauSac();
+        Cbo_ThuongHieu();
+        Cbo_SanPham();
         JComboBox<String> cboFilterTrangThai = new JComboBox<>(new String[]{"Tất cả", "Còn hàng", "Hết hàng"});
-
     }
 
-    public void reloadForm() {
-        fillTable(ctsprp.getAllCTSP());
-        Cbo_MauSac(); // Cập nhật lại combobox màu sắc
-        // Cập nhật lại các combobox khác nếu cần
+    void refreshData() {
+        List<ChiTietSanPhamModel> allCTSP = ctsprp.getAllCTSP(); // Lấy tất cả sản phẩm
+        int totalRecords = allCTSP.size(); // Tổng số lượng bản ghi
+        int totalPages = (int) Math.ceil((double) totalRecords / RECORDS_PER_PAGE);
+
+        // Nếu currentPage hiện tại lớn hơn totalPages sau khi tính lại, điều chỉnh currentPage
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+
+        setPagegination(currentPage, totalRecords); // Cập nhật thanh phân trang
+        fillTable(allCTSP); // Hiển thị dữ liệu cho trang hiện tại
     }
 
-    void fillTable(List<ChiTietSanPhamModel> listCTSP) {
+    public void setPagegination(int current, int totalRecords) {
+        int totalPages = (int) Math.ceil((double) totalRecords / RECORDS_PER_PAGE);
+        pagination1.setPagegination(current, totalPages); // Cập nhật thanh phân trang
+    }
+
+    // Thêm bộ lọc và phân trang mới khi số lượng bản ghi trên mỗi trang được thay đổi
+    void fillTable(List<ChiTietSanPhamModel> listSP) {
         model = (DefaultTableModel) tblSPCT.getModel();
         model.setRowCount(0);
-        Cbo_SanPham();
-        Cbo_MauSac();
-        Cbo_KichCo();
-        Cbo_ThuongHieu();
-        Cbo_ChatLieu();
 
-        int startIndex = (currentPage - 1) * RECORDS_PER_PAGE; // Bắt đầu từ bản ghi thứ startIndex
-        int endIndex = Math.min(startIndex + RECORDS_PER_PAGE, listCTSP.size()); // Lấy tối đa 10 bản ghi kể từ startIndex
+        int startIndex = (currentPage - 1) * RECORDS_PER_PAGE;
+        int endIndex = Math.min(startIndex + RECORDS_PER_PAGE, listSP.size());
 
-        int index = startIndex + 1; // Số thứ tự của bản ghi đầu tiên trên trang
+        int index = startIndex + 1;
 
         for (int i = startIndex; i < endIndex; i++) {
-            ChiTietSanPhamModel ctsp = listCTSP.get(i);
-            ctsp.setStt(index++);
-            model.addRow(ctsp.toData());
+            ChiTietSanPhamModel sp = listSP.get(i);
+            sp.setStt(index++);
+            model.addRow(sp.toData());
         }
     }
 
@@ -108,24 +119,11 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
             @Override
             public void pageChanged(int page) {
                 currentPage = page; // Cập nhật trang hiện tại khi chuyển trang
-                fillTable(ctsprp.getAllCTSP()); // Hiển thị dữ liệu cho trang mới
+                refreshData(); // Hiển thị dữ liệu cho trang mới
             }
         });
         pagination1.setPaginationItemRender(new PaginationItemRenderStyle1());
-        pagination1.setPagegination(1, 100); // Khởi tạo thanh trang với trang đầu tiên và tổng số trang
-    }
-
-    // Cập nhật phương thức setPagegination để cập nhật tổng số trang dựa trên số lượng bản ghi
-    public void setPagegination(int current, int totalRecords) {
-        int totalPages = (int) Math.ceil((double) totalRecords / RECORDS_PER_PAGE);
-        pagination1.setPagegination(current, totalPages);
-    }
-
-    // Phương thức này sẽ được gọi khi dữ liệu thay đổi hoặc khi chuyển trang
-    void refreshData() {
-        int totalRecords = ctsprp.getAllCTSP().size();
-        fillTable(ctsprp.getAllCTSP()); // Cập nhật dữ liệu cho bảng
-        setPagegination(currentPage, totalRecords); // Cập nhật thanh trang
+        refreshData(); // Hiển thị dữ liệu ban đầu khi khởi động
     }
 
     void showData(int index) {
@@ -328,7 +326,6 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
         txtMoTaCTSP.setText(null);
         txtSoLuong.setText(null);
         txtTimKiem.setText(null);
-        fillTable(ctsprp.getAllCTSP());
     }
 
     private void filter(String querry) {
@@ -401,13 +398,13 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
             return false;
         }
 
-        if (giaBanStr.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Vui lòng nhập giá bán", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        if (soLuongTonStr.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập số lượng tồn", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
-        if (soLuongTonStr.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Vui lòng nhập số lượng tồn", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        if (giaBanStr.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập giá bán", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -415,25 +412,64 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập mô tả", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-
-        // Kiểm tra giá bán có phải là số và lớn hơn 1000 không
         try {
-            BigDecimal giaBan = new BigDecimal(giaBanStr);
             int soLuongTon = Integer.parseInt(soLuongTonStr);
-            if (giaBan.compareTo(BigDecimal.valueOf(1000)) <= 0) {
-                // Thông báo lỗi
-                JOptionPane.showMessageDialog(null, "Giá bán phải lớn hơn 1000", "Lỗi", JOptionPane.ERROR_MESSAGE);
+
+            // Kiểm tra số lượng tồn là số nguyên dương lớn hơn 0 và không vượt quá 999
+            if (soLuongTon <= 0 || soLuongTon > 999) {
+                JOptionPane.showMessageDialog(null, "Số lượng tồn phải là số nguyên dương lớn hơn 0 và không vượt quá 999", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         } catch (NumberFormatException e) {
-            // Thông báo lỗi nếu giá bán không phải là số
+            JOptionPane.showMessageDialog(null, "Số lượng tồn phải là số ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        try {
+            BigDecimal giaBan = new BigDecimal(giaBanStr);
+
+            // Kiểm tra giá bán không âm và lớn hơn 1000
+            if (giaBan.compareTo(BigDecimal.valueOf(1000)) < 0) {
+                JOptionPane.showMessageDialog(null, "Giá bán phải lớn hơn hoặc bằng 1000", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            // Kiểm tra giá bán không vượt quá giới hạn
+            BigDecimal maxGiaBan = new BigDecimal("9999999999999999999");
+            if (giaBan.compareTo(maxGiaBan) > 0) {
+                JOptionPane.showMessageDialog(null, "Giá bán không được vượt quá " + maxGiaBan.toString(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Giá bán phải là số", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Kiểm tra mô tả không vượt quá 255 ký tự
+        if (moTa.length() > 255) {
+            JOptionPane.showMessageDialog(null, "Mô tả không được vượt quá 255 ký tự", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         return true;
     }
 
+//    private boolean checkDuplicateCTSP(ChiTietSanPhamModel newChiTiet) {
+//    List<ChiTietSanPhamModel> existingChiTiets = ctsprp.getAllCTSP(); // Lấy danh sách tất cả sản phẩm chi tiết
+//    
+//    for (ChiTietSanPhamModel existingChiTiet : existingChiTiets) {
+//        // Kiểm tra từng thuộc tính của sản phẩm chi tiết đã tồn tại
+//        if (existingChiTiet.getID_SanPham().equals(newChiTiet.getID_SanPham())
+//            && existingChiTiet.getID_MauSac().equals(newChiTiet.getID_MauSac())
+//            && existingChiTiet.getID_Size().equals(newChiTiet.getID_Size())
+//            && existingChiTiet.getID_ChatLieu().equals(newChiTiet.getID_ChatLieu())
+//            && existingChiTiet.getID_ThuongHieu().equals(newChiTiet.getID_ThuongHieu())) {
+//            return true; // Nếu tất cả các thuộc tính đều trùng, trả về true
+//        }
+//    }
+//    
+//    return false; // Không có sản phẩm chi tiết nào trùng
+//}
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
@@ -1136,22 +1172,37 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
     }// GEN-LAST:event_cboChatLieuActionPerformed
 
     private void btnAddCTSPActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnAddCTSPActionPerformed
-        // TODO add your handling code here:
-        if (ctsprp.checkTrungId(txtMaCTSP.getText().trim())) {
-            JOptionPane.showMessageDialog(this, "Mã chi tiết sản phẩm đã tồn tại!");
-            txtMaCTSP.requestFocus();
-            return;
-        }
+        // Kiểm tra tính hợp lệ của dữ liệu nhập vào
         if (!validatef()) {
             return;
         }
-        ChiTietSanPhamModel md = this.readForm();
+        if (ctsprp.checkTrungIdCTSP(txtMaCTSP.getText().trim())) {
+            JOptionPane.showMessageDialog(this, "Mã sản phẩm chi tiết đã tồn tại!");
+            txtMaCTSP.requestFocus();
+            return;
+        }
+
+        // Đọc thông tin từ form và tạo đối tượng ChiTietSanPhamModel
+        ChiTietSanPhamModel chiTietSanPham = readForm();
+
+        // Tạo mới mã sản phẩm chi tiết
         String newID = ctsprp.getNewSPCTID();
-        md.setID(newID);
-        this.ctsprp.insert(md);
-        this.fillTable(ctsprp.getAllCTSP());
-        JOptionPane.showMessageDialog(this, "Thêm thành công");
-        this.clear();
+        chiTietSanPham.setID(newID);
+
+        // Thực hiện thêm mới vào cơ sở dữ liệu
+        int result = ctsprp.insert(chiTietSanPham);
+
+        if (result > 0) {
+            // Nếu kết quả trả về > 0 (insert thành công)
+            JOptionPane.showMessageDialog(this, "Thêm thành công");
+
+            fillTable(ctsprp.getAllCTSP());
+            clear(); // Xóa các trường nhập liệu trên form
+            refreshData();
+        } else {
+            // Nếu kết quả trả về <= 0 (insert thất bại)
+            JOptionPane.showMessageDialog(this, "Thêm thất bại");
+        }
     }// GEN-LAST:event_btnAddCTSPActionPerformed
 
     private void btnUpdateCTSPActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnUpdateCTSPActionPerformed
@@ -1175,11 +1226,13 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
         this.ctsprp.update(md);
         this.fillTable(ctsprp.getAllCTSP());
         JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+        refreshData();
         this.clear();
     }// GEN-LAST:event_btnUpdateCTSPActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnResetActionPerformed
         clear();
+        fillTable(ctsprp.getAllCTSP());
     }// GEN-LAST:event_btnResetActionPerformed
 
     private void btnDeleteCTSPActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1188,7 +1241,11 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
         if (rowSel >= 0) {
             // Lấy mã sản phẩm chi tiết từ cột thứ hai (index 1)
             String ma = tblSPCT.getValueAt(rowSel, 1).toString();
-
+            // Kiểm tra xem sản phẩm có tồn tại trong bảng sản phẩm chi tiết không
+            if (ctsprp.checkTonTaiHDCT(ma)) {
+                JOptionPane.showMessageDialog(this, "Không thể xóa sản phẩm chi tiết này vì đang tồn tại trong hóa đơn chi tiết!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
             // Hiển thị hộp thoại xác nhận
             int option = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa sản phẩm này?",
                     "Xác nhận xóa",
@@ -1197,10 +1254,11 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
                 // Nếu người dùng đồng ý xóa
                 if (ctsprp.delete(ma) > 0) {
                     JOptionPane.showMessageDialog(this, "Xoá thành công!");
+                    refreshData();
                     fillTable(ctsprp.getAllCTSP());
                     clear();
                 } else {
-                    JOptionPane.showMessageDialog(this, "Xoá thất bại");
+                    JOptionPane.showMessageDialog(this, "Không thể xóa do sản phẩm chi tiết đang được sử dụng ở hóa đơn");
                 }
             }
         } else {
