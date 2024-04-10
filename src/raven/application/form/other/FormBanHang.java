@@ -1090,6 +1090,8 @@ public class FormBanHang extends javax.swing.JPanel {
 
         // Lấy tổng tiền từ txtTongTien
         BigDecimal tongTien = new BigDecimal(txtTongTien.getText());
+        
+        int selectedRow = tblHoaDon.getSelectedRow();
 
         // Áp dụng giảm giá từ voucher
         if (voucher.equals("Discount10%")) {
@@ -1146,18 +1148,22 @@ public class FormBanHang extends javax.swing.JPanel {
         txtTienThua.setText(tienThua.toString());
 
         // Cập nhật hình thức thanh toán cho hóa đơn trong bảng tblHoaDon
-        int selectedRow = tblHoaDon.getSelectedRow();
         if (selectedRow >= 0) {
+//            tblHoaDon.setValueAt(voucher, selectedRow, 5);
             tblHoaDon.setValueAt(hinhThucThanhToan, selectedRow, 7); // Giả sử cột 7 trong bảng là cột chứa
             // hình thức thanh toán
         }
 
         // Cập nhật hình thức thanh toán cho hóa đơn trong cơ sở dữ liệu
         if (selectedHoaDonID != null && !selectedHoaDonID.isEmpty()) {
+//            boolean updateVoucher = bhrs.updateVoucherHoaDon(selectedHoaDonID, voucher);
             boolean updated = bhrs.updateHTTTHoaDon(selectedHoaDonID, hinhThucThanhToan);
             if (!updated) {
                 JOptionPane.showMessageDialog(this, "Cập nhật hình thức thanh toán không thành công!");
                 return;
+//            }else if (!updateVoucher) {
+//                JOptionPane.showMessageDialog(this, "Cập nhật voucher không thành công!");
+//                return;
             }
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn một hóa đơn để thanh toán.");

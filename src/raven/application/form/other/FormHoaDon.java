@@ -8,6 +8,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -36,6 +37,7 @@ public class FormHoaDon extends javax.swing.JPanel {
     DefaultComboBoxModel<String> dcb2 = new DefaultComboBoxModel<>();
     List<HoaDonModel> listHD = new ArrayList<>();
     List<ChiTietSanPhamModel> listSPCT = new ArrayList<>();
+    private String selectFilterTrangThai = null;
     private int index = -1;
 
     public FormHoaDon() {
@@ -46,9 +48,12 @@ public class FormHoaDon extends javax.swing.JPanel {
         loadHinhThuc();
         this.fillTable(hdsr.getAll());
 //        this.fillTable2(cthd.getAllCTHD());
+        JComboBox<String> cboTrangThai = new JComboBox<>(
+                new String[]{"Chờ thanh toán", "Tất cả", "Đã thanh toán", "Đã hủy"});
     }
 
     void loadTrangThai() {
+        dcb1.addElement("Tất cả");
         dcb1.addElement("Đã thanh toán");
         dcb1.addElement("Đã hủy");
         dcb1.addElement("Chờ thanh toán");
@@ -60,7 +65,12 @@ public class FormHoaDon extends javax.swing.JPanel {
         dcb2.addElement("Kết hợp");
     }
 
-    void fillTable(List<HoaDonModel> list) {
+    private void fillTable(List<HoaDonModel> list) {
+        if (list == null) {
+            // Xử lý trường hợp list là null (nếu cần)
+            return;
+        }
+
         model = (DefaultTableModel) tblHoaDon.getModel();
         model.setRowCount(0);
         int index = 1;
@@ -115,16 +125,6 @@ public class FormHoaDon extends javax.swing.JPanel {
 
     }
 
-    void showData(int index) {
-        String maHD = String.valueOf(tblHoaDon.getValueAt(index, 1)).trim();
-        String tenNV = String.valueOf(tblHoaDon.getValueAt(index, 3)).trim();
-        String tenKH = String.valueOf(tblHoaDon.getValueAt(index, 4)).trim();
-
-        String tenVC = String.valueOf(tblHoaDon.getValueAt(index, 5)).trim();
-        String tongTien = String.valueOf(tblHoaDon.getValueAt(index, 6)).trim();
-        String HTTT = String.valueOf(tblHoaDon.getValueAt(index, 7)).trim();
-
-    }
     // Biến để lưu trữ ID của hóa đơn được chọn
     private String selectedHoaDonID;
 
@@ -206,10 +206,14 @@ public class FormHoaDon extends javax.swing.JPanel {
         jLabel4.setText("Trạng thái hóa đơn:");
 
         cboTrangThaiHD.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cboTrangThaiHD.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { null }));
         cboTrangThaiHD.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cboTrangThaiHDItemStateChanged(evt);
+            }
+        });
+        cboTrangThaiHD.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboTrangThaiHDActionPerformed(evt);
             }
         });
 
@@ -217,7 +221,6 @@ public class FormHoaDon extends javax.swing.JPanel {
         jLabel5.setText("Hình thức thanh toán:");
 
         cboHinhThuc.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cboHinhThuc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { null }));
         cboHinhThuc.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cboHinhThucItemStateChanged(evt);
@@ -260,9 +263,9 @@ public class FormHoaDon extends javax.swing.JPanel {
                         .addGap(58, 58, 58)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cboHinhThuc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cboHinhThuc, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(txtTimKiemHD, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
                 .addComponent(jLabel6)
                 .addGap(18, 18, 18)
                 .addComponent(dateBatDau, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -300,8 +303,7 @@ public class FormHoaDon extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(dateBatDau, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(2, 2, 2)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -560,6 +562,23 @@ public class FormHoaDon extends javax.swing.JPanel {
     private void tblHoaDonChiTietMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHoaDonChiTietMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_tblHoaDonChiTietMouseClicked
+
+    private void cboTrangThaiHDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboTrangThaiHDActionPerformed
+        // TODO add your handling code here:
+        String selectedStatus = (String) cboTrangThaiHD.getSelectedItem();
+
+        if ("Tất cả".equals(selectedStatus)) {
+            fillTable(hdsr.getAll());
+        } else if ("Đã thanh toán".equals(selectedStatus)) {
+            fillTable(hdsr.getDaThanhToanHoaDon());
+        } else if ("Đã hủy".equals(selectedStatus)) {
+            fillTable(hdsr.getDaHuyHoaDon());
+        } else if ("Chờ thanh toán".equals(selectedStatus)) {
+            fillTable(hdsr.getHoaDonChoThanhToan());
+        } else {
+            JOptionPane.showMessageDialog(this, "Trạng thái không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_cboTrangThaiHDActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

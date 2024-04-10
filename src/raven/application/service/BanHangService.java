@@ -90,8 +90,8 @@ public class BanHangService {
                         rs.getDate(2),
                         new NhanVienModel(rs.getString(3)),
                         new KhachHangModel(rs.getString(4)),
-                        rs.getBigDecimal(6),
                         new VoucherModer(rs.getString(5)),
+                        rs.getBigDecimal(6),
                         rs.getString(7),
                         rs.getString(8));
                 listHD.add(hdModel);
@@ -785,6 +785,25 @@ public class BanHangService {
 
             ps = con.prepareStatement(sql);
             ps.setString(1, HTTT);
+            ps.setString(2, hoaDonID);
+
+            int rowsUpdated = ps.executeUpdate();
+            isSuccess = rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isSuccess;
+    }
+
+    public boolean updateVoucherHoaDon(String hoaDonID, String IDVoucher) {
+        sql = "UPDATE HOADON SET ID_Voucher = ?' WHERE ID = ?;";
+        boolean isSuccess = false; // Biến để xác định việc cập nhật thành công hay không
+        try {
+            // Kết nối cơ sở dữ liệu và thực hiện cập nhật
+            con = DBConnect.getConnection();
+
+            ps = con.prepareStatement(sql);
+            ps.setString(1, IDVoucher);
             ps.setString(2, hoaDonID);
 
             int rowsUpdated = ps.executeUpdate();
