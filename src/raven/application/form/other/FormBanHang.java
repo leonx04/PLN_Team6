@@ -1637,6 +1637,7 @@ public class FormBanHang extends javax.swing.JPanel {
             // Xử lý kết quả
             if (result == 1) {
                 fillTable2(bhrs.getAllHD1());
+                fillTable2(bhrs.getHoaDonChoThanhToan());
                 JOptionPane.showMessageDialog(this, "Tạo hóa đơn thành công");
             } else {
                 JOptionPane.showMessageDialog(this, "Không thể tạo hóa đơn");

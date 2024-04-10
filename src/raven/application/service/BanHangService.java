@@ -136,14 +136,15 @@ public class BanHangService {
     }
 
     public List<HoaDonModel> getHoaDonChoThanhToan() {
-        String sql = "SELECT HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang, VOUCHER.TenVoucher, SUM(HOADONCHITIET.ThanhTien) AS TongTien, HOADON.HinhThucThanhToan, HOADON.TrangThai\n"
-                + "FROM HOADON\n"
-                + "INNER JOIN NHANVIEN ON HOADON.ID_NhanVien = NHANVIEN.ID\n"
-                + "INNER JOIN KHACHHANG ON HOADON.ID_KhachHang = KHACHHANG.ID\n"
-                + "LEFT JOIN VOUCHER ON HOADON.ID_Voucher = VOUCHER.ID\n"
-                + "INNER JOIN HOADONCHITIET ON HOADON.ID = HOADONCHITIET.ID_HoaDon\n"
-                + "WHERE HOADON.TrangThai = N'Chờ thanh toán'\n"
-                + "GROUP BY HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen, VOUCHER.TenVoucher, HOADON.HinhThucThanhToan, HOADON.TrangThai";
+        String sql
+                = "SELECT HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang, VOUCHER.TenVoucher,HOADON.TongTien, HOADON.HinhThucThanhToan, HOADON.TrangThai\n"
+                + "                FROM HOADON\n"
+                + "                INNER JOIN NHANVIEN ON HOADON.ID_NhanVien = NHANVIEN.ID\n"
+                + "                INNER JOIN KHACHHANG ON HOADON.ID_KhachHang = KHACHHANG.ID\n"
+                + "                LEFT JOIN VOUCHER ON HOADON.ID_Voucher = VOUCHER.ID\n"
+                + "               \n"
+                + "                WHERE HOADON.TrangThai = N'Chờ thanh toán'\n"
+                + "                GROUP BY HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen, VOUCHER.TenVoucher, HOADON.HinhThucThanhToan, HOADON.TrangThai,HOADON.TongTien ORDER BY NgayTao DESC";
 
         try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
@@ -168,14 +169,18 @@ public class BanHangService {
     }
 
     public List<HoaDonModel> getDaThanhToanHoaDon() {
-        String sql = "SELECT HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang, VOUCHER.TenVoucher, SUM(HOADONCHITIET.ThanhTien) AS TongTien, HOADON.HinhThucThanhToan, HOADON.TrangThai\n"
-                + "FROM HOADON\n"
-                + "INNER JOIN NHANVIEN ON HOADON.ID_NhanVien = NHANVIEN.ID\n"
-                + "INNER JOIN KHACHHANG ON HOADON.ID_KhachHang = KHACHHANG.ID\n"
-                + "LEFT JOIN VOUCHER ON HOADON.ID_Voucher = VOUCHER.ID\n"
-                + "INNER JOIN HOADONCHITIET ON HOADON.ID = HOADONCHITIET.ID_HoaDon\n"
-                + "WHERE HOADON.TrangThai = N'Đã thanh toán'\n"
-                + "GROUP BY HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen, VOUCHER.TenVoucher, HOADON.HinhThucThanhToan, HOADON.TrangThai";
+        String sql = " SELECT HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang,\n"
+                + "VOUCHER.TenVoucher,\n"
+                + "HOADON.TongTien,\n"
+                + "HOADON.HinhThucThanhToan, \n"
+                + "HOADON.TrangThai\n"
+                + "                FROM HOADON\n"
+                + "                INNER JOIN NHANVIEN ON HOADON.ID_NhanVien = NHANVIEN.ID\n"
+                + "                INNER JOIN KHACHHANG ON HOADON.ID_KhachHang = KHACHHANG.ID\n"
+                + "                LEFT JOIN VOUCHER ON HOADON.ID_Voucher = VOUCHER.ID\n"
+                + "               \n"
+                + "                WHERE HOADON.TrangThai = N'Đã thanh toán'\n"
+                + "                GROUP BY HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen, VOUCHER.TenVoucher, HOADON.HinhThucThanhToan, HOADON.TrangThai,HOADON.TongTien ORDER BY NgayTao DESC";
 
         try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
@@ -907,8 +912,8 @@ public class BanHangService {
         String idKhachHangMacDinh = "KH00";
         String hinhThucThanhToan = "Tiền mặt";
 
-        String sql = "INSERT INTO HOADON (ID, ID_NhanVien, ID_KhachHang,HinhThucThanhToan,  TrangThai,  ID_Voucher,TongTien, NgayTao, NgaySua) "
-                + "VALUES (?, ?, ?,? ,N'Chờ thanh toán','V002', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+        String sql = "INSERT INTO HOADON (ID, ID_NhanVien, ID_KhachHang,HinhThucThanhToan,TongTien,  TrangThai,  ID_Voucher, NgayTao, NgaySua) "
+                + "VALUES (?, ?, ?,? ,?,N'Chờ thanh toán','V002', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
 
         try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -916,6 +921,7 @@ public class BanHangService {
             ps.setObject(2, idNhanVien);
             ps.setObject(3, idKhachHangMacDinh);
             ps.setObject(4, hinhThucThanhToan);
+            ps.setObject(5, 0);
 
             return ps.executeUpdate();
         } catch (SQLException e) {

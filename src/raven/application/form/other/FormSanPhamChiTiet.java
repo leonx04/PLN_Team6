@@ -112,7 +112,7 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
             }
         });
         pagination1.setPaginationItemRender(new PaginationItemRenderStyle1());
-        pagination1.setPagegination(1, 10); // Khởi tạo thanh trang với trang đầu tiên và tổng số trang
+        pagination1.setPagegination(1, 100); // Khởi tạo thanh trang với trang đầu tiên và tổng số trang
     }
 
     // Cập nhật phương thức setPagegination để cập nhật tổng số trang dựa trên số lượng bản ghi
