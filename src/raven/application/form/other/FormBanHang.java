@@ -115,7 +115,7 @@ public class FormBanHang extends javax.swing.JPanel {
         lb1.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:$h1.font");
         JComboBox<String> cboTrangThai = new JComboBox<>(
-                new String[]{"Chờ thanh toán", "Tất cả", "Đã thanh toán", "Đã hủy"});
+                new String[]{"Tất cả", "Chờ thanh toán", "Đã thanh toán", "Đã hủy"});
 
     }
 
@@ -352,8 +352,8 @@ public class FormBanHang extends javax.swing.JPanel {
                 // Lấy thông tin hóa đơn
                 HoaDonModel hoaDon = bhrs.getHoaDonByID(hoaDonID);
 
-                // Xuất hóa đơn sang PDF
-                exportToPDF(hoaDon);
+                // Gọi phương thức exportToPDF với đối số HoaDonModel và JTable
+                exportToPDF(hoaDon, tblGioHang);
 
                 openPDFFile();
             } else {
@@ -364,7 +364,7 @@ public class FormBanHang extends javax.swing.JPanel {
         }
     }
 
-    private void exportToPDF(HoaDonModel hoaDon) {
+    private void exportToPDF(HoaDonModel hoaDon, JTable tblGioHang) {
         Document document = new Document(PageSize.A5);
 
         try {
@@ -390,12 +390,11 @@ public class FormBanHang extends javax.swing.JPanel {
 
             // Tạo bảng để chứa thông tin hoá đơn
             PdfPTable table = new PdfPTable(2); // 2 cột (label và value)
-            table.setWidthPercentage(90); // Chiều rộng bảng là 80% của trang
+            table.setWidthPercentage(90); // Chiều rộng bảng là 90% của trang
             table.setSpacingBefore(20); // Khoảng cách trước bảng là 20 điểm
 
             // Thêm các mục thông tin hoá đơn vào bảng
             addTableRow(table, "Mã Hóa Đơn", hoaDon.getID(), normalFont, Element.ALIGN_LEFT, Element.ALIGN_RIGHT);
-            document.add(new Paragraph("\n")); // Khoảng cách giữa các dòng
             addTableRow(table, "Tên Nhân Viên", hoaDon.getTenNV().getHoTen(), normalFont, Element.ALIGN_LEFT, Element.ALIGN_RIGHT);
             addTableRow(table, "Tên Khách Hàng", hoaDon.getTenKH().getTen(), normalFont, Element.ALIGN_LEFT, Element.ALIGN_RIGHT);
             addTableRow(table, "Tổng Tiền", decimalFormat.format(hoaDon.getTongTien()), normalFont, Element.ALIGN_LEFT, Element.ALIGN_RIGHT);
@@ -408,16 +407,45 @@ public class FormBanHang extends javax.swing.JPanel {
             // Thêm bảng vào tài liệu PDF
             document.add(table);
 
+            // Thêm tiêu đề cho bảng chi tiết sản phẩm
+            Paragraph productTitle = new Paragraph("CHI TIẾT ĐƠN HÀNG", normalFont);
+            productTitle.setAlignment(Element.ALIGN_CENTER);
+            document.add(productTitle);
+
+            // Tạo bảng mới cho chi tiết sản phẩm
+            PdfPTable productTable = new PdfPTable(4); // 4 cột (tên, giá, số lượng, thành tiền)
+            productTable.setWidthPercentage(90); // Chiều rộng bảng là 90% của trang
+            productTable.setSpacingBefore(10); // Khoảng cách trước bảng là 10 điểm
+
+            // Thêm tiêu đề cột cho bảng chi tiết sản phẩm
+            addProductTableHeader(productTable, normalFont);
+
+            // Lấy dữ liệu từ JTable
+            DefaultTableModel model = (DefaultTableModel) tblGioHang.getModel();
+            int rowCount = model.getRowCount();
+            for (int i = 0; i < rowCount; i++) {
+                String tenSanPham = model.getValueAt(i, 1).toString();
+                String giaBan = model.getValueAt(i, 2).toString();
+                String soLuong = model.getValueAt(i, 3).toString();
+                String thanhTien = model.getValueAt(i, 4).toString();
+                addProductTableRow(productTable, tenSanPham, giaBan, soLuong, thanhTien, normalFont);
+            }
+
+            // Thêm bảng chi tiết sản phẩm vào tài liệu PDF
+            document.add(productTable);
+
             // Cảm ơn khách hàng
             document.add(new Paragraph("\n\n")); // Khoảng cách giữa các dòng
             Paragraph thankYou = new Paragraph("--  Xin chân thành cảm ơn quý khách --", new Font(baseFont, 14));
             thankYou.setAlignment(Element.ALIGN_CENTER);
             document.add(thankYou);
+
             // Cảm ơn khách hàng
             document.add(new Paragraph("\n")); // Khoảng cách giữa các dòng
             Paragraph lienHe = new Paragraph("Nếu có vấn đề xin vui lòng liên hệ chúng tôi: 0123456789", new Font(baseFont, 11));
             lienHe.setAlignment(Element.ALIGN_CENTER);
             document.add(lienHe);
+
             // Đóng tài liệu PDF
             document.close();
 
@@ -454,7 +482,36 @@ public class FormBanHang extends javax.swing.JPanel {
 
         // Thêm dòng line màu đen ngăn cách giữa các hàng
         table.addCell(createSeparatorCell(2));
+    }
 
+    private void addProductTableHeader(PdfPTable table, Font font) {
+        String[] headers = {"Tên sản phẩm", "Giá bán", "Số lượng", "Thành tiền"};
+
+        for (String header : headers) {
+            PdfPCell headerCell = new PdfPCell(new Phrase(header, font));
+            headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(headerCell);
+        }
+    }
+
+    private void addProductTableRow(PdfPTable table, String tenSanPham, String giaBan, String soLuong, String thanhTien,
+            Font font) {
+        table.addCell(new Phrase(tenSanPham, font));
+        // Định dạng tiền tệ
+        DecimalFormat decimalFormat = new DecimalFormat("#,### VNĐ");
+        // Định dạng tiền cho cột giá bán
+        double giaBanDouble = Double.parseDouble(giaBan);
+        PdfPCell giaBanCell = new PdfPCell(new Phrase(decimalFormat.format(giaBanDouble) + " VNĐ", font));
+        giaBanCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(giaBanCell);
+
+        table.addCell(new Phrase(soLuong, font));
+
+        // Định dạng tiền cho cột thành tiền
+        double thanhTienDouble = Double.parseDouble(thanhTien);
+        PdfPCell thanhTienCell = new PdfPCell(new Phrase(decimalFormat.format(thanhTienDouble) + " VNĐ", font));
+        thanhTienCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(thanhTienCell);
     }
 
     private PdfPCell createSeparatorCell(int colSpan) {
@@ -606,7 +663,7 @@ public class FormBanHang extends javax.swing.JPanel {
         }
 
         cboTrangThai.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cboTrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chờ thanh toán", "Tất cả", "Đã thanh toán", "Đã hủy" }));
+        cboTrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Chờ thanh toán", "Đã thanh toán", "Đã hủy" }));
         cboTrangThai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboTrangThaiActionPerformed(evt);
@@ -853,6 +910,8 @@ public class FormBanHang extends javax.swing.JPanel {
         txtMaHD.setEditable(false);
         txtMaHD.setBackground(new java.awt.Color(255, 255, 255));
         txtMaHD.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel10.setText("Tổng tiền");
 
@@ -1361,7 +1420,7 @@ public class FormBanHang extends javax.swing.JPanel {
         // Hiển thị kết quả
         txtThanhToan.setText(tongTienSauGiamGia.toString());
         txtTienThua.setText(tienThua.toString());
-        this.fillTable2(bhrs.getHoaDonChoThanhToan());
+        this.fillTable2(bhrs.getAllHD1());
 
         // Validate các trường liên quan
         validateTienMat();
@@ -1432,62 +1491,61 @@ public class FormBanHang extends javax.swing.JPanel {
         // Kiểm tra xem checkbox selectAll đã được chọn hay không
         boolean selectAllActivated = selectAll.isSelected();
 
-        // Nếu checkbox selectAll được chọn, xóa toàn bộ hoá đơn chi tiết trước
-        if (selectAllActivated) {
-            if (selectedHoaDonID != null) {
-                int result = bhrs.xoaToanBoHoaDonChiTiet(selectedHoaDonID);
-                if (result <= 0) {
-                    JOptionPane.showMessageDialog(this, "Xóa toàn bộ hoá đơn chi tiết thất bại!");
-                    return;
-                }
-                // Cập nhật tổng tiền của hóa đơn thành 0
-                boolean update = bhrs.updateBillWhileDeleteALL(selectedHoaDonID);
-                fillTable2(bhrs.getHoaDonChoThanhToan());
-                fillToTable(bhrs.getAllGH());
-            }
-        } else {
-            // Nếu checkbox selectAll không được chọn, và có ít nhất một hàng được chọn, xóa
-            // từng sản phẩm riêng lẻ
-            if (selectedRows.length > 0) {
-                for (int i = selectedRows.length - 1; i >= 0; i--) {
-                    int selectedRow = selectedRows[i];
-                    String maSanPhamChiTiet = model.getValueAt(selectedRow, 0).toString(); // Lấy mã
-                    // sản
-                    // phẩm
-                    // chi
-                    // tiết
-                    // từ bảng
-                    int soLuong = Integer.parseInt(model.getValueAt(selectedRow, 3).toString()); // Lấy
-                    // số
-                    // lượng
-                    // từ
-                    // bảng
+        if (selectAllActivated && selectedHoaDonID != null) {
+            // Lấy danh sách chi tiết hoá đơn của hoá đơn đã chọn trước khi xóa
+            List<ChiTietHoaDonModel> chiTietHoaDons = bhrs.searchByHoaDonID(selectedHoaDonID);
 
-                    // Cập nhật số lượng tồn của sản phẩm
-                    bhrs.updateSoLuongTon(maSanPhamChiTiet,
-                            bhrs.laySoLuongTonByID(maSanPhamChiTiet) + soLuong);
-                    boolean updated = bhrs.capNhatTongTienHoaDon(selectedHoaDonID);
-                    // Xóa dữ liệu từ cơ sở dữ liệu
-                    if (selectedHoaDonID != null) {
-                        int result = bhrs.xoaHoaDonChiTiet(maSanPhamChiTiet, selectedHoaDonID);
-                        if (result <= 0) {
-                            JOptionPane.showMessageDialog(this, "Xóa thất bại!");
-                            return;
-                        }
-                    }
-
-                    // Xóa hàng từ bảng sau khi xóa dữ liệu từ cơ sở dữ liệu
-                    model.removeRow(selectedRow);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn ít nhất một hàng để xóa!");
+            // Xóa toàn bộ hoá đơn chi tiết
+            int result = bhrs.xoaToanBoHoaDonChiTiet(selectedHoaDonID);
+            if (result <= 0) {
+                JOptionPane.showMessageDialog(this, "Xóa toàn bộ hoá đơn chi tiết thất bại!");
                 return;
             }
+
+            // Cập nhật số lượng tồn của từng sản phẩm chi tiết sau khi xóa
+            for (ChiTietHoaDonModel chiTietHoaDon : chiTietHoaDons) {
+                String maSanPhamChiTiet = chiTietHoaDon.getMactsp().getID();
+                int soLuong = chiTietHoaDon.getSoLuong();
+
+                // Lấy số lượng tồn hiện tại của sản phẩm chi tiết
+                int soLuongTonHienTai = bhrs.laySoLuongTonByID(maSanPhamChiTiet);
+
+                // Cập nhật số lượng tồn mới
+                bhrs.updateSoLuongTon(maSanPhamChiTiet, soLuongTonHienTai + soLuong);
+            }
+
+            // Cập nhật tổng tiền của hóa đơn thành 0
+            boolean update = bhrs.updateBillWhileDeleteALL(selectedHoaDonID);
+            fillChiTietHoaDonTable(selectedHoaDonID);
+            cleanForm();
+        } else {
+            // Xóa từng sản phẩm chi tiết được chọn
+            for (int selectedRow : selectedRows) {
+                String maSanPhamChiTiet = model.getValueAt(selectedRow, 0).toString();
+                int soLuong = Integer.parseInt(model.getValueAt(selectedRow, 3).toString());
+
+                // Cập nhật số lượng tồn của sản phẩm
+                bhrs.updateSoLuongTon(maSanPhamChiTiet, bhrs.laySoLuongTonByID(maSanPhamChiTiet) + soLuong);
+
+                // Xóa dữ liệu từ cơ sở dữ liệu
+                int result = bhrs.xoaHoaDonChiTiet(maSanPhamChiTiet, selectedHoaDonID);
+                if (result <= 0) {
+                    JOptionPane.showMessageDialog(this, "Xóa thất bại!");
+                    return;
+                }
+
+                // Xóa hàng từ bảng sau khi xóa dữ liệu từ cơ sở dữ liệu
+                model.removeRow(selectedRow);
+            }
         }
-        fillTable2(bhrs.getHoaDonChoThanhToan());
-        fillTable(bhrs.getAllCTSP());
+
+        // Cập nhật lại bảng hiển thị
+        fillTable2(bhrs.getAllHD1()); // Cập nhật lại bảng hoá đơn chính
+        fillTable(bhrs.getAllCTSP()); // Cập nhật lại bảng sản phẩm chi tiết
+
         // Thông báo xóa thành công
         JOptionPane.showMessageDialog(this, "Xóa thành công!");
+
         // Tắt sự kiện "Select All"
         selectAll.setSelected(false);
     }
@@ -1522,11 +1580,27 @@ public class FormBanHang extends javax.swing.JPanel {
         }
     }
 
-    private void tblHoaDonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_tblHoaDonMouseClicked
+    private void tblHoaDonMouseClicked(java.awt.event.MouseEvent evt) {
         int rowIndex = tblHoaDon.getSelectedRow();
         if (rowIndex >= 0) {
+            // Hiển thị dữ liệu của hoá đơn được chọn
             this.showData(rowIndex);
             selectedHoaDonID = tblHoaDon.getValueAt(rowIndex, 1).toString(); // Lấy ID hóa đơn được chọn từ cột thứ hai
+
+            // Kiểm tra trạng thái của hoá đơn
+            String trangThai = tblHoaDon.getValueAt(rowIndex, 8).toString().trim();
+            if (trangThai.equals("Đã thanh toán") || trangThai.equals("Đã hủy")) {
+                // Nếu trạng thái là "Đã thanh toán" hoặc "Đã hủy", tắt đi các nút
+                btnHuyDon.setEnabled(false);
+                btnSuccesHoaDon.setEnabled(false);
+                btnDeleteGH.setEnabled(false);
+            } else {
+                // Nếu trạng thái không phải là "Đã thanh toán" hoặc "Đã hủy", bật lại các nút 
+                btnHuyDon.setEnabled(true);
+                btnSuccesHoaDon.setEnabled(true);
+                btnDeleteGH.setEnabled(true);
+            }
+
             System.out.println("BẠN ĐÃ NHẤN:  " + selectedHoaDonID);
 
             // Cập nhật lại bảng tblGioHang với dữ liệu của hóa đơn đã chọn
@@ -1544,8 +1618,14 @@ public class FormBanHang extends javax.swing.JPanel {
                 BigDecimal thanhToan = discountVoucher(selectedVoucher, tongTien);
                 txtThanhToan.setText(thanhToan.toString());
             }
+        } else {
+            // Nếu không có hoá đơn nào được chọn, làm sạch form và tắt các nút
+            cleanForm();
+            btnHuyDon.setEnabled(true);
+            btnSuccesHoaDon.setEnabled(true);
+            btnDeleteGH.setEnabled(true);
         }
-    }// GEN-LAST:event_tblHoaDonMouseClicked
+    }
 
     private void btnTaoHDActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnTaoHDActionPerformed
         if (Auth.isLogin()) {
@@ -1568,10 +1648,6 @@ public class FormBanHang extends javax.swing.JPanel {
     }// GEN-LAST:event_btnTaoHDActionPerformed
 
     private void btnHuyDonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnHuyDonActionPerformed
-        // TODO add your handling code here:
-        // Lấy thông tin hóa đơn từ giao diện
-        HoaDonModel hdm = this.read();
-
         // Lấy chỉ mục của hóa đơn được chọn trên bảng
         int index = tblHoaDon.getSelectedRow();
         if (index == -1) {
@@ -1583,19 +1659,32 @@ public class FormBanHang extends javax.swing.JPanel {
         selectedHoaDonID = tblHoaDon.getValueAt(index, 1).toString();
 
         // Hiển thị hộp thoại xác nhận
-        int option = JOptionPane.showConfirmDialog(this, "Bạn có muốn hủy hóa đơn không", "Xác nhận",
-                JOptionPane.YES_NO_OPTION);
+        int option = JOptionPane.showConfirmDialog(this, "Bạn có muốn hủy hóa đơn không", "Xác nhận", JOptionPane.YES_NO_OPTION);
         if (option == JOptionPane.YES_OPTION) {
             // Thực hiện hủy hóa đơn
             if (bhrs.huyHDByID("Đã hủy", selectedHoaDonID)) {
                 // Nếu hủy thành công, thông báo và cập nhật lại bảng hóa đơn
                 JOptionPane.showMessageDialog(this, "Hủy thành công");
 
-                // Loại bỏ hóa đơn đã hủy khỏi danh sách hiển thị
-                DefaultTableModel model = (DefaultTableModel) tblHoaDon.getModel();
-                model.removeRow(index);
+                // Lấy danh sách chi tiết hoá đơn của hoá đơn bị hủy
+                List<ChiTietHoaDonModel> chiTietHoaDons = bhrs.searchByHoaDonID(selectedHoaDonID);
+
+                // Cập nhật số lượng tồn của từng sản phẩm chi tiết và xoá các hoá đơn chi tiết
+                for (ChiTietHoaDonModel chiTietHoaDon : chiTietHoaDons) {
+                    String maSanPhamChiTiet = chiTietHoaDon.getMactsp().getID();
+                    int soLuong = chiTietHoaDon.getSoLuong();
+
+                    // Cập nhật số lượng tồn mới
+                    bhrs.updateSoLuongTon(maSanPhamChiTiet, bhrs.laySoLuongTonByID(maSanPhamChiTiet) + soLuong);
+
+                    // Xoá hoá đơn chi tiết
+                    bhrs.xoaHoaDonChiTiet(maSanPhamChiTiet, selectedHoaDonID);
+                    boolean update = bhrs.updateBillWhileDeleteALL(selectedHoaDonID);
+                    fillTable2(bhrs.getDaThanhToanHoaDon());
+                }
 
                 cleanForm();
+
             } else {
                 JOptionPane.showMessageDialog(this, "Hủy thất bại");
             }
@@ -1628,6 +1717,8 @@ public class FormBanHang extends javax.swing.JPanel {
             DefaultTableModel model = (DefaultTableModel) tblGioHang.getModel();
             model.setRowCount(0);
             selectedHoaDonID = null;
+            fillTable(bhrs.getAllCTSP());
+            fillTable2(bhrs.getAllHD1());
         } else {
             DefaultTableModel model = (DefaultTableModel) tblGioHang.getModel();
             model.setRowCount(0);
@@ -1638,12 +1729,12 @@ public class FormBanHang extends javax.swing.JPanel {
     private void tblCTSPMouseClicked(java.awt.event.MouseEvent evt) {
         int selectedRow = tblCTSP.getSelectedRow();
         if (selectedHoaDonID == null) {
-            JOptionPane.showMessageDialog(this,
-                    "Vui lòng chọn một hoá đơn trước khi thêm sản phẩm vào giỏ hàng!");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một hoá đơn trước khi thêm sản phẩm vào giỏ hàng!");
             return;
         }
+
         if (selectedRow == -1) {
-            return;
+            return; // Không có hàng nào được chọn
         }
 
         String productID = tblCTSP.getValueAt(selectedRow, 0).toString();
@@ -1657,8 +1748,7 @@ public class FormBanHang extends javax.swing.JPanel {
         JTextField txtSoLuong = new JTextField();
         Object[] message = {"Nhập số lượng:", txtSoLuong};
 
-        int option = JOptionPane.showConfirmDialog(this, message, "Nhập số lượng",
-                JOptionPane.OK_CANCEL_OPTION);
+        int option = JOptionPane.showConfirmDialog(this, message, "Nhập số lượng", JOptionPane.OK_CANCEL_OPTION);
         txtSoLuong.requestFocus();
 
         if (option == JOptionPane.OK_OPTION) {
@@ -1673,38 +1763,33 @@ public class FormBanHang extends javax.swing.JPanel {
                 int currentQuantity = bhrs.laySoLuongTonByID(productID);
 
                 if (quantity > currentQuantity) {
-                    JOptionPane.showMessageDialog(this,
-                            "Số lượng nhập vào vượt quá số lượng tồn của sản phẩm!");
+                    JOptionPane.showMessageDialog(this, "Số lượng nhập vào vượt quá số lượng tồn của sản phẩm!");
                     return;
                 }
 
-                ChiTietHoaDonModel existingCTHD = bhrs.kiemTraTrungSanPhamChiTiet(productID,
-                        selectedHoaDonID);
+                ChiTietHoaDonModel existingCTHD = bhrs.kiemTraTrungSanPhamChiTiet(productID, selectedHoaDonID);
 
                 if (existingCTHD != null) {
                     int newQuantity = existingCTHD.getSoLuong() + quantity;
                     BigDecimal newTotal = unitPrice.multiply(BigDecimal.valueOf(newQuantity));
-                    int updatedRows = bhrs.updateSoLuongVaThanhTienHoaDonChiTiet(
-                            existingCTHD.getID(), newQuantity,
-                            newTotal);
+                    int updatedRows = bhrs.updateSoLuongVaThanhTienHoaDonChiTiet(existingCTHD.getID(), newQuantity, newTotal);
 
                     if (updatedRows > 0) {
                         int remainingQuantity = currentQuantity - quantity;
                         bhrs.updateSoLuongTon(productID, remainingQuantity);
                         refreshGioHangTable();
                         boolean updated = bhrs.capNhatTongTienHoaDon(selectedHoaDonID);
-                        fillTable2(bhrs.getHoaDonChoThanhToan());
+                        fillTable2(bhrs.getAllHD1());
                         fillTable(bhrs.getAllCTSP());
                         if (updated) {
-                            JOptionPane.showMessageDialog(this,
-                                    "Cập nhật tổng tiền hóa đơn thành công!");
+                            // Cập nhật lại bảng giỏ hàng
+                            fillChiTietHoaDonTable(selectedHoaDonID);
+                            JOptionPane.showMessageDialog(this, "Cập nhật tổng tiền hóa đơn thành công!");
                         } else {
-                            JOptionPane.showMessageDialog(this,
-                                    "Cập nhật tổng tiền hóa đơn thất bại!");
+                            JOptionPane.showMessageDialog(this, "Cập nhật tổng tiền hóa đơn thất bại!");
                         }
                     } else {
-                        JOptionPane.showMessageDialog(this,
-                                "Cập nhật số lượng và thành tiền thất bại!");
+                        JOptionPane.showMessageDialog(this, "Cập nhật số lượng và thành tiền thất bại!");
                     }
                 } else {
                     ChiTietHoaDonModel chiTietHoaDon = new ChiTietHoaDonModel();
@@ -1717,22 +1802,20 @@ public class FormBanHang extends javax.swing.JPanel {
                         int remainingQuantity = currentQuantity - quantity;
                         bhrs.updateSoLuongTon(productID, remainingQuantity);
 
-                        JOptionPane.showMessageDialog(this,
-                                "Thêm sản phẩm vào giỏ hàng thành công!");
+                        JOptionPane.showMessageDialog(this, "Thêm sản phẩm vào giỏ hàng thành công!");
                         boolean updated = bhrs.capNhatTongTienHoaDon(selectedHoaDonID);
                         refreshGioHangTable();
-                        fillTable2(bhrs.getHoaDonChoThanhToan());
+                        fillTable2(bhrs.getAllHD1());
                         fillTable(bhrs.getAllCTSP());
                         if (updated) {
-                            JOptionPane.showMessageDialog(this,
-                                    "Cập nhật tổng tiền hóa đơn thành công!");
+                            // Cập nhật lại bảng giỏ hàng
+                            fillChiTietHoaDonTable(selectedHoaDonID);
+                            JOptionPane.showMessageDialog(this, "Cập nhật tổng tiền hóa đơn thành công!");
                         } else {
-                            JOptionPane.showMessageDialog(this,
-                                    "Cập nhật tổng tiền hóa đơn thất bại!");
+                            JOptionPane.showMessageDialog(this, "Cập nhật tổng tiền hóa đơn thất bại!");
                         }
                     } else {
-                        JOptionPane.showMessageDialog(this,
-                                "Thêm sản phẩm vào giỏ hàng thất bại!");
+                        JOptionPane.showMessageDialog(this, "Thêm sản phẩm vào giỏ hàng thất bại!");
                     }
                 }
             } catch (NumberFormatException ex) {
