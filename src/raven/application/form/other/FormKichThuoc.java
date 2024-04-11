@@ -5,6 +5,7 @@
 package raven.application.form.other;
 
 import javax.swing.JOptionPane;
+import raven.application.Application;
 
 import raven.application.model.KichCoModel;
 import raven.application.service.KichCoService;
@@ -128,6 +129,7 @@ public class FormKichThuoc extends javax.swing.JFrame {
 
         if (kcrs.insert(kichCo) > 0) {
             JOptionPane.showMessageDialog(this, "Thêm thành công !");
+            Application.showForm(new FormSanPhamChiTiet());
         } else {
             JOptionPane.showMessageDialog(this, "Thêm thất bại!");
         }

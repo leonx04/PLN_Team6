@@ -5,6 +5,7 @@
 package raven.application.form.other;
 
 import javax.swing.JOptionPane;
+import raven.application.Application;
 
 import raven.application.model.MauSacModel;
 import raven.application.service.MauSacService;
@@ -14,6 +15,7 @@ import raven.application.service.MauSacService;
  * @author dungn
  */
 public class FormMauSac extends javax.swing.JFrame {
+
     private MauSacService msrs = new MauSacService();
 
     /**
@@ -23,6 +25,7 @@ public class FormMauSac extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         setTitle("Màu sắc");
+
     }
 
     /**
@@ -125,7 +128,10 @@ public class FormMauSac extends javax.swing.JFrame {
         MauSacModel mauSac = new MauSacModel(newID, tenMauSac, moTa);
 
         if (msrs.insert(mauSac) > 0) {
+
             JOptionPane.showMessageDialog(this, "Thêm thành công !");
+            Application.showForm(new FormSanPhamChiTiet());
+
         } else {
             JOptionPane.showMessageDialog(this, "Thêm thất bại!");
         }

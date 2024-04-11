@@ -36,7 +36,7 @@ public class ChiTietSanPhamService {
                 + "                         CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID INNER JOIN\n"
                 + "                         THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID INNER JOIN\n"
                 + "                         SANPHAMCHITIET AS SANPHAMCHITIET_1 ON SANPHAM.ID = SANPHAMCHITIET_1.ID_SanPham AND MAUSAC.ID = SANPHAMCHITIET_1.ID_MauSac AND SIZE.ID = SANPHAMCHITIET_1.ID_Size AND \n"
-                + "                         CHATLIEU.ID = SANPHAMCHITIET_1.ID_ChatLieu AND THUONGHIEU.ID = SANPHAMCHITIET_1.ID_ThuongHieu";
+                + "                         CHATLIEU.ID = SANPHAMCHITIET_1.ID_ChatLieu AND THUONGHIEU.ID = SANPHAMCHITIET_1.ID_ThuongHieu ";
 
         List<ChiTietSanPhamModel> listCTSP = new ArrayList<>();
         try {

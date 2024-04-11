@@ -119,6 +119,23 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
         tableRowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + query));
     }
 
+    private boolean checkForm() {
+        if (txtTenTT.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên thuộc tính !", "Cảnh báo",
+                    JOptionPane.WARNING_MESSAGE);
+            txtTenTT.requestFocus();
+            return false;
+        }
+
+        if (txtMoTaTT.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mô tả thuộc tính !", "Cảnh báo",
+                    JOptionPane.WARNING_MESSAGE);
+            txtMoTaTT.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
@@ -505,6 +522,14 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
             msmd.setID(newIDMS);
             msmd.setTenMS(tenTT);
             msmd.setMoTa(moTaTT);
+            if (!checkForm()) {
+                return;
+            }
+            if (msrs.checkTrungID(txtMaTT.getText().trim())) {
+                JOptionPane.showMessageDialog(this, "Mã thuộc tính đã tồn tại!");
+                txtMaTT.requestFocus();
+                return;
+            }
             if (msrs.insert(msmd) > 0) {
                 JOptionPane.showMessageDialog(this, "Thêm màu sắc thành công !");
                 fillMS();
@@ -517,6 +542,14 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
             clmd.setID(newIDCL);
             clmd.setTenCL(tenTT);
             clmd.setMoTa(moTaTT);
+            if (!checkForm()) {
+                return;
+            }
+            if (clrs.checkTrungID(txtMaTT.getText().trim())) {
+                JOptionPane.showMessageDialog(this, "Mã thuộc tính đã tồn tại!");
+                txtMaTT.requestFocus();
+                return;
+            }
             if (clrs.insert(clmd) > 0) {
                 JOptionPane.showMessageDialog(this, "Thêm chất liệu thành công !");
                 fillCL();
@@ -529,6 +562,14 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
             kcmd.setID(newIDKC);
             kcmd.setTenSize(tenTT);
             kcmd.setMoTa(moTaTT);
+            if (!checkForm()) {
+                return;
+            }
+            if (kcrs.checkTrungID(txtMaTT.getText().trim())) {
+                JOptionPane.showMessageDialog(this, "Mã thuộc tính đã tồn tại!");
+                txtMaTT.requestFocus();
+                return;
+            }
             if (kcrs.insert(kcmd) > 0) {
                 JOptionPane.showMessageDialog(this, "Thêm kích cỡ thành công !");
                 fillKC();
@@ -541,6 +582,14 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
             thmd.setID(newIDTH);
             thmd.setTenTH(tenTT);
             thmd.setMoTa(moTaTT);
+            if (!checkForm()) {
+                return;
+            }
+            if (thrs.checkTrungID(txtMaTT.getText().trim())) {
+                JOptionPane.showMessageDialog(this, "Mã thuộc tính đã tồn tại!");
+                txtMaTT.requestFocus();
+                return;
+            }
             if (thrs.insert(thmd) > 0) {
                 JOptionPane.showMessageDialog(this, "Thêm thương hiệu thành công !");
                 fillTH();
@@ -560,6 +609,9 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
             msmd.setID(maTT);
             msmd.setTenMS(tenTT);
             msmd.setMoTa(moTaTT);
+            if (!checkForm()) {
+                return;
+            }
             if (msrs.update(msmd, maTT) > 0) {
                 JOptionPane.showMessageDialog(this, "Cập nhật màu sắc thành công !");
                 fillMS();
@@ -570,6 +622,9 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
             clmd.setID(maTT);
             clmd.setTenCL(tenTT);
             clmd.setMoTa(moTaTT);
+            if (!checkForm()) {
+                return;
+            }
             if (clrs.update(clmd, maTT) > 0) {
                 JOptionPane.showMessageDialog(this, "Cập nhật chất liệu thành công !");
                 fillCL();
@@ -581,6 +636,9 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
             kcmd.setID(maTT);
             kcmd.setTenSize(tenTT);
             kcmd.setMoTa(moTaTT);
+            if (!checkForm()) {
+                return;
+            }
             if (kcrs.update(kcmd, maTT) > 0) {
                 JOptionPane.showMessageDialog(this, "Cập nhật kích cỡ thành công !");
                 fillKC();
@@ -592,6 +650,9 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
             thmd.setID(maTT);
             thmd.setTenTH(tenTT);
             thmd.setMoTa(moTaTT);
+            if (!checkForm()) {
+                return;
+            }
             if (thrs.update(thmd, maTT) > 0) {
                 JOptionPane.showMessageDialog(this, "Cập nhật thương hiệu thành công !");
                 fillTH();

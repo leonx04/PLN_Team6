@@ -37,7 +37,18 @@ public class HoaDonModel {
     public HoaDonModel() {
     }
 
-    public HoaDonModel(String ID, Date ngayTao, NhanVienModel tenNV, KhachHangModel tenKH, VoucherModer tenVoucher,BigDecimal tongTien, String hinhThucThanhToan, String trangThai) {
+    public HoaDonModel(String ID, Date ngayTao, NhanVienModel tenNV, KhachHangModel tenKH, BigDecimal tongTien, VoucherModer tenVoucher, String hinhThucThanhToan, String trangThai) {
+        this.ID = ID;
+        this.ngayTao = ngayTao;
+        this.tenNV = tenNV;
+        this.tenKH = tenKH;
+        this.tenVoucher = tenVoucher;
+        this.tongTien = tongTien;
+        this.hinhThucThanhToan = hinhThucThanhToan;
+        this.trangThai = trangThai;
+    }
+
+    public HoaDonModel(String ID, Date ngayTao, NhanVienModel tenNV, KhachHangModel tenKH, VoucherModer tenVoucher, BigDecimal tongTien, String hinhThucThanhToan, String trangThai) {
         this.ID = ID;
         this.ngayTao = ngayTao;
         this.tenNV = tenNV;
@@ -79,7 +90,7 @@ public class HoaDonModel {
     public void setTenKH(KhachHangModel tenKH) {
         this.tenKH = tenKH;
     }
-    
+
     public VoucherModer getTenVoucher() {
         return tenVoucher;
     }
@@ -87,7 +98,7 @@ public class HoaDonModel {
     public void setTenVoucher(VoucherModer tenVoucher) {
         this.tenVoucher = tenVoucher;
     }
-    
+
     public BigDecimal getTongTien() {
         return tongTien;
     }
@@ -95,6 +106,7 @@ public class HoaDonModel {
     public void setTongTien(BigDecimal tongTien) {
         this.tongTien = tongTien;
     }
+
     public String getHinhThucThanhToan() {
         return hinhThucThanhToan;
     }
@@ -102,6 +114,7 @@ public class HoaDonModel {
     public void setHinhThucThanhToan(String hinhThucThanhToan) {
         this.hinhThucThanhToan = hinhThucThanhToan;
     }
+
     public String getTrangThai() {
         return trangThai;
     }
@@ -117,7 +130,8 @@ public class HoaDonModel {
     public void setStt(int stt) {
         this.stt = stt;
     }
-public Object[] toData() {
+
+    public Object[] toData() {
         return new Object[]{
             this.stt,
             this.ID,
@@ -127,6 +141,22 @@ public Object[] toData() {
             this.tenVoucher.getTenVoucher(),
             this.tongTien,
             this.hinhThucThanhToan};
+
+    }
+
+    public Object[] toData2() {
+        return new Object[]{
+            this.stt,
+            this.ID,
+            this.ngayTao,
+            this.tenNV.getHoTen(),
+            this.tenKH.getTen(),
+            this.tenVoucher.getTenVoucher(),
+            this.tongTien,
+            this.hinhThucThanhToan,
+            this.trangThai
+        };
+
     }
 
 }
