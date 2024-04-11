@@ -137,13 +137,17 @@ public class BanHangService {
 
     public List<HoaDonModel> getHoaDonChoThanhToan() {
         String sql
-                = "SELECT HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang, VOUCHER.TenVoucher,HOADON.TongTien, HOADON.HinhThucThanhToan, HOADON.TrangThai\n"
+                = "SELECT HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang,\n"
+                + "VOUCHER.TenVoucher,\n"
+                + "HOADON.TongTien,\n"
+                + "HOADON.HinhThucThanhToan, \n"
+                + "HOADON.TrangThai\n"
                 + "                FROM HOADON\n"
                 + "                INNER JOIN NHANVIEN ON HOADON.ID_NhanVien = NHANVIEN.ID\n"
                 + "                INNER JOIN KHACHHANG ON HOADON.ID_KhachHang = KHACHHANG.ID\n"
                 + "                LEFT JOIN VOUCHER ON HOADON.ID_Voucher = VOUCHER.ID\n"
                 + "               \n"
-                + "                WHERE HOADON.TrangThai = N'Chờ thanh toán'\n"
+                + "                WHERE HOADON.TrangThai = N'Chờ thanh toán'\n"
                 + "                GROUP BY HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen, VOUCHER.TenVoucher, HOADON.HinhThucThanhToan, HOADON.TrangThai,HOADON.TongTien ORDER BY NgayTao DESC";
 
         try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -166,6 +170,29 @@ public class BanHangService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public KhachHangModel findBySDT(String sdt) {
+        sql = "SELECT ID, HoTen, SoDienThoai, DiaChi, Email, GioiTinh FROM KHACHHANG WHERE SoDienThoai = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, sdt);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return new KhachHangModel(
+                        rs.getString(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6)
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public List<HoaDonModel> getDaThanhToanHoaDon() {
@@ -889,6 +916,22 @@ public class BanHangService {
         }
     }
 
+    public String getIDByTen(String ten) {
+        String idKhachHang = null;
+        String sql = "SELECT ID FROM KHACHHANG WHERE HoTen = ?";
+        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, ten);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    idKhachHang = rs.getString("ID");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return idKhachHang;
+    }
+
     public String getNewHD() {
         String newID = "HD001";
         try {
@@ -907,20 +950,17 @@ public class BanHangService {
         return newID;
     }
 
-    public int taoHoaDon(String idNhanVien) {
-        String idKhachHangMacDinh = "KH00";
-        String hinhThucThanhToan = "Tiền mặt";
-
-        String sql = "INSERT INTO HOADON (ID, ID_NhanVien, ID_KhachHang,HinhThucThanhToan,TongTien,  TrangThai,  ID_Voucher, NgayTao, NgaySua) "
-                + "VALUES (?, ?, ?,? ,?,N'Chờ thanh toán','V002', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+    public int taoHoaDon(String idNhanVien, String idKhachHang) {
+        String hinhThucThanhToan = "Tiền mặt";
+        String sql = "INSERT INTO HOADON (ID, ID_NhanVien, ID_KhachHang, HinhThucThanhToan, TongTien, TrangThai, ID_Voucher, NgayTao, NgaySua) "
+                + "VALUES (?, ?, ?, ?, ?, N'Chờ thanh toán', 'V002', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
 
         try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setObject(1, getNewHD());
+            ps.setObject(1, getNewHD()); // Lấy ID mới cho hóa đơn
             ps.setObject(2, idNhanVien);
-            ps.setObject(3, idKhachHangMacDinh);
+            ps.setObject(3, idKhachHang); // Sử dụng ID của khách hàng được truyền vào
             ps.setObject(4, hinhThucThanhToan);
-            ps.setObject(5, 0);
+            ps.setObject(5, 0); // Giá trị tổng tiền ban đầu
 
             return ps.executeUpdate();
         } catch (SQLException e) {
@@ -990,4 +1030,5 @@ public class BanHangService {
         }
         return rowsAffected;
     }
+
 }

@@ -103,6 +103,7 @@ public class HoaDonModel {
     public void setHinhThucThanhToan(String hinhThucThanhToan) {
         this.hinhThucThanhToan = hinhThucThanhToan;
     }
+
     public String getTrangThai() {
         return trangThai;
     }
@@ -118,7 +119,8 @@ public class HoaDonModel {
     public void setStt(int stt) {
         this.stt = stt;
     }
-public Object[] toData() {
+
+    public Object[] toData() {
         return new Object[]{
             this.stt,
             this.ID,

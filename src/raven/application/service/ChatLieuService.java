@@ -170,4 +170,22 @@ public class ChatLieuService {
         return false; // Trả về false nếu có lỗi xảy ra
     }
 
+    public boolean checkTrungTen(String tenCL) {
+        sql = "SELECT COUNT(*) AS count FROM CHATLIEU WHERE Ten = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, tenCL);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                // Nếu count > 0, tức là tên đã tồn tại
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false; // Trả về false nếu có lỗi xảy ra
+    }
+
 }

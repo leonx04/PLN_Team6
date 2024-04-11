@@ -28,6 +28,32 @@ public class FormMauSac extends javax.swing.JFrame {
 
     }
 
+    private boolean validateFields() {
+        String tenChatLieu = txtTenKichThuoc.getText().trim();
+        String moTa = txtMoTa.getText().trim();
+
+        if (tenChatLieu.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên màu sắc!");
+            return false;
+        }
+        if (moTa.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mô tả màu sắc!");
+            return false;
+        }
+
+        if (tenChatLieu.length() > 100) {
+            JOptionPane.showMessageDialog(this, "Tên màu sắc tối đa là 100 ký tự!");
+            return false;
+        }
+
+        if (moTa.length() > 254) {
+            JOptionPane.showMessageDialog(this, "Mô tả tối đa là 254 ký tự!");
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -123,7 +149,14 @@ public class FormMauSac extends javax.swing.JFrame {
     private void btnMauSacActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnMauSacActionPerformed
         String tenMauSac = txtTenKichThuoc.getText();
         String moTa = txtMoTa.getText();
-
+        if (msrs.checkTrungTen(txtTenKichThuoc.getText().trim())) {
+            JOptionPane.showMessageDialog(this, "Tên màu sắc đã tồn tại!");
+            txtTenKichThuoc.requestFocus();
+            return;
+        }
+        if (!validateFields()) {
+            return;
+        }
         String newID = msrs.getNewIDMS();
         MauSacModel mauSac = new MauSacModel(newID, tenMauSac, moTa);
 
