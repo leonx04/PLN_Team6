@@ -1374,6 +1374,15 @@ public class FormBanHang extends javax.swing.JPanel {
         // Lấy giá trị của voucher từ cboVoucher
         String voucher = cboVoucher.getSelectedItem().toString();
 
+        // Khởi tạo biến để lưu tổng tiền sau khi giảm giá
+        BigDecimal tongTienSauGiamGia = BigDecimal.ZERO;
+
+        // Lấy tổng tiền từ txtTongTien
+        BigDecimal tongTien = new BigDecimal(txtTongTien.getText());
+        
+        int selectedRow = tblHoaDon.getSelectedRow();
+
+
         // Áp dụng giảm giá từ voucher
         BigDecimal discountAmount = BigDecimal.ZERO;
         if (voucher.equals("Discount10%")) {
@@ -1420,18 +1429,26 @@ public class FormBanHang extends javax.swing.JPanel {
         BigDecimal tienThua = tienMat.add(chuyenKhoan).subtract(tongTienSauGiamGia);
         txtTienThua.setText(tienThua.toString());
 
+        // Cập nhật hình thức thanh toán cho hóa đơn trong bảng tblHoaDon
         // Update hình thức thanh toán cho hóa đơn
         int selectedRow = tblHoaDon.getSelectedRow();
         if (selectedRow >= 0) {
+//            tblHoaDon.setValueAt(voucher, selectedRow, 5);
+            tblHoaDon.setValueAt(hinhThucThanhToan, selectedRow, 7); // Giả sử cột 7 trong bảng là cột chứa
+            // hình thức thanh toán
             tblHoaDon.setValueAt(hinhThucThanhToan, selectedRow, 7);
         }
 
         // Cập nhật hình thức thanh toán vào cơ sở dữ liệu
         if (selectedHoaDonID != null && !selectedHoaDonID.isEmpty()) {
+//            boolean updateVoucher = bhrs.updateVoucherHoaDon(selectedHoaDonID, voucher);
             boolean updated = bhrs.updateHTTTHoaDon(selectedHoaDonID, hinhThucThanhToan);
             if (!updated) {
                 JOptionPane.showMessageDialog(this, "Cập nhật hình thức thanh toán không thành công!");
                 return;
+//            }else if (!updateVoucher) {
+//                JOptionPane.showMessageDialog(this, "Cập nhật voucher không thành công!");
+//                return;
             }
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn một hóa đơn để thanh toán.");

@@ -40,41 +40,20 @@ public class HoaDonService {
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
-//                String ID = rs.getString("ID");
-//                Date ngayTao = rs.getDate("ngayTao");
-//                String tenNV = rs.getString("tenNV");
-//                String tenKH = rs.getString("tenKH");
-//                String tenVoucher = rs.getString("tenVoucher");
-//                BigDecimal tongTien = rs.getBigDecimal("tongTien");
-//                String hinhThucThanhToan = rs.getString("hinhThucThanhToan");
-//
-//                NhanVienModel nv = new NhanVienModel();
-//                nv.setHoTen(tenNV);
-//                KhachHangModel kh = new KhachHangModel();
-//                kh.setTen(tenKH);
-//                VoucherModer voucher = new VoucherModer();
-//                voucher.setTenVoucher(tenVoucher);
-//                HoaDonModel hoaDon = new HoaDonModel();
-//                hoaDon.setID(ID);
-//                hoaDon.setNgayTao(ngayTao);
-//                hoaDon.setTongTien(tongTien);
-//                hoaDon.setHinhThucThanhToan(hinhThucThanhToan);
-//                listHD.add(hoaDon);
-                HoaDonModel hoaDonModel = new HoaDonModel(
-                        rs.getString(1),
-                        rs.getDate(2),
-                        new NhanVienModel(rs.getString(3)),
-                        new KhachHangModel(rs.getString(4)),
-                        rs.getBigDecimal(6),
-                        new VoucherModer(rs.getString(5)),
-                        rs.getString(7));
-                listHD.add(hoaDonModel);
+                HoaDonModel hdModel = new HoaDonModel(
+                        rs.getString("ID"),
+                        rs.getDate("NgayTao"),
+                        new NhanVienModel(rs.getString("HoTen")),
+                        new KhachHangModel(rs.getString("TenKhachHang")),
+                        new VoucherModer(rs.getString("TenVoucher")),
+                        rs.getBigDecimal("TongTien"),
+                        rs.getString("HinhThucThanhToan"));
+                listHD.add(hdModel);
             }
-            return listHD;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
+        return listHD;
 
     }
 
@@ -94,33 +73,13 @@ public class HoaDonService {
             ps.execute();
             rs = ps.executeQuery();
             while (rs.next()) {
-//                String ID = rs.getString("ID");
-//                Date ngayTao = rs.getDate("ngayTao");
-//                String tenNV = rs.getString("tenNV");
-//                String tenKH = rs.getString("tenKH");
-//                String tenVoucher = rs.getString("tenVoucher");
-//                BigDecimal tongTien = rs.getBigDecimal("tongTien");
-//                String hinhThucThanhToan = rs.getString("hinhThucThanhToan");
-//
-//                NhanVienModel nv = new NhanVienModel(rs.getString(3));
-//                nv.setHoTen(tenNV);
-//                KhachHangModel kh = new KhachHangModel(rs.getString(4));
-//                kh.setTen(tenKH);
-//                VoucherModer voucher = new VoucherModer(rs.getString(5));
-//                voucher.setTenVoucher(tenVoucher);
-//                HoaDonModel hoaDon = new HoaDonModel();
-//                hoaDon.setID(ID);
-//                hoaDon.setNgayTao(ngayTao);
-//                hoaDon.setTongTien(tongTien);
-//                hoaDon.setHinhThucThanhToan(hinhThucThanhToan);
-//                listHD.add(hoaDon);
                 HoaDonModel hoaDonModel = new HoaDonModel(
                         rs.getString(1),
                         rs.getDate(2),
                         new NhanVienModel(rs.getString(3)),
                         new KhachHangModel(rs.getString(4)),
-                        rs.getBigDecimal(5),
-                        new VoucherModer(rs.getString(6)),
+                        new VoucherModer(rs.getString(5)),
+                        rs.getBigDecimal(6),
                         rs.getString(7));
                 listHD.add(hoaDonModel);
             }
@@ -143,33 +102,13 @@ public class HoaDonService {
                 ps.setDate(1, new java.sql.Date(d1.getDate().getTime()));
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
-//                        String ID = rs.getString("ID");
-//                        Date ngayTao = rs.getDate("ngayTao");
-//                        String tenNV = rs.getString("tenNV");
-//                        String tenKH = rs.getString("tenKH");
-//                        String tenVoucher = rs.getString("tenVoucher");
-//                        BigDecimal tongTien = rs.getBigDecimal("tongTien");
-//                        String hinhThucThanhToan = rs.getString("hinhThucThanhToan");
-//
-//                        NhanVienModel nv = new NhanVienModel(rs.getString(3));
-//                        nv.setHoTen(tenNV);
-//                        KhachHangModel kh = new KhachHangModel(rs.getString(4));
-//                        kh.setTen(tenKH);
-//                        VoucherModer voucher = new VoucherModer(rs.getString(5));
-//                        voucher.setTenVoucher(tenVoucher);
-//                        HoaDonModel hoaDon = new HoaDonModel();
-//                        hoaDon.setID(ID);
-//                        hoaDon.setNgayTao(ngayTao);
-//                        hoaDon.setTongTien(tongTien);
-//                        hoaDon.setHinhThucThanhToan(hinhThucThanhToan);
-//                        listHD.add(hoaDon);
                         HoaDonModel hoaDonModel = new HoaDonModel(
                                 rs.getString(1),
                                 rs.getDate(2),
                                 new NhanVienModel(rs.getString(3)),
                                 new KhachHangModel(rs.getString(4)),
-                                rs.getBigDecimal(5),
-                                new VoucherModer(rs.getString(6)),
+                                new VoucherModer(rs.getString(5)),
+                                rs.getBigDecimal(6),
                                 rs.getString(7)
                         );
                         listHD.add(hoaDonModel);
@@ -196,33 +135,13 @@ public class HoaDonService {
             ps.setString(1, IDHD);
             rs = ps.executeQuery();
             while (rs.next()) {
-//                String ID = rs.getString("ID");
-//                Date ngayTao = rs.getDate("ngayTao");
-//                String tenNV = rs.getString("tenNV");
-//                String tenKH = rs.getString("tenKH");
-//                String tenVoucher = rs.getString("tenVoucher");
-//                BigDecimal tongTien = rs.getBigDecimal("tongTien");
-//                String hinhThucThanhToan = rs.getString("hinhThucThanhToan");
-//
-//                NhanVienModel nv = new NhanVienModel(rs.getString(3));
-//                nv.setHoTen(tenNV);
-//                KhachHangModel kh = new KhachHangModel(rs.getString(4));
-//                kh.setTen(tenKH);
-//                VoucherModer voucher = new VoucherModer(rs.getString(5));
-//                voucher.setTenVoucher(tenVoucher);
-//                HoaDonModel hoaDon = new HoaDonModel();
-//                hoaDon.setID(ID);
-//                hoaDon.setNgayTao(ngayTao);
-//                hoaDon.setTongTien(tongTien);
-//                hoaDon.setHinhThucThanhToan(hinhThucThanhToan);
-//                listHD.add(hoaDon);
                 HoaDonModel hoaDonModel = new HoaDonModel(
                         rs.getString(1),
                         rs.getDate(2),
                         new NhanVienModel(rs.getString(3)),
                         new KhachHangModel(rs.getString(4)),
-                        rs.getBigDecimal(5),
-                        new VoucherModer(rs.getString(6)),
+                        new VoucherModer(rs.getString(5)),
+                        rs.getBigDecimal(6),
                         rs.getString(7));
                 listHD.add(hoaDonModel);
             }
@@ -281,8 +200,8 @@ public class HoaDonService {
             ps.setObject(2, hdm.getTenNV().getId());
             ps.setObject(3, hdm.getTenKH().getMa());
             ps.setObject(4, hdm.getTenVoucher().getID());
-            ps.setObject(5, hdm.getTongTien());
-            ps.setObject(6, hdm.getHinhThucThanhToan());
+            ps.setObject(6, hdm.getTongTien());
+            ps.setObject(5, hdm.getHinhThucThanhToan());
             ps.setObject(7, hdm.getID());
             return ps.executeUpdate();
         } catch (Exception e) {
@@ -301,6 +220,102 @@ public class HoaDonService {
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
+        }
+    }
+
+    public List<HoaDonModel> getDaThanhToanHoaDon() {
+        List<HoaDonModel> listHD = new ArrayList<>();
+
+        String sql = "SELECT HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang, VOUCHER.TenVoucher, SUM(HOADONCHITIET.ThanhTien) AS TongTien, HOADON.HinhThucThanhToan "
+                + "FROM HOADON "
+                + "INNER JOIN NHANVIEN ON HOADON.ID_NhanVien = NHANVIEN.ID "
+                + "INNER JOIN KHACHHANG ON HOADON.ID_KhachHang = KHACHHANG.ID "
+                + "LEFT JOIN VOUCHER ON HOADON.ID_Voucher = VOUCHER.ID "
+                + "INNER JOIN HOADONCHITIET ON HOADON.ID = HOADONCHITIET.ID_HoaDon "
+                + "WHERE HOADON.TrangThai = N'Đã thanh toán' "
+                + "GROUP BY HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen, VOUCHER.TenVoucher, HOADON.HinhThucThanhToan";
+
+        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                HoaDonModel hdModel = new HoaDonModel(
+                        rs.getString("ID"),
+                        rs.getDate("NgayTao"),
+                        new NhanVienModel(rs.getString("HoTen")),
+                        new KhachHangModel(rs.getString("TenKhachHang")),
+                        new VoucherModer(rs.getString("TenVoucher")),
+                        rs.getBigDecimal("TongTien"),
+                        rs.getString("HinhThucThanhToan"));
+                listHD.add(hdModel);
+            }
+            return listHD;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<HoaDonModel> getDaHuyHoaDon() {
+        sql = "SELECT HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang, VOUCHER.TenVoucher, SUM(HOADONCHITIET.ThanhTien) AS TongTien, HOADON.HinhThucThanhToan"
+                + "FROM HOADON\n"
+                + "INNER JOIN NHANVIEN ON HOADON.ID_NhanVien = NHANVIEN.ID\n"
+                + "INNER JOIN KHACHHANG ON HOADON.ID_KhachHang = KHACHHANG.ID\n"
+                + "LEFT JOIN VOUCHER ON HOADON.ID_Voucher = VOUCHER.ID\n"
+                + "INNER JOIN HOADONCHITIET ON HOADON.ID = HOADONCHITIET.ID_HoaDon\n"
+                + "WHERE HOADON.TrangThai = N'Đã hủy'\n"
+                + "GROUP BY HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen, VOUCHER.TenVoucher, HOADON.HinhThucThanhToan, HOADON.TrangThai";
+
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                HoaDonModel hdModel = new HoaDonModel(
+                        rs.getString("ID"),
+                        rs.getDate("NgayTao"),
+                        new NhanVienModel(rs.getString("HoTen")),
+                        new KhachHangModel(rs.getString("TenKhachHang")),
+                        new VoucherModer(rs.getString("TenVoucher")),
+                        rs.getBigDecimal("TongTien"),
+                        rs.getString("HinhThucThanhToan"));
+                listHD.add(hdModel);
+            }
+            return listHD;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<HoaDonModel> getHoaDonChoThanhToan() {
+        sql = "SELECT HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang, VOUCHER.TenVoucher, SUM(HOADONCHITIET.ThanhTien) AS TongTien, HOADON.HinhThucThanhToan"
+                + "FROM HOADON\n"
+                + "INNER JOIN NHANVIEN ON HOADON.ID_NhanVien = NHANVIEN.ID\n"
+                + "INNER JOIN KHACHHANG ON HOADON.ID_KhachHang = KHACHHANG.ID\n"
+                + "LEFT JOIN VOUCHER ON HOADON.ID_Voucher = VOUCHER.ID\n"
+                + "INNER JOIN HOADONCHITIET ON HOADON.ID = HOADONCHITIET.ID_HoaDon\n"
+                + "WHERE HOADON.TrangThai = N'Chờ thanh toán'\n"
+                + "GROUP BY HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen, VOUCHER.TenVoucher, HOADON.HinhThucThanhToan";
+
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                HoaDonModel hdModel = new HoaDonModel(
+                        rs.getString("ID"),
+                        rs.getDate("NgayTao"),
+                        new NhanVienModel(rs.getString("HoTen")),
+                        new KhachHangModel(rs.getString("TenKhachHang")),
+                        new VoucherModer(rs.getString("TenVoucher")),
+                        rs.getBigDecimal("TongTien"),
+                        rs.getString("HinhThucThanhToan"));
+                listHD.add(hdModel);
+            }
+            return listHD;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }
