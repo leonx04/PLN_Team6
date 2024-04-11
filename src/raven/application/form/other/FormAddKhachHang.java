@@ -333,7 +333,7 @@ public class FormAddKhachHang extends javax.swing.JFrame {
                         .addGap(39, 39, 39)
                         .addComponent(btnTimKiem))
                     .addComponent(jLabel2))
-                .addContainerGap(200, Short.MAX_VALUE))
+                .addContainerGap(328, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

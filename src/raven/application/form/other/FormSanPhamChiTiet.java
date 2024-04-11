@@ -458,8 +458,6 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
 
         return true;
     }
-    
-    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
