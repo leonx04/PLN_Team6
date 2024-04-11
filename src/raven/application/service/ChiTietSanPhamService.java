@@ -27,42 +27,60 @@ public class ChiTietSanPhamService {
     String sql = null;
 
     public List<ChiTietSanPhamModel> getAllCTSP() {
-        sql = " SELECT        SANPHAMCHITIET.ID, SANPHAM.TenSanPham, MAUSAC.TenMau AS MauSac, SIZE.Ten AS Size, CHATLIEU.Ten AS ChatLieu, THUONGHIEU.Ten AS ThuongHieu, SANPHAMCHITIET_1.GiaBan, SANPHAMCHITIET_1.SoLuongTon, \n"
-                + "                         SANPHAMCHITIET_1.MoTa\n"
-                + "FROM            SANPHAMCHITIET INNER JOIN\n"
-                + "                         SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID INNER JOIN\n"
-                + "                         MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID INNER JOIN\n"
-                + "                         SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID INNER JOIN\n"
-                + "                         CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID INNER JOIN\n"
-                + "                         THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID INNER JOIN\n"
-                + "                         SANPHAMCHITIET AS SANPHAMCHITIET_1 ON SANPHAM.ID = SANPHAMCHITIET_1.ID_SanPham AND MAUSAC.ID = SANPHAMCHITIET_1.ID_MauSac AND SIZE.ID = SANPHAMCHITIET_1.ID_Size AND \n"
-                + "                         CHATLIEU.ID = SANPHAMCHITIET_1.ID_ChatLieu AND THUONGHIEU.ID = SANPHAMCHITIET_1.ID_ThuongHieu  ";
-
         List<ChiTietSanPhamModel> listCTSP = new ArrayList<>();
         try {
+            // Kết nối đến cơ sở dữ liệu
             con = DBConnect.getConnection();
+
+            // Câu truy vấn SQL để lấy thông tin các sản phẩm chi tiết
+            String sql = "SELECT SANPHAMCHITIET.ID, SANPHAM.TenSanPham, MAUSAC.TenMau, SIZE.Ten, CHATLIEU.Ten, THUONGHIEU.Ten, SANPHAMCHITIET.SoLuongTon, SANPHAMCHITIET.GiaBan, SANPHAMCHITIET.MoTa "
+                    + "FROM SANPHAMCHITIET "
+                    + "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID "
+                    + "INNER JOIN MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID "
+                    + "INNER JOIN SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID "
+                    + "INNER JOIN CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID "
+                    + "INNER JOIN THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID";
+
+            // Tạo đối tượng PreparedStatement từ câu truy vấn SQL
             ps = con.prepareStatement(sql);
+
+            // Thực hiện truy vấn và lưu kết quả vào ResultSet
             rs = ps.executeQuery();
+
+            // Duyệt qua các bản ghi trong ResultSet và thêm vào danh sách kết quả
             while (rs.next()) {
-                ChiTietSanPhamModel ctsp = new ChiTietSanPhamModel(
-                        rs.getString(1), // ID
-                        new SanPhamModel(rs.getString(2)), // TenSP
-                        new MauSacModel(rs.getString(3)), // MauSac
-                        new KichCoModel(rs.getString(4)), // Size
-                        new ChatLieuModel(rs.getString(5)), // ChatLieu
-                        new ThuongHieuModel(rs.getString(6)), // ThuongHieu
-                        rs.getBigDecimal(7), // GiaBan
-                        rs.getInt(8), // SoLuongTon
-                        rs.getString(9)); // MoTa
+                ChiTietSanPhamModel ctsp = new ChiTietSanPhamModel();
+                ctsp.setID(rs.getString(1));
+                ctsp.setTenSP(new SanPhamModel(rs.getString(2)));
+                ctsp.setMauSac(new MauSacModel(rs.getString(3)));
+                ctsp.setKichCo(new KichCoModel(rs.getString(4)));
+                ctsp.setChatLieu(new ChatLieuModel(rs.getString(5)));
+                ctsp.setThuongHieu(new ThuongHieuModel(rs.getString(6)));
+                ctsp.setSoLuongTon(rs.getInt(7));
+                ctsp.setGiaBan(rs.getBigDecimal(8));
+                ctsp.setMoTa(rs.getString(9));
                 listCTSP.add(ctsp);
             }
-            return listCTSP;
         } catch (Exception e) {
-            // TODO: handle exception
             e.printStackTrace();
-            return null;
+        } finally {
+            // Đóng các đối tượng ResultSet, PreparedStatement và Connection
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-
+        // Trả về danh sách các sản phẩm chi tiết
+        return listCTSP;
     }
 
     public List<ChiTietSanPhamModel> getAllCTSPSoluong0() {
@@ -355,31 +373,53 @@ public class ChiTietSanPhamService {
         // Mã sản phẩm mặc định
         String newID = "SPCT01";
         try {
-            // Truy vấn SQL để lấy số thứ tự lớn nhất của mã sản phẩm từ cơ sở dữ liệu
-            sql = "SELECT MAX(CAST(SUBSTRING(ID, 5, LEN(ID)) AS INT)) AS maxID FROM SANPHAMCHITIET";
-            // trong truy vấn SQL, MAX(CAST(SUBSTRING(ID, 3, LEN(ID)) AS INT)) được sử dụng
-            // để lấy số thứ tự lớn nhất của các mã sản phẩm trong cơ sở dữ liệu.
-            // SUBSTRING(ID, 3, LEN(ID)) được sử dụng để cắt bỏ ba ký tự đầu tiên của mã sản
-            // phẩm (trong trường hợp này là "SP"),
-            // sau đó chuyển thành kiểu số nguyên bằng CAST.
-// Kết nối đến cơ sở dữ liệu
+            // Kết nối đến cơ sở dữ liệu
             con = DBConnect.getConnection();
+
+            // Tạo truy vấn SQL để lấy số thứ tự lớn nhất của mã sản phẩm từ cơ sở dữ liệu
+            sql = "SELECT MAX(CAST(SUBSTRING(ID, 5, LEN(ID)) AS INT)) AS maxID FROM SANPHAMCHITIET";
+
             // Tạo đối tượng PreparedStatement từ truy vấn SQL
             ps = con.prepareStatement(sql);
+
             // Thực hiện truy vấn và lưu kết quả vào ResultSet
             rs = ps.executeQuery();
+
             // Kiểm tra xem ResultSet có kết quả hay không
             if (rs.next()) {
                 // Nếu có kết quả, lấy giá trị số thứ tự lớn nhất từ cột "maxID"
                 int maxID = rs.getInt("maxID");
-                // Tăng giá trị số thứ tự lên một đơn vị
-                maxID++;
-                // Tạo mã sản phẩm mới từ số thứ tự lớn nhất và định dạng lại để có hai chữ số
+
+                // Tạo mã sản phẩm mới từ số thứ tự lớn nhất
+                if (maxID < 99) {
+                    // Nếu maxID nhỏ hơn 99, tăng giá trị số thứ tự lên một đơn vị
+                    maxID++;
+                } else {
+                    // Nếu maxID đạt đến 99, tự động tăng mã lên SPCT100
+                    maxID = 100;
+                }
+
+                // Định dạng lại mã sản phẩm mới để có hai chữ số
                 newID = "SPCT" + String.format("%02d", maxID);
             }
         } catch (Exception e) {
             // Xử lý ngoại lệ nếu có lỗi xảy ra
             e.printStackTrace();
+        } finally {
+            // Đóng các đối tượng ResultSet, PreparedStatement và Connection
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         // Trả về mã sản phẩm mới hoặc mã mặc định nếu có lỗi xảy ra
         return newID;
