@@ -42,6 +42,18 @@ public class HoaDonModel {
         this.ngayTao = ngayTao;
         this.tenNV = tenNV;
         this.tenKH = tenKH;
+        this.tenVoucher = tenVoucher;
+        this.tongTien = tongTien;
+        this.hinhThucThanhToan = hinhThucThanhToan;
+        this.trangThai = trangThai;
+    }
+
+    public HoaDonModel(String ID, Date ngayTao, NhanVienModel tenNV, KhachHangModel tenKH, VoucherModer tenVoucher, BigDecimal tongTien, String hinhThucThanhToan, String trangThai) {
+
+        this.ID = ID;
+        this.ngayTao = ngayTao;
+        this.tenNV = tenNV;
+        this.tenKH = tenKH;
         this.tongTien = tongTien;
         this.tenVoucher = tenVoucher;
 
@@ -131,6 +143,20 @@ public class HoaDonModel {
             this.tenVoucher.getTenVoucher(),
             this.tongTien,
             this.hinhThucThanhToan};
+
     }
 
+    public Object[] toData2() {
+        return new Object[]{
+            this.stt,
+            this.ID,
+            this.ngayTao,
+            this.tenNV.getHoTen(),
+            this.tenKH.getTen(),
+            this.tenVoucher.getTenVoucher(),
+            this.tongTien,
+            this.hinhThucThanhToan,
+            this.trangThai
+        };
+    }
 }

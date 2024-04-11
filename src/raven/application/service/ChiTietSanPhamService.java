@@ -27,16 +27,13 @@ public class ChiTietSanPhamService {
     String sql = null;
 
     public List<ChiTietSanPhamModel> getAllCTSP() {
-        sql = " SELECT        SANPHAMCHITIET.ID, SANPHAM.TenSanPham, MAUSAC.TenMau AS MauSac, SIZE.Ten AS Size, CHATLIEU.Ten AS ChatLieu, THUONGHIEU.Ten AS ThuongHieu, SANPHAMCHITIET_1.GiaBan, SANPHAMCHITIET_1.SoLuongTon, \n"
-                + "                         SANPHAMCHITIET_1.MoTa\n"
-                + "FROM            SANPHAMCHITIET INNER JOIN\n"
-                + "                         SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID INNER JOIN\n"
-                + "                         MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID INNER JOIN\n"
-                + "                         SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID INNER JOIN\n"
-                + "                         CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID INNER JOIN\n"
-                + "                         THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID INNER JOIN\n"
-                + "                         SANPHAMCHITIET AS SANPHAMCHITIET_1 ON SANPHAM.ID = SANPHAMCHITIET_1.ID_SanPham AND MAUSAC.ID = SANPHAMCHITIET_1.ID_MauSac AND SIZE.ID = SANPHAMCHITIET_1.ID_Size AND \n"
-                + "                         CHATLIEU.ID = SANPHAMCHITIET_1.ID_ChatLieu AND THUONGHIEU.ID = SANPHAMCHITIET_1.ID_ThuongHieu  ";
+        String sql = "SELECT SANPHAMCHITIET.ID, SANPHAM.TenSanPham, MAUSAC.TenMau, SIZE.Ten, CHATLIEU.Ten, THUONGHIEU.Ten, SANPHAMCHITIET.SoLuongTon, SANPHAMCHITIET.GiaBan, SANPHAMCHITIET.MoTa "
+                + "FROM SANPHAMCHITIET "
+                + "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID "
+                + "INNER JOIN MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID "
+                + "INNER JOIN SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID "
+                + "INNER JOIN CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID "
+                + "INNER JOIN THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID";
 
         List<ChiTietSanPhamModel> listCTSP = new ArrayList<>();
         try {
@@ -51,8 +48,8 @@ public class ChiTietSanPhamService {
                         new KichCoModel(rs.getString(4)), // Size
                         new ChatLieuModel(rs.getString(5)), // ChatLieu
                         new ThuongHieuModel(rs.getString(6)), // ThuongHieu
-                        rs.getBigDecimal(7), // GiaBan
-                        rs.getInt(8), // SoLuongTon
+                        rs.getBigDecimal(8), // GiaBan
+                        rs.getInt(7), // SoLuongTon
                         rs.getString(9)); // MoTa
                 listCTSP.add(ctsp);
             }
@@ -444,6 +441,91 @@ public class ChiTietSanPhamService {
             e.printStackTrace();
         }
         // Không tìm thấy mã SP trùng
+        return false;
+    }
+
+    public boolean checkTrungTenSanPham(String tenSanPham) {
+        String sql = "SELECT COUNT(*) AS count FROM SANPHAM WHERE TenSanPham = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, tenSanPham);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean checkTrungMauSac(String tenMauSac) {
+        String sql = "SELECT COUNT(*) AS count FROM MAUSAC WHERE TenMau = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, tenMauSac);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean checkTrungChatLieu(String tenChatLieu) {
+        String sql = "SELECT COUNT(*) AS count FROM CHATLIEU WHERE Ten = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, tenChatLieu);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean checkTrungKichCo(String tenKichCo) {
+        String sql = "SELECT COUNT(*) AS count FROM SIZE WHERE Ten = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, tenKichCo);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean checkTrungThuongHieu(String tenThuongHieu) {
+        String sql = "SELECT COUNT(*) AS count FROM THUONGHIEU WHERE Ten = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, tenThuongHieu);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return false;
     }
 

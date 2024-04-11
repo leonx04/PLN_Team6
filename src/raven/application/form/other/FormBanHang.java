@@ -115,7 +115,7 @@ public class FormBanHang extends javax.swing.JPanel {
         lb1.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:$h1.font");
         JComboBox<String> cboTrangThai = new JComboBox<>(
-                new String[]{"Tất cả", "Chờ thanh toán", "Đã thanh toán", "Đã hủy"});
+                new String[] { "Tất cả", "Chờ thanh toán", "Đã thanh toán", "Đã hủy" });
 
     }
 
@@ -126,7 +126,7 @@ public class FormBanHang extends javax.swing.JPanel {
 
     private void initCBOHTTT() {
         // Định nghĩa mảng chứa các lựa chọn cho combobox
-        String[] options = {"Kết hợp cả hai", "Tiền mặt", "Chuyển khoản"};
+        String[] options = { "Kết hợp", "Tiền mặt", "Chuyển khoản" };
 
         // Khởi tạo combobox với các giá trị từ mảng options
         cboHTTT.setModel(new DefaultComboBoxModel<>(options));
@@ -135,7 +135,7 @@ public class FormBanHang extends javax.swing.JPanel {
 
     private void initCBOVoucher() {
         // Định nghĩa mảng chứa các lựa chọn cho combobox
-        String[] options = {"Discount10%", "Discount20%", "Discount300K", "Discount700K"};
+        String[] options = { "Discount10%", "Discount20%", "Discount300K", "Discount700K" };
 
         // Khởi tạo combobox với các giá trị từ mảng options
         cboVoucher.setModel(new DefaultComboBoxModel<>(options));
@@ -236,15 +236,15 @@ public class FormBanHang extends javax.swing.JPanel {
             for (int i = 0; i < list.size(); i++) {
                 HoaDonModel hoaDonModel = list.get(i);
                 Object[] rowData = {
-                    i + 1, // Số thứ tự (STT)
-                    hoaDonModel.getID(),
-                    hoaDonModel.getNgayTao(),
-                    hoaDonModel.getTenNV().getHoTen(),
-                    hoaDonModel.getTenKH().getTen(),
-                    hoaDonModel.getTenVoucher().getTenVoucher(),
-                    hoaDonModel.getTongTien(),
-                    hoaDonModel.getHinhThucThanhToan(),
-                    hoaDonModel.getTrangThai()
+                        i + 1, // Số thứ tự (STT)
+                        hoaDonModel.getID(),
+                        hoaDonModel.getNgayTao(),
+                        hoaDonModel.getTenNV().getHoTen(),
+                        hoaDonModel.getTenKH().getTen(),
+                        hoaDonModel.getTenVoucher().getTenVoucher(),
+                        hoaDonModel.getTongTien(),
+                        hoaDonModel.getHinhThucThanhToan(),
+                        hoaDonModel.getTrangThai()
                 };
                 model.addRow(rowData); // Thêm dòng mới vào bảng
             }
@@ -258,11 +258,11 @@ public class FormBanHang extends javax.swing.JPanel {
 
         for (ChiTietHoaDonModel chiTietHoaDon : chiTietHoaDons) {
             Object[] rowData = {
-                chiTietHoaDon.getMactsp().getID(),
-                chiTietHoaDon.getTenSP().getTenSP(),
-                chiTietHoaDon.getDonGia().getGiaBan(),
-                chiTietHoaDon.getSoLuong(),
-                chiTietHoaDon.getThanhTien()
+                    chiTietHoaDon.getMactsp().getID(),
+                    chiTietHoaDon.getTenSP().getTenSP(),
+                    chiTietHoaDon.getDonGia().getGiaBan(),
+                    chiTietHoaDon.getSoLuong(),
+                    chiTietHoaDon.getThanhTien()
 
             };
             model.addRow(rowData);
@@ -465,6 +465,8 @@ public class FormBanHang extends javax.swing.JPanel {
             document.close();
 
             JOptionPane.showMessageDialog(null, "Xuất hoá đơn sang PDF thành công!");
+            refreshGioHangTable();
+            fillTable2(bhrs.getHoaDonChoThanhToan());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Lỗi khi xuất hoá đơn sang PDF: " + e.getMessage());
         }
@@ -501,7 +503,7 @@ public class FormBanHang extends javax.swing.JPanel {
     }
 
     private void addProductTableHeader(PdfPTable table, Font font) {
-        String[] headers = {"Tên sản phẩm", "Giá bán", "Số lượng", "Thành tiền"};
+        String[] headers = { "Tên sản phẩm", "Giá bán", "Số lượng", "Thành tiền" };
 
         for (String header : headers) {
             PdfPCell headerCell = new PdfPCell(new Phrase(header, font));
@@ -577,6 +579,7 @@ public class FormBanHang extends javax.swing.JPanel {
     }
 
     @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
@@ -895,6 +898,7 @@ public class FormBanHang extends javax.swing.JPanel {
         txtTimSDT.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtTimSDT.setToolTipText("Nhập số điện thoại khách hàng");
 
+        btnTimKiem.setBackground(new java.awt.Color(0, 204, 0));
         btnTimKiem.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnTimKiem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/raven/icon/png/computer.png"))); // NOI18N
         btnTimKiem.addActionListener(new java.awt.event.ActionListener() {
@@ -1487,10 +1491,7 @@ public class FormBanHang extends javax.swing.JPanel {
         BigDecimal tongTienSauGiamGia = BigDecimal.ZERO;
 
         // Lấy tổng tiền từ txtTongTien
-        BigDecimal tongTien = new BigDecimal(txtTongTien.getText());
-        
         int selectedRow = tblHoaDon.getSelectedRow();
-
 
         // Áp dụng giảm giá từ voucher
         BigDecimal discountAmount = BigDecimal.ZERO;
@@ -1504,7 +1505,7 @@ public class FormBanHang extends javax.swing.JPanel {
             discountAmount = new BigDecimal("700000");
         }
 
-        BigDecimal tongTienSauGiamGia = tongTien.subtract(discountAmount);
+        tongTienSauGiamGia = tongTien.subtract(discountAmount);
 
         // Hiển thị tổng tiền sau khi áp dụng giảm giá lên txtThanhToan
         txtThanhToan.setText(tongTienSauGiamGia.toString());
@@ -1512,7 +1513,7 @@ public class FormBanHang extends javax.swing.JPanel {
         // Tính số tiền thừa hoặc thiếu dựa trên hình thức thanh toán được chọn
         BigDecimal tienMat = BigDecimal.ZERO;
         BigDecimal chuyenKhoan = BigDecimal.ZERO;
-
+        BigDecimal tienThua = BigDecimal.ZERO;
         String hinhThucThanhToan = cboHTTT.getSelectedItem().toString();
         if (hinhThucThanhToan.equals("Tiền mặt")) {
             if (validateTienMat()) {
@@ -1526,8 +1527,10 @@ public class FormBanHang extends javax.swing.JPanel {
             } else {
                 return;
             }
-        } else if (hinhThucThanhToan.equals("Kết hợp cả hai")) {
-            if (validateTienMat() && validateTienCK()) {
+            tienThua = chuyenKhoan.subtract(tongTienSauGiamGia);
+        } else if (hinhThucThanhToan.equals("Kết hợp")) {
+            // Kiểm tra và lấy giá trị từ txtTienMat và txtChuyenKhoan
+            if (!txtTienMat.getText().isEmpty() && !txtTienCK.getText().isEmpty()) {
                 tienMat = new BigDecimal(txtTienMat.getText());
                 chuyenKhoan = new BigDecimal(txtTienCK.getText());
             } else {
@@ -1535,14 +1538,13 @@ public class FormBanHang extends javax.swing.JPanel {
             }
         }
 
-        BigDecimal tienThua = tienMat.add(chuyenKhoan).subtract(tongTienSauGiamGia);
+        tienThua = tienMat.add(chuyenKhoan).subtract(tongTienSauGiamGia);
         txtTienThua.setText(tienThua.toString());
 
         // Cập nhật hình thức thanh toán cho hóa đơn trong bảng tblHoaDon
         // Update hình thức thanh toán cho hóa đơn
-        int selectedRow = tblHoaDon.getSelectedRow();
         if (selectedRow >= 0) {
-//            tblHoaDon.setValueAt(voucher, selectedRow, 5);
+            tblHoaDon.setValueAt(voucher, selectedRow, 5);
             tblHoaDon.setValueAt(hinhThucThanhToan, selectedRow, 7); // Giả sử cột 7 trong bảng là cột chứa
             // hình thức thanh toán
             tblHoaDon.setValueAt(hinhThucThanhToan, selectedRow, 7);
@@ -1550,14 +1552,14 @@ public class FormBanHang extends javax.swing.JPanel {
 
         // Cập nhật hình thức thanh toán vào cơ sở dữ liệu
         if (selectedHoaDonID != null && !selectedHoaDonID.isEmpty()) {
-//            boolean updateVoucher = bhrs.updateVoucherHoaDon(selectedHoaDonID, voucher);
+            boolean updateVoucher = bhrs.updateVoucherHoaDon(selectedHoaDonID, voucher);
             boolean updated = bhrs.updateHTTTHoaDon(selectedHoaDonID, hinhThucThanhToan);
             if (!updated) {
                 JOptionPane.showMessageDialog(this, "Cập nhật hình thức thanh toán không thành công!");
                 return;
-//            }else if (!updateVoucher) {
-//                JOptionPane.showMessageDialog(this, "Cập nhật voucher không thành công!");
-//                return;
+            } else if (!updateVoucher) {
+                JOptionPane.showMessageDialog(this, "Cập nhật voucher không thành công!");
+                return;
             }
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn một hóa đơn để thanh toán.");
@@ -1589,13 +1591,15 @@ public class FormBanHang extends javax.swing.JPanel {
 
         // Kiểm tra độ dài không vượt quá 20 ký tự
         if (tienMatStr.length() > 20) {
-            JOptionPane.showMessageDialog(this, "Số tiền mặt không được vượt quá 20 ký tự.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Số tiền mặt không được vượt quá 20 ký tự.", "Lỗi",
+                    JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         // Kiểm tra xem chỉ chứa các ký tự số và không chứa ký tự "-"
         if (!tienMatStr.matches("^\\d+$")) {
-            JOptionPane.showMessageDialog(this, "Số tiền mặt phải là số và không được chứa ký tự đặc biệt.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Số tiền mặt phải là số và không được chứa ký tự đặc biệt.", "Lỗi",
+                    JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -1614,20 +1618,23 @@ public class FormBanHang extends javax.swing.JPanel {
 
         // Kiểm tra độ dài không vượt quá 20 ký tự
         if (tienCKStr.length() > 20) {
-            JOptionPane.showMessageDialog(this, "Số tiền chuyển khoản không được vượt quá 20 ký tự.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Số tiền chuyển khoản không được vượt quá 20 ký tự.", "Lỗi",
+                    JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         // Kiểm tra xem chỉ chứa các ký tự số và không chứa ký tự "-"
         if (!tienCKStr.matches("^\\d+$")) {
-            JOptionPane.showMessageDialog(this, "Số tiền chuyển khoản phải là số và không được chứa ký tự đặc biệt.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Số tiền chuyển khoản phải là số và không được chứa ký tự đặc biệt.",
+                    "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         // Chuyển đổi thành số BigDecimal để kiểm tra số không âm
         BigDecimal tienCK = new BigDecimal(tienCKStr);
         if (tienCK.compareTo(BigDecimal.ZERO) < 0) {
-            JOptionPane.showMessageDialog(this, "Số tiền chuyển khoản không được là số âm.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Số tiền chuyển khoản không được là số âm.", "Lỗi",
+                    JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -1791,20 +1798,19 @@ public class FormBanHang extends javax.swing.JPanel {
             this.showData(rowIndex);
             selectedHoaDonID = tblHoaDon.getValueAt(rowIndex, 1).toString(); // Lấy ID hóa đơn được chọn từ cột thứ hai
 
-            // // Kiểm tra trạng thái của hoá đơn
-            // String trangThai = tblHoaDon.getValueAt(rowIndex, 8).toString().trim();
-            // if (trangThai.equals("Đã thanh toán") || trangThai.equals("Đã hủy")) {
-            // // Nếu trạng thái là "Đã thanh toán" hoặc "Đã hủy", tắt đi các nút
-            // btnHuyDon.setEnabled(false);
-            // btnSuccesHoaDon.setEnabled(false);
-            // btnDeleteGH.setEnabled(false);
-            // } else {
-            // // Nếu trạng thái không phải là "Đã thanh toán" hoặc "Đã hủy", bật lại các
-            // nút
-            // btnHuyDon.setEnabled(true);
-            // btnSuccesHoaDon.setEnabled(true);
-            // btnDeleteGH.setEnabled(true);
-            // }
+            // Kiểm tra trạng thái của hoá đơn
+            String trangThai = tblHoaDon.getValueAt(rowIndex, 8).toString().trim();
+            if (trangThai.equals("Đã thanh toán") || trangThai.equals("Đã hủy")) {
+                // Nếu trạng thái là "Đã thanh toán" hoặc "Đã hủy", tắt đi các nút
+                btnHuyDon.setEnabled(false);
+                btnSuccesHoaDon.setEnabled(false);
+                btnDeleteGH.setEnabled(false);
+            } else {
+                // Nếu trạng thái không phải là "Đã thanh toán" hoặc "Đã hủy", bật lại các nút
+                btnHuyDon.setEnabled(true);
+                btnSuccesHoaDon.setEnabled(true);
+                btnDeleteGH.setEnabled(true);
+            }
             System.out.println("BẠN ĐÃ NHẤN:  " + selectedHoaDonID);
 
             // Cập nhật lại bảng tblGioHang với dữ liệu của hóa đơn đã chọn
@@ -1915,7 +1921,7 @@ public class FormBanHang extends javax.swing.JPanel {
                 txtTienMat.setText(null);
                 txtTienMat.setEnabled(false); // Tắt ô txtTienMat
                 txtTienCK.setEnabled(true);
-            } else if (selectedOption.equals("Kết hợp cả hai")) {
+            } else if (selectedOption.equals("Kết hợp")) {
                 txtTienMat.setEnabled(true);
                 txtTienCK.setEnabled(true);
             }
@@ -1958,7 +1964,7 @@ public class FormBanHang extends javax.swing.JPanel {
         }
 
         JTextField txtSoLuong = new JTextField();
-        Object[] message = {"Nhập số lượng:", txtSoLuong};
+        Object[] message = { "Nhập số lượng:", txtSoLuong };
 
         int option = JOptionPane.showConfirmDialog(this, message, "Nhập số lượng", JOptionPane.OK_CANCEL_OPTION);
         txtSoLuong.requestFocus();

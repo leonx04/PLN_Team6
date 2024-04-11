@@ -60,6 +60,7 @@ public class FormHoaDon extends javax.swing.JPanel {
     }
 
     void loadHinhThuc() {
+        dcb2.addElement("Tất cả");
         dcb2.addElement("Tiền mặt");
         dcb2.addElement("Chuyển khoản");
         dcb2.addElement("Kết hợp");
@@ -76,7 +77,7 @@ public class FormHoaDon extends javax.swing.JPanel {
         int index = 1;
         for (HoaDonModel hoaDonModel : list) {
             hoaDonModel.setStt(index++);
-            model.addRow(hoaDonModel.toData());
+            model.addRow(hoaDonModel.toData2());
         }
         if (model.getRowCount() > 0) {
             tblHoaDon.scrollRectToVisible(tblHoaDon.getCellRect(0, 0, true));
@@ -99,31 +100,7 @@ public class FormHoaDon extends javax.swing.JPanel {
         }
     }
 
-    void locHoaDon() {
-        String trangThai = null;
-        String tenHinhThuc = null;
-        if (cboHinhThuc.getItemCount() == 3 && cboTrangThaiHD.getItemCount() == 4) {
-            if (cboTrangThaiHD.getSelectedItem().equals("Tất cả")) {
-                this.fillTable(hdsr.getAll());
-            } else if (cboTrangThaiHD.getSelectedItem().equals("Đã thanh toán")) {
-                trangThai = "Đã thanh toán";
-            } else if (cboTrangThaiHD.getSelectedItem().equals("Chờ thanh toán")) {
-                trangThai = "Chờ thanh toán";
-            } else if (cboTrangThaiHD.getSelectedItem().equals("Đã hủy")) {
-                trangThai = "Đã hủy";
-            }
-            if (cboHinhThuc.getSelectedItem().equals("Kết hợp")) {
-                tenHinhThuc = "Kết hợp";
-            } else if (cboHinhThuc.getSelectedItem().equals("Tiền mặt")) {
-                tenHinhThuc = "Tiền mặt";
-            } else {
-                tenHinhThuc = cboHinhThuc.getSelectedItem().toString();
-            }
-            this.fillTable(hdsr.getAllByTrangThaiAndHinhThuc(trangThai, tenHinhThuc));
-
-        }
-
-    }
+    
 
     // Biến để lưu trữ ID của hóa đơn được chọn
     private String selectedHoaDonID;
@@ -178,17 +155,17 @@ public class FormHoaDon extends javax.swing.JPanel {
         tblHoaDon.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         tblHoaDon.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "STT", "Mã Hóa Đơn", "Ngày Tạo", "Tên Nhân Viên", "Tên Khách Hàng", "Tên Voucher", "Tổng Tiền", "Hình thức thanh toán"
+                "STT", "Mã Hóa Đơn", "Ngày Tạo", "Tên Nhân Viên", "Tên Khách Hàng", "Tên Voucher", "Tổng Tiền", "Hình thức thanh toán", "Trạng thái"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -224,6 +201,11 @@ public class FormHoaDon extends javax.swing.JPanel {
         cboHinhThuc.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cboHinhThucItemStateChanged(evt);
+            }
+        });
+        cboHinhThuc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboHinhThucActionPerformed(evt);
             }
         });
 
@@ -303,7 +285,8 @@ public class FormHoaDon extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(dateBatDau, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(2, 2, 2)))
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -482,30 +465,6 @@ public class FormHoaDon extends javax.swing.JPanel {
 
     private void btnLocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLocActionPerformed
         // TODO add your handling code here:
-        if (dateBatDau.getDateFormatString().toString().trim().isEmpty() || dateKetThuc.getDateFormatString().toString().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn đủ ngày và giờ");
-            return;
-        } else {
-            List<HoaDonModel> listHD = hdsr.findDate(dateBatDau, dateBatDau);
-            DefaultTableModel model = (DefaultTableModel) tblHoaDon.getModel();
-            model.setRowCount(0);
-            int stt = 1;
-            for (HoaDonModel hoaDonModel : listHD) {
-                String trangThai = "";
-                String trangThaiValue = hoaDonModel.getTrangThai();
-                if (trangThaiValue == "Đã thanh toán") {
-                    trangThai = "Đã thanh toán";
-                } else if (trangThaiValue == "Chờ thanh toán") {
-                    trangThai = "Chờ thanh toán";
-                } else if (trangThaiValue == "Đã hủy") {
-                    trangThai = "Đã hủy";
-                }
-            }
-            for (HoaDonModel hdModel : listHD) {
-                hdModel.setStt(index++);
-                model.addRow(hdModel.toData());
-            }
-        }
     }//GEN-LAST:event_btnLocActionPerformed
 
     private void txtTimKiemHDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTimKiemHDActionPerformed
@@ -551,12 +510,10 @@ public class FormHoaDon extends javax.swing.JPanel {
 
     private void cboHinhThucItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboHinhThucItemStateChanged
         // TODO add your handling code here:
-        locHoaDon();
     }//GEN-LAST:event_cboHinhThucItemStateChanged
 
     private void cboTrangThaiHDItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboTrangThaiHDItemStateChanged
         // TODO add your handling code here:
-        locHoaDon();
     }//GEN-LAST:event_cboTrangThaiHDItemStateChanged
 
     private void tblHoaDonChiTietMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHoaDonChiTietMouseClicked
@@ -579,6 +536,23 @@ public class FormHoaDon extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Trạng thái không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_cboTrangThaiHDActionPerformed
+
+    private void cboHinhThucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboHinhThucActionPerformed
+        // TODO add your handling code here:
+        String selecdHinhThuc = (String) cboHinhThuc.getSelectedItem();
+        
+        if ("Tất cả".equals(selecdHinhThuc)) {
+            fillTable(hdsr.getAll()); 
+        } else if ("Tiền mặt".equals(selecdHinhThuc)) {
+            fillTable(hdsr.getHDTienMat());
+        } else if ("Chuyển khoản".equals(selecdHinhThuc)) {
+            fillTable(hdsr.getHDTienChuyenKhoan());
+        } else if ("Kết hợp".equals(selecdHinhThuc)) {
+            fillTable(hdsr.getHDKetHop());
+        } else {
+            JOptionPane.showMessageDialog(this, "Hình thức không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_cboHinhThucActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

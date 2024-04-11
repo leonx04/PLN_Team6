@@ -417,7 +417,9 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
 
             // Kiểm tra số lượng tồn là số nguyên dương lớn hơn 0 và không vượt quá 999
             if (soLuongTon <= 0 || soLuongTon > 999) {
-                JOptionPane.showMessageDialog(null, "Số lượng tồn phải là số nguyên dương lớn hơn 0 và không vượt quá 999", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null,
+                        "Số lượng tồn phải là số nguyên dương lớn hơn 0 và không vượt quá 999", "Lỗi",
+                        JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         } catch (NumberFormatException e) {
@@ -430,14 +432,16 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
 
             // Kiểm tra giá bán không âm và lớn hơn 1000
             if (giaBan.compareTo(BigDecimal.valueOf(1000)) < 0) {
-                JOptionPane.showMessageDialog(null, "Giá bán phải lớn hơn hoặc bằng 1000", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Giá bán phải lớn hơn hoặc bằng 1000", "Lỗi",
+                        JOptionPane.ERROR_MESSAGE);
                 return false;
             }
 
             // Kiểm tra giá bán không vượt quá giới hạn
             BigDecimal maxGiaBan = new BigDecimal("9999999999999999999");
             if (giaBan.compareTo(maxGiaBan) > 0) {
-                JOptionPane.showMessageDialog(null, "Giá bán không được vượt quá " + maxGiaBan.toString(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Giá bán không được vượt quá " + maxGiaBan.toString(), "Lỗi",
+                        JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         } catch (NumberFormatException e) {
@@ -447,29 +451,16 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
 
         // Kiểm tra mô tả không vượt quá 255 ký tự
         if (moTa.length() > 255) {
-            JOptionPane.showMessageDialog(null, "Mô tả không được vượt quá 255 ký tự", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Mô tả không được vượt quá 255 ký tự", "Lỗi",
+                    JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         return true;
     }
+    
+    
 
-//    private boolean checkDuplicateCTSP(ChiTietSanPhamModel newChiTiet) {
-//    List<ChiTietSanPhamModel> existingChiTiets = ctsprp.getAllCTSP(); // Lấy danh sách tất cả sản phẩm chi tiết
-//    
-//    for (ChiTietSanPhamModel existingChiTiet : existingChiTiets) {
-//        // Kiểm tra từng thuộc tính của sản phẩm chi tiết đã tồn tại
-//        if (existingChiTiet.getID_SanPham().equals(newChiTiet.getID_SanPham())
-//            && existingChiTiet.getID_MauSac().equals(newChiTiet.getID_MauSac())
-//            && existingChiTiet.getID_Size().equals(newChiTiet.getID_Size())
-//            && existingChiTiet.getID_ChatLieu().equals(newChiTiet.getID_ChatLieu())
-//            && existingChiTiet.getID_ThuongHieu().equals(newChiTiet.getID_ThuongHieu())) {
-//            return true; // Nếu tất cả các thuộc tính đều trùng, trả về true
-//        }
-//    }
-//    
-//    return false; // Không có sản phẩm chi tiết nào trùng
-//}
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
@@ -1172,35 +1163,28 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
     }// GEN-LAST:event_cboChatLieuActionPerformed
 
     private void btnAddCTSPActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnAddCTSPActionPerformed
-        // Kiểm tra tính hợp lệ của dữ liệu nhập vào
         if (!validatef()) {
             return;
         }
-        if (ctsprp.checkTrungIdCTSP(txtMaCTSP.getText().trim())) {
+
+        ChiTietSanPhamModel chiTietSanPham = readForm();
+
+        if (ctsprp.checkTrungIdCTSP(chiTietSanPham.getID())) {
             JOptionPane.showMessageDialog(this, "Mã sản phẩm chi tiết đã tồn tại!");
-            txtMaCTSP.requestFocus();
             return;
         }
 
-        // Đọc thông tin từ form và tạo đối tượng ChiTietSanPhamModel
-        ChiTietSanPhamModel chiTietSanPham = readForm();
-
-        // Tạo mới mã sản phẩm chi tiết
         String newID = ctsprp.getNewSPCTID();
         chiTietSanPham.setID(newID);
 
-        // Thực hiện thêm mới vào cơ sở dữ liệu
         int result = ctsprp.insert(chiTietSanPham);
 
         if (result > 0) {
-            // Nếu kết quả trả về > 0 (insert thành công)
             JOptionPane.showMessageDialog(this, "Thêm thành công");
-
             fillTable(ctsprp.getAllCTSP());
-            clear(); // Xóa các trường nhập liệu trên form
+            clear();
             refreshData();
         } else {
-            // Nếu kết quả trả về <= 0 (insert thất bại)
             JOptionPane.showMessageDialog(this, "Thêm thất bại");
         }
     }// GEN-LAST:event_btnAddCTSPActionPerformed
@@ -1212,9 +1196,12 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn một sản phẩm để cập nhật.");
             return;
         }
+
+        // Kiểm tra tính hợp lệ của dữ liệu nhập vào
         if (!validatef()) {
             return;
         }
+
         // Xác nhận cập nhật
         int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn cập nhật sản phẩm này?", "Xác nhận",
                 JOptionPane.YES_NO_OPTION);
@@ -1222,12 +1209,17 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
             return; // Nếu không được xác nhận, thoát khỏi phương thức
         }
 
-        ChiTietSanPhamModel md = this.readForm();
-        this.ctsprp.update(md);
-        this.fillTable(ctsprp.getAllCTSP());
+        // Đọc thông tin từ form và tạo đối tượng ChiTietSanPhamModel
+        ChiTietSanPhamModel chiTietSanPham = readForm();
+
+        // Thực hiện cập nhật vào cơ sở dữ liệu
+        ctsprp.update(chiTietSanPham);
+
+        // Hiển thị thông báo cập nhật thành công
         JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+        fillTable(ctsprp.getAllCTSP());
+        clear();
         refreshData();
-        this.clear();
     }// GEN-LAST:event_btnUpdateCTSPActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnResetActionPerformed

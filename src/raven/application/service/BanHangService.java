@@ -1015,15 +1015,17 @@ public class BanHangService {
         return isSuccess;
     }
 
-    public boolean updateVoucherHoaDon(String hoaDonID, String IDVoucher) {
-        sql = "UPDATE HOADON SET ID_Voucher = ?' WHERE ID = ?;";
+    public boolean updateVoucherHoaDon(String hoaDonID, String tenVoucher) {
+        sql = "UPDATE HOADON\n"
+                + "SET ID_Voucher = ( SELECT ID FROM VOUCHER WHERE TenVoucher = ?)\n"
+                + "WHERE HOADON.ID = ?;";
         boolean isSuccess = false; // Biến để xác định việc cập nhật thành công hay không
         try {
             // Kết nối cơ sở dữ liệu và thực hiện cập nhật
             con = DBConnect.getConnection();
 
             ps = con.prepareStatement(sql);
-            ps.setString(1, IDVoucher);
+            ps.setString(1, tenVoucher);
             ps.setString(2, hoaDonID);
 
             int rowsUpdated = ps.executeUpdate();
