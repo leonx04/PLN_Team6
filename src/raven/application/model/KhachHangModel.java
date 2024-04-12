@@ -11,9 +11,10 @@ import java.util.Date;
  * @author OS
  */
 public class KhachHangModel {
+
     private String ma, ten, sodt, diachi, email;
-    private Date ngaysinh;
-    private boolean gioitinh;
+    private String gioitinh ;
+    private int stt;
 
     public KhachHangModel() {
     }
@@ -22,26 +23,42 @@ public class KhachHangModel {
         this.ten = tenKH;
     }
 
-    public KhachHangModel(String ma, String ten, String sodt, String diachi, String email, Date ngaysinh, boolean gioitinh) {
+    public KhachHangModel(String ma, String ten, String sodt, String diachi, String email, String gioitinh) {
         this.ma = ma;
         this.ten = ten;
         this.sodt = sodt;
         this.diachi = diachi;
         this.email = email;
-        this.ngaysinh = ngaysinh;
         this.gioitinh = gioitinh;
     }
 
-    public KhachHangModel(String ten, String sodt, String diachi, String email, Date ngaysinh, boolean gioitinh) {
+    public KhachHangModel(String ten, String sodt, String diachi, String email, Date ngaysinh, String gioitinh) {
         this.ten = ten;
         this.sodt = sodt;
         this.diachi = diachi;
         this.email = email;
-        this.ngaysinh = ngaysinh;
         this.gioitinh = gioitinh;
     }
-    
-    
+
+    public Object[] toData() {
+        return new Object[]{
+            this.stt,
+            this.ma,
+            this.ten,
+            this.sodt,
+            this.diachi,
+            this.email,
+            this.gioitinh
+        };
+    }
+
+    public int getStt() {
+        return stt;
+    }
+
+    public void setStt(int stt) {
+        this.stt = stt;
+    }
 
     public String getMa() {
         return ma;
@@ -83,21 +100,23 @@ public class KhachHangModel {
         this.email = email;
     }
 
-    public Date getNgaysinh() {
-        return ngaysinh;
-    }
-
-    public void setNgaysinh(Date ngaysinh) {
-        this.ngaysinh = ngaysinh;
-    }
-
-    public boolean isGioitinh() {
+    public String getGioitinh() {
         return gioitinh;
     }
 
-    public void setGioitinh(boolean gioitinh) {
+    public void setGioitinh(String gioitinh) {
         this.gioitinh = gioitinh;
     }
 
+    private static KhachHangModel selectedKhachHang;
+    // Các thuộc tính và phương thức khác
     
+    public static KhachHangModel getSelectedKhachHang() {
+        return selectedKhachHang;
+    }
+
+    public static void setSelectedKhachHang(KhachHangModel kh) {
+        selectedKhachHang = kh;
+    }
+
 }

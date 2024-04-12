@@ -120,19 +120,41 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
     }
 
     private boolean checkForm() {
-        if (txtTenTT.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên thuộc tính !", "Cảnh báo",
+        String tenTT = txtTenTT.getText().trim();
+        String moTaTT = txtMoTaTT.getText().trim();
+
+        // Kiểm tra tên thuộc tính không được rỗng
+        if (tenTT.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên thuộc tính!", "Cảnh báo",
                     JOptionPane.WARNING_MESSAGE);
             txtTenTT.requestFocus();
             return false;
         }
 
-        if (txtMoTaTT.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập mô tả thuộc tính !", "Cảnh báo",
+        // Kiểm tra độ dài tối đa của tên thuộc tính là 100 ký tự
+        if (tenTT.length() > 100) {
+            JOptionPane.showMessageDialog(this, "Tên thuộc tính không được vượt quá 100 ký tự!", "Cảnh báo",
+                    JOptionPane.WARNING_MESSAGE);
+            txtTenTT.requestFocus();
+            return false;
+        }
+
+        // Kiểm tra mô tả thuộc tính không được rỗng
+        if (moTaTT.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mô tả thuộc tính!", "Cảnh báo",
                     JOptionPane.WARNING_MESSAGE);
             txtMoTaTT.requestFocus();
             return false;
         }
+
+        // Kiểm tra độ dài tối đa của mô tả thuộc tính là 255 ký tự
+        if (moTaTT.length() > 255) {
+            JOptionPane.showMessageDialog(this, "Mô tả thuộc tính không được vượt quá 255 ký tự!", "Cảnh báo",
+                    JOptionPane.WARNING_MESSAGE);
+            txtMoTaTT.requestFocus();
+            return false;
+        }
+
         return true;
     }
 
@@ -229,7 +251,7 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
 
         buttonGroup1.add(rdoKichCo);
         rdoKichCo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        rdoKichCo.setText("Kích thước");
+        rdoKichCo.setText("Size");
         rdoKichCo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rdoKichCoActionPerformed(evt);
@@ -277,7 +299,7 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(rdoMauSac)
                             .addComponent(rdoKichCo))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(rdoThuongHieu)
                             .addComponent(rdoChatLieu))
@@ -530,6 +552,11 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
                 txtMaTT.requestFocus();
                 return;
             }
+            if (msrs.checkTrungTen(txtTenTT.getText().trim())) {
+                JOptionPane.showMessageDialog(this, "Tên thuộc tính đã tồn tại!");
+                txtTenTT.requestFocus();
+                return;
+            }
             if (msrs.insert(msmd) > 0) {
                 JOptionPane.showMessageDialog(this, "Thêm màu sắc thành công !");
                 fillMS();
@@ -548,6 +575,11 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
             if (clrs.checkTrungID(txtMaTT.getText().trim())) {
                 JOptionPane.showMessageDialog(this, "Mã thuộc tính đã tồn tại!");
                 txtMaTT.requestFocus();
+                return;
+            }
+            if (clrs.checkTrungTen(txtTenTT.getText().trim())) {
+                JOptionPane.showMessageDialog(this, "Tên thuộc tính đã tồn tại!");
+                txtTenTT.requestFocus();
                 return;
             }
             if (clrs.insert(clmd) > 0) {
@@ -570,6 +602,11 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
                 txtMaTT.requestFocus();
                 return;
             }
+            if (kcrs.checkTrungTen(txtTenTT.getText().trim())) {
+                JOptionPane.showMessageDialog(this, "Tên thuộc tính đã tồn tại!");
+                txtTenTT.requestFocus();
+                return;
+            }
             if (kcrs.insert(kcmd) > 0) {
                 JOptionPane.showMessageDialog(this, "Thêm kích cỡ thành công !");
                 fillKC();
@@ -588,6 +625,11 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
             if (thrs.checkTrungID(txtMaTT.getText().trim())) {
                 JOptionPane.showMessageDialog(this, "Mã thuộc tính đã tồn tại!");
                 txtMaTT.requestFocus();
+                return;
+            }
+            if (thrs.checkTrungTen(txtTenTT.getText().trim())) {
+                JOptionPane.showMessageDialog(this, "Tên thuộc tính đã tồn tại!");
+                txtTenTT.requestFocus();
                 return;
             }
             if (thrs.insert(thmd) > 0) {

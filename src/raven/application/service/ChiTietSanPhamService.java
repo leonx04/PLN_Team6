@@ -27,16 +27,13 @@ public class ChiTietSanPhamService {
     String sql = null;
 
     public List<ChiTietSanPhamModel> getAllCTSP() {
-        sql = " SELECT        SANPHAMCHITIET.ID, SANPHAM.TenSanPham, MAUSAC.TenMau AS MauSac, SIZE.Ten AS Size, CHATLIEU.Ten AS ChatLieu, THUONGHIEU.Ten AS ThuongHieu, SANPHAMCHITIET_1.GiaBan, SANPHAMCHITIET_1.SoLuongTon, \n"
-                + "                         SANPHAMCHITIET_1.MoTa\n"
-                + "FROM            SANPHAMCHITIET INNER JOIN\n"
-                + "                         SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID INNER JOIN\n"
-                + "                         MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID INNER JOIN\n"
-                + "                         SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID INNER JOIN\n"
-                + "                         CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID INNER JOIN\n"
-                + "                         THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID INNER JOIN\n"
-                + "                         SANPHAMCHITIET AS SANPHAMCHITIET_1 ON SANPHAM.ID = SANPHAMCHITIET_1.ID_SanPham AND MAUSAC.ID = SANPHAMCHITIET_1.ID_MauSac AND SIZE.ID = SANPHAMCHITIET_1.ID_Size AND \n"
-                + "                         CHATLIEU.ID = SANPHAMCHITIET_1.ID_ChatLieu AND THUONGHIEU.ID = SANPHAMCHITIET_1.ID_ThuongHieu ";
+        String sql = "SELECT SANPHAMCHITIET.ID, SANPHAM.TenSanPham, MAUSAC.TenMau, SIZE.Ten, CHATLIEU.Ten, THUONGHIEU.Ten, SANPHAMCHITIET.SoLuongTon, SANPHAMCHITIET.GiaBan, SANPHAMCHITIET.MoTa "
+                + "FROM SANPHAMCHITIET "
+                + "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID "
+                + "INNER JOIN MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID "
+                + "INNER JOIN SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID "
+                + "INNER JOIN CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID "
+                + "INNER JOIN THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID";
 
         List<ChiTietSanPhamModel> listCTSP = new ArrayList<>();
         try {
@@ -51,8 +48,8 @@ public class ChiTietSanPhamService {
                         new KichCoModel(rs.getString(4)), // Size
                         new ChatLieuModel(rs.getString(5)), // ChatLieu
                         new ThuongHieuModel(rs.getString(6)), // ThuongHieu
-                        rs.getBigDecimal(7), // GiaBan
-                        rs.getInt(8), // SoLuongTon
+                        rs.getBigDecimal(8), // GiaBan
+                        rs.getInt(7), // SoLuongTon
                         rs.getString(9)); // MoTa
                 listCTSP.add(ctsp);
             }
@@ -66,29 +63,27 @@ public class ChiTietSanPhamService {
     }
 
     public List<ChiTietSanPhamModel> getAllCTSPSoluong0() {
-        String sql = "SELECT " +
-                "SANPHAMCHITIET.ID, " +
-                "SANPHAM.TenSanPham, " +
-                "MAUSAC.TenMau AS MauSac, " +
-                "SIZE.Ten AS Size, " +
-                "CHATLIEU.Ten AS ChatLieu, " +
-                "THUONGHIEU.Ten AS ThuongHieu, " +
-                "SANPHAMCHITIET.GiaBan, " +
-                "SANPHAMCHITIET.SoLuongTon, " +
-                "SANPHAMCHITIET.MoTa " +
-                "FROM " +
-                "SANPHAMCHITIET " +
-                "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID " +
-                "INNER JOIN MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID " +
-                "INNER JOIN SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID " +
-                "INNER JOIN CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID " +
-                "INNER JOIN THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID " +
-                "WHERE SANPHAMCHITIET.SoLuongTon = 0"; // Chỉ lấy các sản phẩm chi tiết có số lượng tồn bằng 0
+        String sql = "SELECT "
+                + "SANPHAMCHITIET.ID, "
+                + "SANPHAM.TenSanPham, "
+                + "MAUSAC.TenMau AS MauSac, "
+                + "SIZE.Ten AS Size, "
+                + "CHATLIEU.Ten AS ChatLieu, "
+                + "THUONGHIEU.Ten AS ThuongHieu, "
+                + "SANPHAMCHITIET.GiaBan, "
+                + "SANPHAMCHITIET.SoLuongTon, "
+                + "SANPHAMCHITIET.MoTa "
+                + "FROM "
+                + "SANPHAMCHITIET "
+                + "INNER JOIN SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID "
+                + "INNER JOIN MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID "
+                + "INNER JOIN SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID "
+                + "INNER JOIN CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID "
+                + "INNER JOIN THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID "
+                + "WHERE SANPHAMCHITIET.SoLuongTon = 0"; // Chỉ lấy các sản phẩm chi tiết có số lượng tồn bằng 0
 
         List<ChiTietSanPhamModel> listCTSP = new ArrayList<>();
-        try (Connection con = DBConnect.getConnection();
-                PreparedStatement ps = con.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 int soLuongTon = rs.getInt("SoLuongTon");
@@ -411,6 +406,129 @@ public class ChiTietSanPhamService {
         }
     }
 
+    public boolean checkTrungId(String id) {
+        sql = "SELECT COUNT(*) AS count FROM SANPHAMCHITIET WHERE ID = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean checkTrungIdCTSP(String maSPM) {
+        String sql = "SELECT ID FROM SANPHAMCHITIET WHERE ID = ?";
+
+        try {
+            Connection con = DBConnect.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, maSPM);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                // Nếu có kết quả trả về => Mã SP đã tồn tại
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Không tìm thấy mã SP trùng
+        return false;
+    }
+
+    public boolean checkTrungTenSanPham(String tenSanPham) {
+        String sql = "SELECT COUNT(*) AS count FROM SANPHAM WHERE TenSanPham = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, tenSanPham);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean checkTrungMauSac(String tenMauSac) {
+        String sql = "SELECT COUNT(*) AS count FROM MAUSAC WHERE TenMau = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, tenMauSac);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean checkTrungChatLieu(String tenChatLieu) {
+        String sql = "SELECT COUNT(*) AS count FROM CHATLIEU WHERE Ten = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, tenChatLieu);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean checkTrungKichCo(String tenKichCo) {
+        String sql = "SELECT COUNT(*) AS count FROM SIZE WHERE Ten = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, tenKichCo);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean checkTrungThuongHieu(String tenThuongHieu) {
+        String sql = "SELECT COUNT(*) AS count FROM THUONGHIEU WHERE Ten = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, tenThuongHieu);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public int update(ChiTietSanPhamModel ctsp) {
         sql = "UPDATE SANPHAMCHITIET SET ID_SanPham=?, ID_MauSac=?, ID_Size=?, ID_ChatLieu=?, ID_ThuongHieu=?, GiaBan=?, SoLuongTon=?, MoTa=?, NgaySua = CURRENT_TIMESTAMP WHERE ID=?";
 
@@ -446,36 +564,20 @@ public class ChiTietSanPhamService {
         }
     }
 
-    public boolean checkTrungId(String id) {
-        sql = "SELECT COUNT(*) AS count FROM SANPHAMCHITIET WHERE ID = ?";
+    public boolean checkTonTaiHDCT(String idSPCT) {
+        sql = "SELECT COUNT(*) FROM HOADONCHITIET WHERE ID_SanPhamChiTiet = ?";
         try {
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
-            ps.setString(1, id);
+            ps.setString(1, idSPCT);
             rs = ps.executeQuery();
             if (rs.next()) {
-                int count = rs.getInt("count");
+                int count = rs.getInt(1);
                 return count > 0;
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            // Đóng các tài nguyên
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
         }
         return false;
     }
-
 }

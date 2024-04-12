@@ -25,7 +25,49 @@ public class SanPhamService {
     String sql = null;
 
     public List<SanPhamModel> getAllSP() {
-        sql = "SELECT ID, TenSanPham, MoTa FROM SANPHAM";
+        sql = "SELECT ID, TenSanPham, MoTa FROM SANPHAM ORDER BY NgayTao DESC";
+        List<SanPhamModel> listSP = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                SanPhamModel sp = new SanPhamModel(
+                        rs.getString(1),
+                        rs.getString(2),
+                        rs.getString(3));
+                listSP.add(sp);
+            }
+            return listSP;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<SanPhamModel> getAllSPDangKinhDoanh() {
+        sql = "SELECT ID, TenSanPham, MoTa FROM SANPHAM WHERE TrangThai = N'Đang kinh doanh'";
+        List<SanPhamModel> listSP = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                SanPhamModel sp = new SanPhamModel(
+                        rs.getString(1),
+                        rs.getString(2),
+                        rs.getString(3));
+                listSP.add(sp);
+            }
+            return listSP;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<SanPhamModel> getAllSPNgungKinhDoanh() {
+        sql = "SELECT ID, TenSanPham, MoTa FROM SANPHAM WHERE TrangThai = N'Ngừng kinh doanh'";
         List<SanPhamModel> listSP = new ArrayList<>();
         try {
             con = DBConnect.getConnection();
@@ -194,13 +236,29 @@ public class SanPhamService {
     }
 
     public int update(SanPhamModel sp, String ma) {
-        sql = "UPDATE SANPHAM SET TenSanPham = ?, MoTa = ? , NgaySua  = CURRENT_TIMESTAMP WHERE ID = ? ;";
+        sql = "UPDATE SANPHAM SET TenSanPham = ?, MoTa = ? ,TrangThai = ?, NgaySua  = CURRENT_TIMESTAMP WHERE ID = ? ;";
         try {
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
-            ps.setObject(3, ma);
+            ps.setObject(4, ma);
             ps.setObject(1, sp.getTenSP());
             ps.setObject(2, sp.getMoTa());
+            ps.setObject(3, "Đang kinh doanh");
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int updateTrangThai(SanPhamModel sp, String ma) {
+        sql = "UPDATE SANPHAM SET TrangThai = ?, NgaySua  = CURRENT_TIMESTAMP WHERE ID = ? ;";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setObject(2, ma);
+            ps.setObject(1, "Ngừng kinh doanh");
             return ps.executeUpdate();
         } catch (Exception e) {
             // TODO: handle exception
@@ -221,5 +279,56 @@ public class SanPhamService {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    public boolean checkTrungMa(String maSP) {
+        sql = "SELECT COUNT(*) AS count FROM SANPHAM WHERE ID = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, maSP);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                return count > 0; // Trả về true nếu tên sản phẩm đã tồn tại trong cơ sở dữ liệu
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false; // Trả về false nếu có lỗi xảy ra hoặc tên sản phẩm không tồn tại
+    }
+
+    public boolean checkTrungTen(String tenSP) {
+        sql = "SELECT COUNT(*) AS count FROM SANPHAM WHERE TenSanPham = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, tenSP);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                return count > 0; // Trả về true nếu tên sản phẩm đã tồn tại trong cơ sở dữ liệu
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false; // Trả về false nếu có lỗi xảy ra hoặc tên sản phẩm không tồn tại
+    }
+
+    public boolean checkTonTaiSPCT(String idSanPham) {
+        sql = "SELECT COUNT(*) FROM SANPHAMCHITIET WHERE ID_SanPham = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, idSanPham);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

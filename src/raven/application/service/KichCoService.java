@@ -63,6 +63,24 @@ public class KichCoService {
         return false; // Trả về false nếu có lỗi xảy ra
     }
 
+    public boolean checkTrungTen(String tenKC) {
+        sql = "SELECT COUNT(*) AS count FROM SIZE WHERE Ten = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, tenKC);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                // Nếu count > 0, tức là tên đã tồn tại
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false; // Trả về false nếu có lỗi xảy ra
+    }
+
     public List<KichCoModel> getIDByTenKC(String tenKC) {
         sql = "SELECT ID, Ten, MoTa FROM SIZE WHERE Ten = ?";
         List<KichCoModel> listKC = new ArrayList<>();

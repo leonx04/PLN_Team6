@@ -19,6 +19,7 @@ import raven.connect.DBConnect;
  * @author dungn
  */
 public class ThuongHieuService {
+
     Connection con = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -46,10 +47,26 @@ public class ThuongHieuService {
             return null;
         }
     }
-    
-    
-    
-     public boolean checkTrungID(String id) {
+
+    public boolean checkTrungTen(String tenTH) {
+        sql = "SELECT COUNT(*) AS count FROM THUONGHIEU WHERE Ten = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, tenTH);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                // Nếu count > 0, tức là tên đã tồn tại
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false; // Trả về false nếu có lỗi xảy ra
+    }
+
+    public boolean checkTrungID(String id) {
         sql = "SELECT COUNT(*) AS count FROM THUONGHIEU WHERE ID = ?";
         try {
             con = DBConnect.getConnection();
