@@ -25,16 +25,16 @@ public class Menu extends JPanel {
 
     // Mảng menuItems chứa các mục trong menu
     private final String menuItems[][] = {
-        {"~Main~"},
+        {"~Chức năng chính~"},
         {"Bán hàng"},
-        {"~Chức năng~"},
-        {"Product", "Sản phẩm", "Sản phẩm chi tiết", "Thuộc tính sản phẩm"},
-        {"Bill"},
+        {"~Chức năng khác~"},
+        {"Sản phẩm", "Sản phẩm", "Sản phẩm chi tiết", "Thuộc tính sản phẩm"},
+        {"Hóa đơn"},
         {"Voucher"},
-        {"Staff"},
+        {"Nhân viên"},
         {"Khách hàng"},
-        {"Logout"},
-        {"Exit"}
+        {"Đăng xuất"},
+        {"Thoát"}
     };
 
     // Getter cho trạng thái menuFull

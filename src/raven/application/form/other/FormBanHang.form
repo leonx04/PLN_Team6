@@ -694,7 +694,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="35" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Component id="txtTienCK" min="-2" pref="215" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
@@ -812,7 +812,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="14" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="T&#xf4;&#x309;ng ti&#xea;&#x300;n"/>
+                <Property name="text" type="java.lang.String" value="T&#xf4;&#x309;ng ti&#xea;&#x300;n(VN&#x110;)"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel12">
@@ -839,7 +839,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="14" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Thanh toa&#x301;n"/>
+                <Property name="text" type="java.lang.String" value="Thanh toa&#x301;n(VN&#x110;)"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtThanhToan">
@@ -869,7 +869,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="14" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Ti&#xea;&#x300;n m&#x103;&#x323;t"/>
+                <Property name="text" type="java.lang.String" value="Ti&#xea;&#x300;n m&#x103;&#x323;t(VN&#x110;)"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtTienMat">
@@ -891,7 +891,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="14" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Ti&#xea;&#x300;n chuy&#xea;&#x309;n khoa&#x309;n"/>
+                <Property name="text" type="java.lang.String" value="Ti&#xea;&#x300;n chuy&#xea;&#x309;n khoa&#x309;n(VN&#x110;)"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtTienThua">
@@ -910,7 +910,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="14" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Ti&#xea;&#x300;n th&#x1b0;&#x300;a"/>
+                <Property name="text" type="java.lang.String" value="Ti&#xea;&#x300;n th&#x1b0;&#x300;a(VN&#x110;)"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btnSuccesHoaDon">

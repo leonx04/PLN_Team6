@@ -221,4 +221,111 @@ public class KhachHangService {
         return null;
     }
 
+    public int delete(String id) {
+        sql = "DELETE FROM KHACHHANG WHERE ID = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, id);
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public List<KhachHangModel> searchByName(String name) {
+        sql = "SELECT ID, HoTen, SoDienThoai, DiaChi, Email, GioiTinh FROM KHACHHANG WHERE HoTen LIKE ?";
+        List<KhachHangModel> listKH = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, "%" + name + "%");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                KhachHangModel kh = new KhachHangModel(
+                        rs.getString(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6)
+                );
+                listKH.add(kh);
+            }
+            return listKH;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<KhachHangModel> searchByGender(String gender) {
+        sql = "SELECT ID, HoTen, SoDienThoai, DiaChi, Email, GioiTinh FROM KHACHHANG WHERE GioiTinh = ?";
+        List<KhachHangModel> listKH = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, gender);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                KhachHangModel kh = new KhachHangModel(
+                        rs.getString(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6)
+                );
+                listKH.add(kh);
+            }
+            return listKH;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<KhachHangModel> searchBySDT(String sdt) {
+        sql = "SELECT ID, HoTen, SoDienThoai, DiaChi, Email, GioiTinh FROM KHACHHANG WHERE SoDienThoai LIKE ?";
+        List<KhachHangModel> listKH = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, "%" + sdt + "%");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                KhachHangModel kh = new KhachHangModel(
+                        rs.getString(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6)
+                );
+                listKH.add(kh);
+            }
+            return listKH;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean checkExistInHoaDon(String id) {
+        sql = "SELECT COUNT(*) AS count FROM HOADON WHERE ID_KhachHang = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                return count > 0; // Trả về true nếu khách hàng tồn tại trong bảng HOADON
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false; // Mặc định trả về false nếu có lỗi xảy ra
+    }
 }

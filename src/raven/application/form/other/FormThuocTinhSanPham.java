@@ -251,7 +251,7 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
 
         buttonGroup1.add(rdoKichCo);
         rdoKichCo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        rdoKichCo.setText("Kích thước");
+        rdoKichCo.setText("Size");
         rdoKichCo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rdoKichCoActionPerformed(evt);
@@ -299,7 +299,7 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(rdoMauSac)
                             .addComponent(rdoKichCo))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(rdoThuongHieu)
                             .addComponent(rdoChatLieu))

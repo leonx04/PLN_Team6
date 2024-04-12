@@ -134,7 +134,6 @@ public class BanHangService {
 //            return null;
 //        }
 //    }
-
     public List<HoaDonModel> getHoaDonChoThanhToan() {
         String sql
                 = "SELECT HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang,\n"

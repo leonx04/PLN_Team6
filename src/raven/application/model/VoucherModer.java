@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
  * @author admin
  */
 public class VoucherModer {
+
     public String ID;
     public String tenVoucher;
     public Integer soLuong;
@@ -27,18 +28,40 @@ public class VoucherModer {
     public VoucherModer() {
     }
 
-    
     public VoucherModer(String tenVoucher) {
         this.tenVoucher = tenVoucher;
     }
-    
 
     public VoucherModer(BigDecimal mucGiamGia) {
         this.mucGiamGia = mucGiamGia;
     }
-    
 
     public VoucherModer(String ID, String tenVoucher, int soLuong, String loaiVoucher, BigDecimal mucGiamGia, String moTa, Date ngayBatDau, Date ngayKetThuc) {
+        this.ID = ID;
+        this.tenVoucher = tenVoucher;
+        this.soLuong = soLuong;
+        this.loaiVoucher = loaiVoucher;
+        this.mucGiamGia = mucGiamGia;
+        this.moTa = moTa;
+        this.ngayBatDau = ngayBatDau;
+        this.ngayKetThuc = ngayKetThuc;
+    }
+
+    public VoucherModer(String ID, String tenVoucher, Integer soLuong, String loaiVoucher, BigDecimal mucGiamGia, String moTa, Date ngayBatDau, Date ngayKetThuc, String trangThai) {
+        this.ID = ID;
+        this.tenVoucher = tenVoucher;
+        this.soLuong = soLuong;
+        this.loaiVoucher = loaiVoucher;
+        this.mucGiamGia = mucGiamGia;
+        this.moTa = moTa;
+        this.ngayBatDau = ngayBatDau;
+        this.ngayKetThuc = ngayKetThuc;
+        this.trangThai = trangThai;
+    }
+    
+    
+
+    public VoucherModer(String ID, String tenVoucher, Integer soLuong, String loaiVoucher, BigDecimal mucGiamGia, String moTa, Date ngayBatDau, Date ngayKetThuc) {
         this.ID = ID;
         this.tenVoucher = tenVoucher;
         this.soLuong = soLuong;
@@ -129,9 +152,7 @@ public class VoucherModer {
         this.STT = STT;
     }
 
-
-
-    public Object[] toData(){
+    public Object[] toData() {
         return new Object[]{
             this.STT,
             this.ID,
@@ -139,7 +160,10 @@ public class VoucherModer {
             this.soLuong,
             this.loaiVoucher,
             this.mucGiamGia,
-            this.moTa
+            this.moTa,
+            this.ngayBatDau,
+            this.ngayKetThuc,
+            this.trangThai
         };
     }
 }

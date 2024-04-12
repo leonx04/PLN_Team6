@@ -555,7 +555,7 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
         txtMaCTSP.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel3.setText("Giá bán");
+        jLabel3.setText("Giá bán(VNĐ)");
 
         txtSoLuong.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
