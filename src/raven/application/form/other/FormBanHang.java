@@ -273,7 +273,7 @@ public class FormBanHang extends javax.swing.JPanel {
     private void cleanForm() {
         txtMaHD.setText(null);
         // txtMaKH.setText(null);
-        txtTenKH.setText("Khách bán lẻ");
+        txtTenKH.setText(null);
         txtTongTien.setText(null);
         txtThanhToan.setText(null);
         txtTienMat.setText(null);
@@ -431,16 +431,6 @@ public class FormBanHang extends javax.swing.JPanel {
             // Thêm bảng vào tài liệu PDF
             document.add(table);
 
-            // Tạo đối tượng Chunk với ký tự gạch ngang và kích thước phù hợp
-            Chunk lineChunk = new Chunk("__________________________________________________");
-
-            // Tạo đối tượng Paragraph chứa Chunk này
-            Paragraph line = new Paragraph(lineChunk);
-            line.setAlignment(Element.ALIGN_CENTER); // Căn giữa dòng line
-
-            // Thêm dòng line vào tài liệu PDF
-            document.add(line);
-
             // Thêm tiêu đề cho bảng chi tiết sản phẩm
             Paragraph productTitle = new Paragraph("CHI TIẾT ĐƠN HÀNG", normalFont);
             productTitle.setAlignment(Element.ALIGN_CENTER);
@@ -467,24 +457,16 @@ public class FormBanHang extends javax.swing.JPanel {
 
             // Thêm bảng chi tiết sản phẩm vào tài liệu PDF
             document.add(productTable);
-            
-            
 
             // Cảm ơn khách hàng
-            document.add(new Paragraph("\n")); // Khoảng cách giữa các dòng
-            Paragraph thuonghieu = new Paragraph("--The POLO MAN--", new Font(baseFont, 16));
-            thuonghieu.setAlignment(Element.ALIGN_CENTER);
-            document.add(thuonghieu);
-
-            // Cảm ơn khách hàng
-            document.add(new Paragraph("\n")); // Khoảng cách giữa các dòng
+            document.add(new Paragraph("\n\n")); // Khoảng cách giữa các dòng
             Paragraph thankYou = new Paragraph("--  Xin chân thành cảm ơn quý khách --", new Font(baseFont, 14));
             thankYou.setAlignment(Element.ALIGN_CENTER);
             document.add(thankYou);
 
             // Cảm ơn khách hàng
             document.add(new Paragraph("\n")); // Khoảng cách giữa các dòng
-            Paragraph lienHe = new Paragraph("Nếu có vấn đề xin vui lòng liên hệ chúng tôi: 0977-903-208",
+            Paragraph lienHe = new Paragraph("Nếu có vấn đề xin vui lòng liên hệ chúng tôi: 0123456789",
                     new Font(baseFont, 11));
             lienHe.setAlignment(Element.ALIGN_CENTER);
             document.add(lienHe);
@@ -512,13 +494,15 @@ public class FormBanHang extends javax.swing.JPanel {
 
         // Thêm label và value vào các ô của hàng trong bảng
         PdfPCell labelCell = new PdfPCell(labelParagraph);
-        labelCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        labelCell.setBorder(Rectangle.NO_BORDER); // Loại bỏ border
-
         PdfPCell valueCell = new PdfPCell(valueParagraph);
+
+        // Thiết lập canh lề cho các ô
+        labelCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        labelCell.setBorder(Rectangle.NO_BORDER);
+
         valueCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         valueCell.setHorizontalAlignment(valueAlignment);
-        valueCell.setBorder(Rectangle.NO_BORDER); // Loại bỏ border
+        valueCell.setBorder(Rectangle.NO_BORDER);
 
         // Thêm các ô vào hàng trong bảng
         table.addCell(labelCell);
@@ -545,7 +529,7 @@ public class FormBanHang extends javax.swing.JPanel {
         DecimalFormat decimalFormat = new DecimalFormat("#,### VNĐ");
         // Định dạng tiền cho cột giá bán
         double giaBanDouble = Double.parseDouble(giaBan);
-        PdfPCell giaBanCell = new PdfPCell(new Phrase(decimalFormat.format(giaBanDouble), font));
+        PdfPCell giaBanCell = new PdfPCell(new Phrase(decimalFormat.format(giaBanDouble) + " VNĐ", font));
         giaBanCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         table.addCell(giaBanCell);
 
@@ -553,14 +537,15 @@ public class FormBanHang extends javax.swing.JPanel {
 
         // Định dạng tiền cho cột thành tiền
         double thanhTienDouble = Double.parseDouble(thanhTien);
-        PdfPCell thanhTienCell = new PdfPCell(new Phrase(decimalFormat.format(thanhTienDouble), font));
+        PdfPCell thanhTienCell = new PdfPCell(new Phrase(decimalFormat.format(thanhTienDouble) + " VNĐ", font));
         thanhTienCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         table.addCell(thanhTienCell);
     }
 
     private PdfPCell createSeparatorCell(int colSpan) {
         PdfPCell cell = new PdfPCell();
-        cell.setBorder(Rectangle.NO_BORDER); // Đảm bảo loại bỏ border cho cell này
+        cell.setBorder(Rectangle.TOP); // Chỉ có border trên (tạo dòng line màu đen)
+        cell.setBorderColor(BaseColor.BLACK); // Màu đen cho border
         cell.setColspan(colSpan); // Số cột của ô (bằng số cột của bảng)
         return cell;
     }

@@ -3,11 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/form/other/FormBanHang.java</file>
             <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/model/SanPhamModel.java</file>
             <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/service/VoucherService.java</file>
             <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/form/other/FormThongKe.java</file>
             <file>file:/C:/Users/admin/Documents/PLN_Team6/src/raven/application/service/ThongKeService.java</file>
+=======
+            <file>file:/A:/PLN_Team6/src/raven/application/service/ThongKeService.java</file>
+            <file>file:/A:/PLN_Team6/src/raven/application/form/other/FormThongKe.java</file>
+>>>>>>> parent of 2cc1f9c (Update FormBanHang.java: add line to PDF, update thank you message, fix text in cleanForm, update lien he)
         </group>
     </open-files>
 </project-private>
