@@ -16,12 +16,12 @@ import java.time.LocalDateTime;
  * @author admin
  */
 public class VoucherService {
-    
+
     Connection con = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
     String sql = null;
-    
+
     public List<VoucherModer> getAllVoucher() {
         sql = "SELECT ID, TenVoucher, SoLuong, LoaiVoucher, MucGiamGia,MoTa, NgayBatDau, NgayKetThuc , TrangThai FROM VOUCHER";
         List<VoucherModer> listVoucher = new ArrayList<>();
@@ -48,7 +48,7 @@ public class VoucherService {
             return null;
         }
     }
-    
+
     public List<VoucherModer> getAllVoucherByTrangThai(String trangThai) {
         sql = "SELECT ID, TenVoucher, SoLuong, LoaiVoucher, MucGiamGia,MoTa, NgayBatDau, NgayKetThuc , TrangThai FROM VOUCHER WHERE TrangThai = ?";
         List<VoucherModer> listV = new ArrayList<>();
@@ -76,7 +76,7 @@ public class VoucherService {
         }
         return listV;
     }
-    
+
     public List<VoucherModer> getIDByTenVoucher(String ten) {
         sql = "SELECT ID, TenVoucher, SoLuong, LoaiVoucher, MucGiamGia, MoTa FROM VOUCHER WHERE TenVoucher = ?";
         List<VoucherModer> list = new ArrayList<>();
@@ -102,7 +102,7 @@ public class VoucherService {
         }
         return list;
     }
-    
+
     public String getNewVoucherID() {
         String newID = "V001";
         try {
@@ -113,17 +113,17 @@ public class VoucherService {
             if (rs.next()) {
                 int maxID = rs.getInt("maxID");
                 maxID++;
-                newID = "V" + String.format("%03", maxID);
+                newID = "V" + String.format("%03d", maxID);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return newID;
     }
-    
+
     public int insert(VoucherModer voucher) {
-        sql = "INSERT INTO VOUCHER(ID, TenVoucher, SoLuong, LoaiVoucher, MucGiamGia,  NgayBatDau, NgayKetThuc, MoTa,TrangThai, NgayTao, NgaySua)"
-                + "VALUES(?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+        sql = "INSERT INTO VOUCHER(ID, TenVoucher, SoLuong, LoaiVoucher, MucGiamGia, MoTa, NgayBatDau, NgayKetThuc, TrangThai, NgayTao, NgaySua)"
+                + "VALUES(?,?,?,?,?,?,?,?,?, CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)";
         try {
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
@@ -132,9 +132,9 @@ public class VoucherService {
             ps.setObject(3, voucher.getSoLuong());
             ps.setObject(4, voucher.getLoaiVoucher());
             ps.setObject(5, voucher.getMucGiamGia());
-            ps.setObject(6, voucher.getNgayBatDau());
-            ps.setObject(7, voucher.getNgayKetThuc());
-            ps.setObject(8, voucher.getMoTa());
+            ps.setObject(6, voucher.getMoTa());
+            ps.setObject(7, voucher.getNgayBatDau());
+            ps.setObject(8, voucher.getNgayKetThuc());
             ps.setObject(9, voucher.getTrangThai());
             return ps.executeUpdate();
         } catch (Exception e) {
@@ -142,7 +142,7 @@ public class VoucherService {
             return 0;
         }
     }
-    
+
     public int update(VoucherModer voucher) {
         sql = "UPDATE VOUCHER SET TenVoucher = ?, SoLuong = ?, LoaiVoucher = ?, MucGiamGia = ?, NgayBatDau = ?, NgayKetThuc = ?, MoTa = ?, NgaySua = CURRENT_TIMESTAMP , TrangThai= ? WHERE ID = ?";
         try {
@@ -163,9 +163,9 @@ public class VoucherService {
             return 0;
         }
     }
-    
+
     public List<VoucherModer> getAllVoucherByNgay(java.sql.Date ngayBD, java.sql.Date ngayKT) {
-        sql = "SELECT ID, TenVoucher, SoLuong, LoaiVoucher, MucGiamGia, MoTa, NgayBatDau, NgayKetThuc "
+        sql = "SELECT ID, TenVoucher, SoLuong, LoaiVoucher, MucGiamGia, MoTa, NgayBatDau, NgayKetThuc, TrangThai "
                 + "FROM VOUCHER "
                 + "WHERE NgayBatDau BETWEEN ? AND ? "
                 + "  AND NgayKetThuc BETWEEN ? AND ?";
@@ -187,7 +187,9 @@ public class VoucherService {
                         rs.getBigDecimal(5),
                         rs.getString(6),
                         rs.getDate(7),
-                        rs.getDate(8));
+                        rs.getDate(8),
+                        rs.getString(9)
+                );
                 listV.add(voucher);
             }
         } catch (Exception e) {
@@ -196,7 +198,7 @@ public class VoucherService {
         }
         return listV;
     }
-    
+
     public int delete(String ma) {
         sql = "DELETE FROM VOUCHER WHERE ID = ?";
         try {
@@ -209,7 +211,7 @@ public class VoucherService {
             return 0;
         }
     }
-    
+
     public boolean checkTrungID(String id) {
         sql = "SELECT COUNT(*) AS count FROM VOUCHER WHERE ID = ?";
         try {
@@ -226,7 +228,7 @@ public class VoucherService {
         }
         return false;
     }
-    
+
     public boolean checkTrungTen(String tenVoucher) {
         sql = "SELECT COUNT(*) AS count FROM VOUCHER WHERE TenVoucher = ?";
         try {
@@ -243,7 +245,7 @@ public class VoucherService {
         }
         return false;
     }
-    
+
     public boolean checkTonTaiHD(String idSPCT) {
         sql = "SELECT COUNT(*) FROM HOADON WHERE ID_Voucher = ?";
         try {
@@ -260,5 +262,5 @@ public class VoucherService {
         }
         return false;
     }
-    
+
 }

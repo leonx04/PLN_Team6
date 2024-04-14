@@ -36,10 +36,6 @@ public class FormVoucher extends javax.swing.JPanel {
             voucher.setSTT(index++);
             model.addRow(voucher.toData());
         }
-        if (model.getRowCount() > 0) {
-            tblVoucher.scrollRectToVisible(tblVoucher.getCellRect(0, 0, true));
-            tblVoucher.setRowSelectionInterval(0, 0);
-        }
     }
 
     private VoucherModer readForm() {
@@ -201,8 +197,6 @@ public class FormVoucher extends javax.swing.JPanel {
         btnXoa = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tblVoucher = new javax.swing.JTable();
         jLabel14 = new javax.swing.JLabel();
         txtTimKiem = new javax.swing.JTextField();
         btnLoc = new javax.swing.JButton();
@@ -211,6 +205,8 @@ public class FormVoucher extends javax.swing.JPanel {
         dateBD1 = new com.toedter.calendar.JDateChooser();
         jLabel16 = new javax.swing.JLabel();
         cboTrangThai1 = new javax.swing.JComboBox<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblVoucher = new javax.swing.JTable();
 
         setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         setPreferredSize(new java.awt.Dimension(1295, 713));
@@ -530,47 +526,6 @@ public class FormVoucher extends javax.swing.JPanel {
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel13.setText("Danh sách Voucher");
 
-        tblVoucher.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        tblVoucher.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "STT", "Mã Voucher", "Tên Voucher", "Số Lượng", "Loại Voucher", "Mức giảm giá", "Mô tả", "Ngày bắt đầu", "Ngày kết thúc", "Trạng thái"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tblVoucher.setMaximumSize(new java.awt.Dimension(400, 40));
-        tblVoucher.setMinimumSize(new java.awt.Dimension(0, 0));
-        tblVoucher.setPreferredSize(new java.awt.Dimension(300, 40));
-        tblVoucher.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblVoucherMouseClicked(evt);
-            }
-        });
-        jScrollPane2.setViewportView(tblVoucher);
-        if (tblVoucher.getColumnModel().getColumnCount() > 0) {
-            tblVoucher.getColumnModel().getColumn(0).setResizable(false);
-            tblVoucher.getColumnModel().getColumn(1).setResizable(false);
-            tblVoucher.getColumnModel().getColumn(2).setResizable(false);
-            tblVoucher.getColumnModel().getColumn(3).setResizable(false);
-            tblVoucher.getColumnModel().getColumn(4).setResizable(false);
-            tblVoucher.getColumnModel().getColumn(5).setResizable(false);
-            tblVoucher.getColumnModel().getColumn(6).setResizable(false);
-            tblVoucher.getColumnModel().getColumn(7).setResizable(false);
-            tblVoucher.getColumnModel().getColumn(8).setResizable(false);
-        }
-
         jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel14.setText("Tìm kiếm Voucher :");
 
@@ -612,6 +567,40 @@ public class FormVoucher extends javax.swing.JPanel {
             }
         });
 
+        tblVoucher.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "STT", "Mã Voucher", "Tên Voucher", "Số Lượng", "Loại Voucher", "Mức Giảm Giá", "Mô tả", "Ngày Bắt Đầu", "Ngày Kết Thúc", "Trạng Thái"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, true, true, true, true, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblVoucher.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblVoucherMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tblVoucher);
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -622,7 +611,7 @@ public class FormVoucher extends javax.swing.JPanel {
                         .addGap(14, 14, 14)
                         .addComponent(jLabel13)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel14)
                         .addGap(18, 18, 18)
@@ -661,8 +650,8 @@ public class FormVoucher extends javax.swing.JPanel {
                         .addComponent(jLabel16)
                         .addComponent(cboTrangThai1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(dateKT1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -723,27 +712,25 @@ public class FormVoucher extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnSuaActionPerformed
 
-    private void tblVoucherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblVoucherMouseClicked
-        // TODO add your handling code here:
-        index = tblVoucher.getSelectedRow();
-        this.showData(index);
-
-    }//GEN-LAST:event_tblVoucherMouseClicked
-
     private void btnThemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnThemMouseClicked
         // TODO add your handling code here:
 
     }//GEN-LAST:event_btnThemMouseClicked
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
+        // Đọc dữ liệu từ form
         VoucherModer voucher = readForm();
+
+        // Kiểm tra trùng ID
         if (service.checkTrungID(voucher.getID())) {
-            JOptionPane.showMessageDialog(this, "Mã voucher  đã tồn tại!");
-            return;
+            JOptionPane.showMessageDialog(this, "ID đã tồn tại. Vui lòng nhập ID khác.");
+            return; // Dừng thực hiện nếu ID đã tồn tại
         }
+
+        // Kiểm tra trùng tên voucher
         if (service.checkTrungTen(voucher.getTenVoucher())) {
-            JOptionPane.showMessageDialog(this, "Tên voucher  đã tồn tại!");
-            return;
+            JOptionPane.showMessageDialog(this, "Tên voucher đã tồn tại. Vui lòng nhập tên khác.");
+            return; // Dừng thực hiện nếu tên voucher đã tồn tại
         }
         // Kiểm tra ngày bắt đầu và ngày kết thúc
         java.util.Date ngayBD = dateBD.getDate();
@@ -760,14 +747,22 @@ public class FormVoucher extends javax.swing.JPanel {
             dateKT.requestFocus();
             return;
         }
-        voucher.setID(service.getNewVoucherID());
+        // Lấy ID mới cho voucher
+        String newID = service.getNewVoucherID();
+        voucher.setID(newID);
+
+        // Thêm voucher vào cơ sở dữ liệu
         int result = service.insert(voucher);
         if (result > 0) {
-            JOptionPane.showMessageDialog(this, "Thêm thành công!");
-            fillTable(service.getAllVoucher());
-            clear();
+            JOptionPane.showMessageDialog(this, "Thêm voucher thành công.");
+
+            // Lấy lại toàn bộ danh sách voucher từ cơ sở dữ liệu
+            List<VoucherModer> listVoucher = service.getAllVoucher();
+
+            // Đổ dữ liệu vào bảng
+            fillTable(listVoucher);
         } else {
-            JOptionPane.showMessageDialog(this, "Thêm thất bại!");
+            JOptionPane.showMessageDialog(this, "Đã xảy ra lỗi khi thêm voucher.");
         }
     }//GEN-LAST:event_btnThemActionPerformed
 
@@ -835,6 +830,35 @@ public class FormVoucher extends javax.swing.JPanel {
         List<VoucherModer> list = service.getAllVoucherByTrangThai(trangThai);
         fillTable(list);
     }//GEN-LAST:event_cboTrangThai1ActionPerformed
+
+    private void tblVoucherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblVoucherMouseClicked
+        // TODO add your handling code here:
+        // Lấy chỉ số của hàng được chọn
+        int rowIndex = tblVoucher.getSelectedRow();
+
+        // Kiểm tra xem người dùng đã nhấp chuột đúng vào hàng hay không
+        if (rowIndex >= 0) {
+            // Lấy dữ liệu của hàng được chọn
+            String maVoucher = tblVoucher.getValueAt(rowIndex, 1).toString();
+            String tenVoucher = tblVoucher.getValueAt(rowIndex, 2).toString();
+            String soLuong = tblVoucher.getValueAt(rowIndex, 3).toString();
+            String loaiVoucher = tblVoucher.getValueAt(rowIndex, 4).toString();
+            String mucGiamGia = tblVoucher.getValueAt(rowIndex, 5).toString();
+            String moTa = tblVoucher.getValueAt(rowIndex, 6).toString();
+            String ngayBatDau = tblVoucher.getValueAt(rowIndex, 7).toString();
+            String ngayKetThuc = tblVoucher.getValueAt(rowIndex, 8).toString();
+            String trangThai = tblVoucher.getValueAt(rowIndex, 9).toString();
+
+            // Hiển thị dữ liệu trên các thành phần giao diện người dùng khác
+            txtMaVoucher.setText(maVoucher);
+            txtTenVoucher.setText(tenVoucher);
+            txtSoLuong.setText(soLuong);
+            cboLoaiVoucher.setSelectedItem(loaiVoucher);
+            txtMucGiamGia.setText(mucGiamGia);
+            txtMoTa.setText(moTa);
+            cboTrangThai.setSelectedItem(trangThai);
+        }
+    }//GEN-LAST:event_tblVoucherMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
