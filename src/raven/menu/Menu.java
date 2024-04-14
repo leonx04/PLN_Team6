@@ -33,6 +33,7 @@ public class Menu extends JPanel {
         {"Voucher"},
         {"Nhân viên"},
         {"Khách hàng"},
+        {"Thống kê"},
         {"Đăng xuất"},
         {"Thoát"}
     };

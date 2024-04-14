@@ -24,6 +24,7 @@ import raven.application.form.other.FormKhachHang;
 
 import raven.application.form.other.FormSanPham;
 import raven.application.form.other.FormSanPhamChiTiet;
+import raven.application.form.other.FormThongKe;
 import raven.application.form.other.FormThuocTinhSanPham;
 import raven.application.form.other.FormVoucher;
 import raven.menu.Menu;
@@ -101,8 +102,10 @@ public class MainForm extends JLayeredPane {
             } else if (index == 5) {
                 Application.showForm(new FormKhachHang());
             } else if (index == 6) {
-                Application.logout();
+                Application.showForm(new FormThongKe());
             } else if (index == 7) {
+                Application.logout();
+            } else if (index == 8) {
                 int confirm = JOptionPane.showConfirmDialog(null,
                         "Bạn có muốn thoát chương trình?",
                         "Xác nhận thoát",
