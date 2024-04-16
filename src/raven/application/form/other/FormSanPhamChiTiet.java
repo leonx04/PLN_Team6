@@ -328,10 +328,17 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
         txtTimKiem.setText(null);
     }
 
-    private void filter(String querry) {
-        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(model);
-        tblSPCT.setRowSorter(tr);
-        tr.setRowFilter(RowFilter.regexFilter(querry));
+    private void searchByProductName() {
+        String searchText = txtTimKiem.getText().trim().toLowerCase();
+        List<ChiTietSanPhamModel> filteredList = new ArrayList<>();
+
+        for (ChiTietSanPhamModel ctsp : ctsprp.getAllCTSP()) {
+            if (ctsp.getTenSP().getTenSP().toLowerCase().contains(searchText)) {
+                filteredList.add(ctsp);
+            }
+        }
+
+        fillTable(filteredList);
     }
 
     void openMauSac() {
@@ -1380,8 +1387,7 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
     }// GEN-LAST:event_btnImportExcelActionPerformed
 
     private void txtTimKiemKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtTimKiemKeyReleased
-        String query = txtTimKiem.getText();
-        filter(query);
+        searchByProductName();
     }// GEN-LAST:event_txtTimKiemKeyReleased
 
     private void tblSPCTMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_tblSPCTMouseClicked
