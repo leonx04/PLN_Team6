@@ -345,6 +345,51 @@ public class BanHangService {
         }
     }
 
+    public boolean updateBillWhileDeleteOne(String maHoaDon) {
+        BigDecimal tongTien = BigDecimal.ZERO;
+
+        // Lấy danh sách chi tiết hóa đơn còn lại
+        List<ChiTietHoaDonModel> chiTietHoaDons = searchByHoaDonID(maHoaDon);
+
+        // Tính tổng tiền của các chi tiết hóa đơn còn lại
+        for (ChiTietHoaDonModel chiTietHoaDon : chiTietHoaDons) {
+            tongTien = tongTien.add(chiTietHoaDon.getThanhTien());
+        }
+
+        // Cập nhật tổng tiền của hóa đơn
+        String sqlUpdateTongTien = "UPDATE HOADON SET TongTien = ? WHERE ID = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sqlUpdateTongTien);
+            ps.setBigDecimal(1, tongTien);
+            ps.setString(2, maHoaDon);
+            int rowsAffected = ps.executeUpdate();
+
+            // Cập nhật số lượng tồn của sản phẩm chi tiết
+            for (ChiTietHoaDonModel chiTietHoaDon : chiTietHoaDons) {
+                updateSoLuongTon(chiTietHoaDon.getMactsp().getID(),
+                        laySoLuongTonByID(chiTietHoaDon.getMactsp().getID()) + chiTietHoaDon.getSoLuong());
+            }
+
+            return rowsAffected > 0; // Trả về true nếu cập nhật thành công
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            // Đóng kết nối
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
     public List<ChiTietSanPhamModel> getAllCTSP() {
         sql = "SELECT SANPHAMCHITIET.ID, SANPHAM.TenSanPham, MAUSAC.TenMau AS TenMau, SIZE.Ten AS TenKichCo, CHATLIEU.Ten AS TenChatLieu, THUONGHIEU.Ten AS TenThuongHieu, SANPHAMCHITIET.GiaBan, SANPHAMCHITIET.SoLuongTon, MAUSAC.MoTa\n"
                 + "FROM SANPHAMCHITIET\n"
