@@ -136,7 +136,7 @@ public class FormBanHang extends javax.swing.JPanel {
 
     private void initCBOVoucher() {
         // Định nghĩa mảng chứa các lựa chọn cho combobox
-        String[] options = {"Discount10%", "Discount20%", "Discount300K", "Discount700K"};
+        String[] options = {"Discount0","Discount10%", "Discount20%", "Discount300K", "Discount700K"};
 
         // Khởi tạo combobox với các giá trị từ mảng options
         cboVoucher.setModel(new DefaultComboBoxModel<>(options));
