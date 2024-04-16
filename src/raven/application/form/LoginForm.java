@@ -163,6 +163,12 @@ public class LoginForm extends javax.swing.JPanel {
     private void formKeyPressed(java.awt.event.KeyEvent evt) {
         if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
             cmdLoginActionPerformed(null);
+        } else if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_TAB) {
+            if (evt.getSource() == txtUser) {
+                txtPass.requestFocus();
+            } else if (evt.getSource() == txtPass) {
+                txtUser.requestFocus();
+            }
         }
     }
 
