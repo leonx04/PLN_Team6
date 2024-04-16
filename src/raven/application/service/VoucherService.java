@@ -393,4 +393,50 @@ public class VoucherService {
         return false;
     }
 
+    public List<VoucherModer> searchVoucherByName(String tenVoucher) {
+        sql = "SELECT ID, TenVoucher, SoLuong, LoaiVoucher, MucGiamGia, MoTa, NgayBatDau, NgayKetThuc, TrangThai "
+                + "FROM VOUCHER "
+                + "WHERE TenVoucher LIKE ?";
+        List<VoucherModer> resultList = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, "%" + tenVoucher + "%");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                VoucherModer voucher = new VoucherModer(
+                        rs.getString(1),
+                        rs.getString(2),
+                        rs.getInt(3),
+                        rs.getString(4),
+                        rs.getBigDecimal(5),
+                        rs.getString(6),
+                        rs.getDate(7),
+                        rs.getDate(8),
+                        rs.getString(9)
+                );
+                resultList.add(voucher);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            // Đóng tài nguyên kết nối
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return resultList;
+    }
+
 }

@@ -8,7 +8,10 @@ import java.util.List;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import raven.application.model.HoaDonModel;
 import raven.application.model.KhachHangModel;
+import raven.application.model.NhanVienModel;
+import raven.application.model.VoucherModer;
 import raven.connect.DBConnect;
 
 public class KhachHangService {
@@ -405,5 +408,41 @@ public class KhachHangService {
             e.printStackTrace();
         }
         return false; // Mặc định trả về false nếu có lỗi xảy ra
+    }
+
+    public List<HoaDonModel> getHoaDonByIdKhachHang(String idKhachHang) {
+        String sql = "SELECT HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang, VOUCHER.TenVoucher, HOADON.TongTien, HOADON.HinhThucThanhToan, HOADON.TrangThai\n"
+                + "FROM HOADON\n"
+                + "INNER JOIN NHANVIEN ON HOADON.ID_NhanVien = NHANVIEN.ID\n"
+                + "INNER JOIN KHACHHANG ON HOADON.ID_KhachHang = KHACHHANG.ID\n"
+                + "LEFT JOIN VOUCHER ON HOADON.ID_Voucher = VOUCHER.ID\n"
+                + "WHERE KHACHHANG.ID = ?\n"
+                + "ORDER BY HOADON.NgayTao DESC";
+
+        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, idKhachHang);
+            ResultSet rs = ps.executeQuery();
+            List<HoaDonModel> hoaDons = new ArrayList<>();
+
+            while (rs.next()) {
+                HoaDonModel hdModel = new HoaDonModel(
+                        rs.getString(1),
+                        rs.getDate(2),
+                        new NhanVienModel(rs.getString(3)),
+                        new KhachHangModel(rs.getString(4)),
+                        rs.getBigDecimal(6),
+                        new VoucherModer(rs.getString(5)),
+                        rs.getString(7),
+                        rs.getString(8));
+
+                hoaDons.add(hdModel);
+            }
+
+            return hoaDons;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null; // Hoặc xử lý lỗi khác tùy theo yêu cầu
+        }
     }
 }

@@ -159,10 +159,10 @@ public class FormVoucher extends javax.swing.JPanel {
         cboTrangThai.setSelectedIndex(0);
     }
 
-    private void filter(String sa) {
+    private void filter(String searchQuery) {
         TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<>(model);
         tblVoucher.setRowSorter(tableRowSorter);
-        tableRowSorter.setRowFilter(RowFilter.regexFilter("?i" + sa));
+        tableRowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchQuery, 2)); // Sử dụng cột có chỉ số 2 (Tên voucher)
     }
 
     /**
@@ -791,8 +791,9 @@ public class FormVoucher extends javax.swing.JPanel {
 
     private void txtTimKiemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimKiemKeyReleased
         // TODO add your handling code here:
-        String sa = txtTimKiem.getText();
-        filter(sa);
+        String searchQuery = txtTimKiem.getText().trim();
+        // Gọi hàm filter để lọc dữ liệu trong bảng
+        filter(searchQuery);
     }//GEN-LAST:event_txtTimKiemKeyReleased
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
