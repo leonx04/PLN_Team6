@@ -952,7 +952,7 @@ public class BanHangService {
     public int taoHoaDon(String idNhanVien, String idKhachHang) {
         String hinhThucThanhToan = "Tiền mặt";
         String sql = "INSERT INTO HOADON (ID, ID_NhanVien, ID_KhachHang, HinhThucThanhToan, TongTien, TrangThai, ID_Voucher, NgayTao, NgaySua) "
-                + "VALUES (?, ?, ?, ?, ?, N'Chờ thanh toán', 'V002', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+                + "VALUES (?, ?, ?, ?, ?, N'Chờ thanh toán', 'V00', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
 
         try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, getNewHD()); // Lấy ID mới cho hóa đơn
@@ -963,6 +963,32 @@ public class BanHangService {
 
             return ps.executeUpdate();
         } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int updateSoLuongVoucher(String voucherID) {
+        sql = "UPDATE VOUCHER SET SoLuong = SoLuong - 1 WHERE TenVoucher = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, voucherID);
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int updateSoLuongVoucher2(String voucherID) {
+        sql = "UPDATE VOUCHER SET SoLuong = SoLuong + 1 WHERE TenVoucher = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, voucherID);
+            return ps.executeUpdate();
+        } catch (Exception e) {
             e.printStackTrace();
             return 0;
         }
@@ -994,6 +1020,27 @@ public class BanHangService {
         return isSuccess;
     }
 
+     public int deleteChiTietHoaDonByID(String hoaDonID) {
+        String sql = "DELETE FROM HOADONCHITIET WHERE ID_HoaDon = ?";
+
+        try {
+            Connection con = DBConnect.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, hoaDonID); // Thiết lập giá trị tham số cho câu truy vấn
+
+            int rowsAffected = ps.executeUpdate(); // Thực hiện truy vấn xoá và trả về số hàng bị ảnh hưởng
+
+            // Đóng tất cả các đối tượng tài nguyên
+            ps.close();
+            con.close();
+
+            return rowsAffected; // Trả về số lượng hàng bị xoá
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0; // Nếu có lỗi, trả về 0 để báo hiệu không xoá được
+        }
+    }
+
     public boolean updateHTTTHoaDon(String hoaDonID, String HTTT) {
         // Thực hiện cập nhật hình thức thanh toán cho hóa đơn có ID tương ứng
         sql = "UPDATE HoaDon SET HinhThucThanhToan = ? WHERE ID = ?";
@@ -1014,25 +1061,50 @@ public class BanHangService {
         return isSuccess;
     }
 
-    public boolean updateVoucherHoaDon(String hoaDonID, String tenVoucher) {
-        sql = "UPDATE HOADON\n"
-                + "SET ID_Voucher = ( SELECT ID FROM VOUCHER WHERE TenVoucher = ?)\n"
-                + "WHERE HOADON.ID = ?;";
-        boolean isSuccess = false; // Biến để xác định việc cập nhật thành công hay không
+//    public boolean updateVoucherHoaDon(String hoaDonID, String tenVoucher) {
+//        sql = "UPDATE HOADON\n"
+//                + "SET ID_Voucher = ( SELECT ID FROM VOUCHER WHERE TenVoucher = ?)\n"
+//                + "WHERE HOADON.ID = ?;";
+//        boolean isSuccess = false; // Biến để xác định việc cập nhật thành công hay không
+//        try {
+//            // Kết nối cơ sở dữ liệu và thực hiện cập nhật
+//            con = DBConnect.getConnection();
+//
+//            ps = con.prepareStatement(sql);
+//            ps.setString(1, tenVoucher);
+//            ps.setString(2, hoaDonID);
+//
+//            int rowsUpdated = ps.executeUpdate();
+//            isSuccess = rowsUpdated > 0;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return isSuccess;
+//    }
+    public boolean updateVoucherHoaDon(String hoaDonID, String voucherID) {
+        sql = "UPDATE HOADON SET ID_Voucher = ? WHERE ID = ?";
         try {
-            // Kết nối cơ sở dữ liệu và thực hiện cập nhật
             con = DBConnect.getConnection();
-
             ps = con.prepareStatement(sql);
-            ps.setString(1, tenVoucher);
+            ps.setString(1, voucherID);
             ps.setString(2, hoaDonID);
-
             int rowsUpdated = ps.executeUpdate();
-            isSuccess = rowsUpdated > 0;
-        } catch (SQLException e) {
+            return rowsUpdated > 0;
+        } catch (Exception e) {
             e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
-        return isSuccess;
     }
 
     public int updateBillStatus(String maHoaDon, String trangThaiMoi) {

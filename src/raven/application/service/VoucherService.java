@@ -4,6 +4,7 @@
  */
 package raven.application.service;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +50,57 @@ public class VoucherService {
         }
     }
 
+    public List<VoucherModer> getAllVoucherActive() {
+        sql = "SELECT ID, TenVoucher, SoLuong, LoaiVoucher, MucGiamGia, MoTa, NgayBatDau, NgayKetThuc, TrangThai "
+                + "FROM VOUCHER "
+                + "WHERE TrangThai = N'Hoạt động' "
+                + "AND NgayBatDau <= GETDATE() "
+                + "AND NgayKetThuc > GETDATE()";
+        List<VoucherModer> listVoucher = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                VoucherModer voucher = new VoucherModer(
+                        rs.getString(1),
+                        rs.getString(2),
+                        rs.getInt(3),
+                        rs.getString(4),
+                        rs.getBigDecimal(5),
+                        rs.getString(6),
+                        rs.getDate(7),
+                        rs.getDate(8),
+                        rs.getString(9)
+                );
+                listVoucher.add(voucher);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            // Đóng tài nguyên kết nối
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return listVoucher;
+    }
+
     public List<VoucherModer> getAllVoucherByTrangThai(String trangThai) {
-        sql = "SELECT ID, TenVoucher, SoLuong, LoaiVoucher, MucGiamGia,MoTa, NgayBatDau, NgayKetThuc , TrangThai FROM VOUCHER WHERE TrangThai = ?";
+        sql = "SELECT ID, TenVoucher, SoLuong, LoaiVoucher, MucGiamGia, MoTa, NgayBatDau, NgayKetThuc, TrangThai "
+                + "FROM VOUCHER "
+                + "WHERE TrangThai = ? AND SoLuong > 0";
         List<VoucherModer> listV = new ArrayList<>();
         try {
             con = DBConnect.getConnection();
@@ -67,12 +117,28 @@ public class VoucherService {
                         rs.getString(6),
                         rs.getDate(7),
                         rs.getDate(8),
-                        rs.getString(9));
+                        rs.getString(9)
+                );
                 listV.add(voucher);
             }
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        } finally {
+            // Đóng tài nguyên kết nối
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return listV;
     }
@@ -210,6 +276,70 @@ public class VoucherService {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    public String getIdByTenVoucher(String tenVoucher) {
+        sql = "SELECT ID FROM VOUCHER WHERE TenVoucher = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, tenVoucher);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("ID");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getTenByIDVoucher(String ID) {
+        sql = "SELECT TenVoucher FROM VOUCHER WHERE ID = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, ID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("TenVoucher");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public BigDecimal getMucGiamGiaByTenVoucher(String tenVoucher) {
+        sql = "SELECT MucGiamGia FROM VOUCHER WHERE TenVoucher = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, tenVoucher);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getBigDecimal("MucGiamGia");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getLoaiVoucherByTenVoucher(String tenVoucher) {
+        sql = "SELECT LoaiVoucher FROM VOUCHER WHERE TenVoucher = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, tenVoucher);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("LoaiVoucher");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public boolean checkTrungID(String id) {

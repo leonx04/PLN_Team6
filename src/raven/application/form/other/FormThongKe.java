@@ -46,23 +46,26 @@ public class FormThongKe extends javax.swing.JPanel {
 
     void init() {
         thongKeService = new ThongKeService();
-        String donVi = "(cái)";
 
         // Hiển thị tổng tiền hóa đơn hôm nay
-        lblDoanhThuHomNay.setText(numberFormat.format(thongKeService.getTongTienHoaDonHomnay()));
+        BigDecimal doanhThuHomNay = thongKeService.getTongTienHoaDonHomnay();
+        lblDoanhThuHomNay.setText(doanhThuHomNay != null ? numberFormat.format(doanhThuHomNay) : "0");
 
         // Hiển thị tổng tiền hóa đơn 7 ngày gần đây
-        lblDoanhThu7Ngay.setText(numberFormat.format(thongKeService.getTongTienHoaDon7NgayGanDay()));
+        BigDecimal doanhThu7Ngay = thongKeService.getTongTienHoaDon7NgayGanDay();
+        lblDoanhThu7Ngay.setText(doanhThu7Ngay != null ? numberFormat.format(doanhThu7Ngay) : "0");
 
         // Hiển thị tổng tiền hóa đơn trong tháng
-        lblDoanhThuTheoThang.setText(numberFormat.format(thongKeService.getTongTienHoaDonThangNay()));
+        BigDecimal doanhThuTheoThang = thongKeService.getTongTienHoaDonThangNay();
+        lblDoanhThuTheoThang.setText(doanhThuTheoThang != null ? numberFormat.format(doanhThuTheoThang) : "0");
 
         // Hiển thị tổng tiền hóa đơn trong năm
-        lblDoanhThuTheoNam.setText(numberFormat.format(thongKeService.getTongTienHoaDonNamNay()));
+        BigDecimal doanhThuTheoNam = thongKeService.getTongTienHoaDonNamNay();
+        lblDoanhThuTheoNam.setText(doanhThuTheoNam != null ? numberFormat.format(doanhThuTheoNam) : "0");
 
         // Hiển thị tổng số lượng sản phẩm đã bán
-        lblSoLuongDaBan.setText(String.valueOf(thongKeService.getTongSoSanPhamDaBan()) + " " + donVi);
-
+        int soLuongDaBan = thongKeService.getTongSoSanPhamDaBan();
+        lblSoLuongDaBan.setText(String.valueOf(soLuongDaBan));
     }
 
     private void loadBieuDo() {

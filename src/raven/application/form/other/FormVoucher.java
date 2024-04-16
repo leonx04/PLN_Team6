@@ -25,7 +25,16 @@ public class FormVoucher extends javax.swing.JPanel {
         initComponents();
         this.fillTable(service.getAllVoucher());
         JComboBox<String> cboTrangThai = new JComboBox<>(
-                new String[]{"Hoạt động", "Không hoạt động"});
+                new String[]{"Hoạt động", "Không hoạt động"});
+        cboTrangThai.setSelectedIndex(0); // Chọn mặc định "Hoạt động"
+        this.cboTrangThai = cboTrangThai;
+        initCboLoaiVoucher();
+    }
+
+    private void initCboLoaiVoucher() {
+        cboLoaiVoucher.addItem("Giảm theo phần trăm");
+        cboLoaiVoucher.addItem("Giảm theo giá tiền");
+        cboLoaiVoucher.setSelectedIndex(0); // Chọn mặc định "Giảm theo phần trăm"
     }
 
     void fillTable(List<VoucherModer> list) {
@@ -49,10 +58,10 @@ public class FormVoucher extends javax.swing.JPanel {
         java.util.Date ngayKT = dateKT.getDate();
         java.sql.Date sqlNgayBD = new java.sql.Date(ngayBD.getTime());
         java.sql.Date sqlNgayKT = new java.sql.Date(ngayKT.getTime());
-        String trangThai = (String) cboTrangThai.getSelectedItem();
+        String trangThai = (String) cboTrangThai.getSelectedItem(); // Đọc dữ liệu từ cboTrangThai
 
         VoucherModer voucher = new VoucherModer(ma, ten, soLuong, loai, mucGiam, moTa, sqlNgayBD, sqlNgayKT);
-        voucher.setTrangThai(trangThai);
+        voucher.setTrangThai(trangThai); // Gán trạng thái vào voucher
         return voucher;
     }
 
@@ -273,7 +282,6 @@ public class FormVoucher extends javax.swing.JPanel {
         jLabel6.setText("Mức giảm giá :");
 
         cboLoaiVoucher.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cboLoaiVoucher.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Giảm giá theo phần trăm", "Giảm giá theo giá tiền" }));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel8.setText("Số Lượng :");

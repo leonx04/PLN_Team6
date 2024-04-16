@@ -24,7 +24,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="204" max="-2" attributes="0"/>
               <Component id="login" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="15" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -99,7 +99,7 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="14" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Login"/>
+            <Property name="text" type="java.lang.String" value="&#x110;&#x103;ng nh&#xe2;&#x323;p"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdLoginActionPerformed"/>
@@ -108,19 +108,19 @@
         <Component class="javax.swing.JLabel" name="lbTitle">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Login"/>
+            <Property name="text" type="java.lang.String" value="&#x110;&#x103;ng nh&#xe2;&#x323;p"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lbUser">
           <Properties>
-            <Property name="text" type="java.lang.String" value="User Name"/>
+            <Property name="text" type="java.lang.String" value="T&#xea;n ta&#x300;i khoa&#x309;n"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtUser">
         </Component>
         <Component class="javax.swing.JLabel" name="lbPass">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Password"/>
+            <Property name="text" type="java.lang.String" value="M&#xe2;&#x323;t kh&#xe2;&#x309;u"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JPasswordField" name="txtPass">
@@ -133,7 +133,7 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="14" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Exit"/>
+            <Property name="text" type="java.lang.String" value="Thoa&#x301;t"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExitActionPerformed"/>

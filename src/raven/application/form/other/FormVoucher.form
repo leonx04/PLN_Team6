@@ -298,10 +298,7 @@
                   <Font name="Segoe UI" size="14" style="0"/>
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="2">
-                    <StringItem index="0" value="Gi&#x1ea3;m gi&#xe1; theo ph&#xe2;&#x300;n tr&#x103;m"/>
-                    <StringItem index="1" value="Gi&#x1ea3;m gi&#xe1; theo gia&#x301; ti&#xea;&#x300;n"/>
-                  </StringArray>
+                  <StringArray count="0"/>
                 </Property>
               </Properties>
               <AuxValues>
