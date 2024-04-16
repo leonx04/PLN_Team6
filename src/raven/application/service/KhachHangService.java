@@ -260,6 +260,84 @@ public class KhachHangService {
         }
     }
 
+    public KhachHangModel getKHByHoTen(String hoTen) {
+        sql = "SELECT ID, HoTen, SoDienThoai, DiaChi, Email, GioiTinh FROM KHACHHANG WHERE HoTen = ?";
+        KhachHangModel kh = null;
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, hoTen);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                kh = new KhachHangModel(
+                        rs.getString("ID"),
+                        rs.getString("HoTen"),
+                        rs.getString("SoDienThoai"),
+                        rs.getString("DiaChi"),
+                        rs.getString("Email"),
+                        rs.getString("GioiTinh")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // Đóng ResultSet, PreparedStatement và Connection trong khối finally để giải phóng tài nguyên
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return kh;
+    }
+
+    public KhachHangModel getKHByMa(String maKH) {
+        sql = "SELECT ID, HoTen, SoDienThoai, DiaChi, Email, GioiTinh FROM KHACHHANG WHERE ID = ?";
+        KhachHangModel kh = null;
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, maKH);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                kh = new KhachHangModel(
+                        rs.getString("ID"),
+                        rs.getString("HoTen"),
+                        rs.getString("SoDienThoai"),
+                        rs.getString("DiaChi"),
+                        rs.getString("Email"),
+                        rs.getString("GioiTinh")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // Đóng ResultSet, PreparedStatement và Connection trong khối finally để giải phóng tài nguyên
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return kh;
+    }
+
     public List<KhachHangModel> searchByGender(String gender) {
         sql = "SELECT ID, HoTen, SoDienThoai, DiaChi, Email, GioiTinh FROM KHACHHANG WHERE GioiTinh = ?";
         List<KhachHangModel> listKH = new ArrayList<>();

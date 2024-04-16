@@ -109,10 +109,13 @@ public class FormBanHang1 extends javax.swing.JPanel {
     // Biến để lưu trữ ID của hóa đơn được chọn
     private String selectedHoaDonID;
     private String voucherID;
+    private ChonKhachHangDiaLog chonKhachHangDiaLog;
 
     public FormBanHang1() {
         initComponents();
+
         txtTenKH.setText("Khách bán lẻ");
+        chonKhachHangDiaLog = new ChonKhachHangDiaLog(this, true);
         initCBOHTTT();
         Cbo_Voucher();
         // initCBOVoucher();
@@ -126,9 +129,8 @@ public class FormBanHang1 extends javax.swing.JPanel {
 
     }
 
-    // Phương thức để cập nhật tên khách hàng trên JPanel
     public void updateTenKhachHang(String tenKhachHang) {
-        txtTenKH.setText(tenKhachHang); // Cập nhật tên khách hàng
+        txtTenKH.setText(tenKhachHang);
     }
 
     private void initCBOHTTT() {
@@ -140,14 +142,6 @@ public class FormBanHang1 extends javax.swing.JPanel {
 
     }
 
-    // private void initCBOVoucher() {
-    // // Định nghĩa mảng chứa các lựa chọn cho combobox
-    // String[] options = {"Discount10%", "Discount20%", "Discount300K",
-    // "Discount700K"};
-    //
-    // // Khởi tạo combobox với các giá trị từ mảng options
-    // cboVoucher.setModel(new DefaultComboBoxModel<>(options));
-    // }
     private void fillTable(List<ChiTietSanPhamModel> listCTSP) {
         model = (DefaultTableModel) tblCTSP.getModel();
         model.setRowCount(0);
@@ -326,12 +320,13 @@ public class FormBanHang1 extends javax.swing.JPanel {
     private void cleanForm() {
         txtMaHD.setText(null);
         // txtMaKH.setText(null);
-        txtTenKH.setText(null);
+        txtTenKH.setText("Khách bán lẻ");
         txtTongTien.setText(null);
         txtThanhToan.setText(null);
         txtTienMat.setText(null);
         txtTienCK.setText(null);
         txtTienThua.setText(null);
+        txtTimSDT.setText(null);
         fillTable(bhrs.getAllCTSP());
     }
 
@@ -367,10 +362,6 @@ public class FormBanHang1 extends javax.swing.JPanel {
                 break; // Sau khi loại bỏ, thoát khỏi vòng lặp
             }
         }
-    }
-
-    void openKhachhang() {
-        new FormAddKhachHang().setVisible(true);
     }
 
     private void searchByProductName() {
@@ -1479,7 +1470,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
     }// GEN-LAST:event_cboTrangThaiActionPerformed
 
     private void btnOpenKHActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnOpenKHActionPerformed
-        this.openKhachhang();
+        chonKhachHangDiaLog.setVisible(true);
     }// GEN-LAST:event_btnOpenKHActionPerformed
 
     private void cboMauSacActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cboMauSacActionPerformed
@@ -1765,10 +1756,9 @@ public class FormBanHang1 extends javax.swing.JPanel {
         }
 
         KhachHangModel kh = bhrs.findBySDT(sdt);
+
         if (kh != null) {
             txtTenKH.setText(kh.getTen());
-            // Lấy ID khách hàng từ tên khách hàng đã tìm thấy
-            idKhachHang = bhrs.getIDByTen(kh.getTen());
         } else {
             JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin khách hàng");
         }
@@ -1926,8 +1916,14 @@ public class FormBanHang1 extends javax.swing.JPanel {
             NhanVienModel nhanVien = Auth.user;
             String idNhanVien = nhanVien.getId();
 
-            if (idKhachHang == null) {
-                // Nếu không tìm thấy ID từ tên khách hàng, sử dụng ID mặc định là "KH00"
+            // Lấy tên khách hàng từ ô txtTenKH
+            String tenKH = txtTenKH.getText().trim();
+
+            // Tìm ID khách hàng dựa trên tên khách hàng
+            String idKhachHang = bhrs.getIDByTen(tenKH);
+
+            // Nếu không tìm thấy ID từ tên khách hàng, sử dụng ID mặc định là "KH00"
+            if (idKhachHang == null || idKhachHang.isEmpty()) {
                 idKhachHang = "KH00";
             }
 
