@@ -1593,8 +1593,19 @@ public class FormBanHang1 extends javax.swing.JPanel {
                 return;
             }
 
-            // Cập nhật hình thức thanh toán và ID voucher vào cơ sở dữ liệu
+            // Cập nhật ID nhân viên của hóa đơn thành ID nhân viên hiện tại
             if (selectedHoaDonID != null && !selectedHoaDonID.isEmpty()) {
+                // Lấy ID nhân viên hiện tại từ Auth.user
+                String idNhanVien = Auth.user.getId();
+
+                // Cập nhật ID nhân viên cho hóa đơn
+                int updateResult = bhrs.updateIdNhanVienChoHoaDon(selectedHoaDonID, idNhanVien);
+                if (updateResult == 0) {
+                    JOptionPane.showMessageDialog(this, "Cập nhật ID nhân viên không thành công!");
+                    return;
+                }
+
+                // Cập nhật hình thức thanh toán và ID voucher vào cơ sở dữ liệu
                 boolean updateVoucher = bhrs.updateVoucherHoaDon(selectedHoaDonID, voucherId);
                 boolean updated = bhrs.updateHTTTHoaDon(selectedHoaDonID, hinhThucThanhToan);
 
@@ -1745,8 +1756,6 @@ public class FormBanHang1 extends javax.swing.JPanel {
             }
         }
     }// GEN-LAST:event_cboVoucherItemStateChanged
-
-    private String idKhachHang;
 
     private void btnTimKiemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnTimKiemActionPerformed
         String sdt = txtTimSDT.getText().trim();

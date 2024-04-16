@@ -872,6 +872,33 @@ public class BanHangService {
         }
     }
 
+    public int updateIdNhanVienChoHoaDon(String maHoaDon, String maNhanVienMoi) {
+        String sql = "UPDATE HOADON SET ID_NhanVien = ? WHERE ID = ?";
+
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, maNhanVienMoi);
+            ps.setString(2, maHoaDon);
+
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
     public List<HoaDonModel> getHoaDonByTrangThaiChoThanhToan() {
         String sql = "SELECT \n"
                 + "    HD.ID ,\n"
@@ -1020,7 +1047,7 @@ public class BanHangService {
         return isSuccess;
     }
 
-     public int deleteChiTietHoaDonByID(String hoaDonID) {
+    public int deleteChiTietHoaDonByID(String hoaDonID) {
         String sql = "DELETE FROM HOADONCHITIET WHERE ID_HoaDon = ?";
 
         try {
