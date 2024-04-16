@@ -207,7 +207,9 @@ public class LoginForm extends javax.swing.JPanel {
                 if (!nhanVienModel.getMatKhau().equals(hashedPassword)) {
                     JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu");
                 } else {
-                    JOptionPane.showMessageDialog(this, "Đăng nhập thành công " + nhanVienModel.isChucVu());
+                    String loginMessage = nhanVienModel.isChucVu() ? "Đăng nhập thành công với vai trò khoản quản lý"
+                            : "Đăng nhập thành công với vai trò nhân viên";
+                    JOptionPane.showMessageDialog(this, loginMessage);
                     Auth.user = nhanVienModel;
                     Application.login();
                 }

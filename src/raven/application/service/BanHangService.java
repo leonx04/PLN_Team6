@@ -345,6 +345,51 @@ public class BanHangService {
         }
     }
 
+    public boolean updateBillWhileDeleteOne(String maHoaDon) {
+        BigDecimal tongTien = BigDecimal.ZERO;
+
+        // Lấy danh sách chi tiết hóa đơn còn lại
+        List<ChiTietHoaDonModel> chiTietHoaDons = searchByHoaDonID(maHoaDon);
+
+        // Tính tổng tiền của các chi tiết hóa đơn còn lại
+        for (ChiTietHoaDonModel chiTietHoaDon : chiTietHoaDons) {
+            tongTien = tongTien.add(chiTietHoaDon.getThanhTien());
+        }
+
+        // Cập nhật tổng tiền của hóa đơn
+        String sqlUpdateTongTien = "UPDATE HOADON SET TongTien = ? WHERE ID = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sqlUpdateTongTien);
+            ps.setBigDecimal(1, tongTien);
+            ps.setString(2, maHoaDon);
+            int rowsAffected = ps.executeUpdate();
+
+            // Cập nhật số lượng tồn của sản phẩm chi tiết
+            for (ChiTietHoaDonModel chiTietHoaDon : chiTietHoaDons) {
+                updateSoLuongTon(chiTietHoaDon.getMactsp().getID(),
+                        laySoLuongTonByID(chiTietHoaDon.getMactsp().getID()) + chiTietHoaDon.getSoLuong());
+            }
+
+            return rowsAffected > 0; // Trả về true nếu cập nhật thành công
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            // Đóng kết nối
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
     public List<ChiTietSanPhamModel> getAllCTSP() {
         sql = "SELECT SANPHAMCHITIET.ID, SANPHAM.TenSanPham, MAUSAC.TenMau AS TenMau, SIZE.Ten AS TenKichCo, CHATLIEU.Ten AS TenChatLieu, THUONGHIEU.Ten AS TenThuongHieu, SANPHAMCHITIET.GiaBan, SANPHAMCHITIET.SoLuongTon, MAUSAC.MoTa\n"
                 + "FROM SANPHAMCHITIET\n"
@@ -872,6 +917,33 @@ public class BanHangService {
         }
     }
 
+    public int updateIdNhanVienChoHoaDon(String maHoaDon, String maNhanVienMoi) {
+        String sql = "UPDATE HOADON SET ID_NhanVien = ? WHERE ID = ?";
+
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, maNhanVienMoi);
+            ps.setString(2, maHoaDon);
+
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
     public List<HoaDonModel> getHoaDonByTrangThaiChoThanhToan() {
         String sql = "SELECT \n"
                 + "    HD.ID ,\n"
@@ -1020,7 +1092,7 @@ public class BanHangService {
         return isSuccess;
     }
 
-     public int deleteChiTietHoaDonByID(String hoaDonID) {
+    public int deleteChiTietHoaDonByID(String hoaDonID) {
         String sql = "DELETE FROM HOADONCHITIET WHERE ID_HoaDon = ?";
 
         try {
