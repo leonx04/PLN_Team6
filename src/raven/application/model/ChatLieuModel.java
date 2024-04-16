@@ -23,8 +23,8 @@ public class ChatLieuModel {
         this.MoTa = MoTa;
     }
 
-    public ChatLieuModel(String TenCL) {
-        this.TenCL = TenCL;
+    public ChatLieuModel(String chatlieu) {
+        this.TenCL = chatlieu;
     }
     
     public String getID() {

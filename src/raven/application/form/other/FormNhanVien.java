@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import raven.application.model.Auth;
 import raven.application.model.NhanVienModel;
 import raven.application.service.NhanVienService;
 
@@ -26,11 +27,11 @@ public class FormNhanVien extends javax.swing.JPanel {
     int index = 0;
 
     private List<NhanVienModel> listNV = new ArrayList<>();
-    
+
     public FormNhanVien() {
         initComponents();
         listNV = nhanVienService.selectAll();
-        loadData(listNV);
+         loadData(listNV);
     }
 
     public void loadData(List<NhanVienModel> nhanVienModels) {
@@ -53,7 +54,7 @@ public class FormNhanVien extends javax.swing.JPanel {
                     nv.getEmail(),
                     nv.getNamSinh(),
                     nv.getGioiTinh(),
-                    nv.getChucVu(),
+                    nv.isChucVu() == true ? "Quản lý" : "Nhân viên",
                     nv.getMatKhau(),
                     trangThai
                 };
@@ -85,7 +86,7 @@ public class FormNhanVien extends javax.swing.JPanel {
                     nv.getEmail(),
                     nv.getNamSinh(),
                     nv.getGioiTinh(),
-                    nv.getChucVu(),
+                    nv.isChucVu() == true ? "Quản lý" : "Nhân viên",
                     nv.getMatKhau(),
                     trangThai
                 };
@@ -117,7 +118,7 @@ public class FormNhanVien extends javax.swing.JPanel {
                     nv.getEmail(),
                     nv.getNamSinh(),
                     nv.getGioiTinh(),
-                    nv.getChucVu(),
+                    nv.isChucVu() == true ? "Quản lý" : "Nhân viên",
                     nv.getMatKhau(),
                     trangThai
                 };
@@ -136,19 +137,13 @@ public class FormNhanVien extends javax.swing.JPanel {
         txtNamSinh.setText(String.valueOf(model.getNamSinh()));
         txtDiaChi.setText(model.getDiaChi());
         txtMatKhau.setText(model.getMatKhau());
-
+        rbQuanLy.setSelected(model.isChucVu());
+        rbNhanVien.setSelected(!model.isChucVu());
         String gioiTinh = model.getGioiTinh();
         if (gioiTinh != null && gioiTinh.equals("Nam")) {
             rbNam.setSelected(true);
         } else if (gioiTinh != null && gioiTinh.equals("Nữ")) {
             rbNu.setSelected(true);
-        }
-
-        String chucVu = model.getChucVu();
-        if (chucVu != null && chucVu.equals("Nhân viên")) {
-            rbNhanVien.setSelected(true);
-        } else if (chucVu != null && chucVu.equals("Quản lý")) {
-            rbQuanLy.setSelected(true);
         }
 
     }
@@ -173,15 +168,7 @@ public class FormNhanVien extends javax.swing.JPanel {
         }
         model.setGioiTinh(gioiTinh);
 
-        String chucVu;
-        if (rbQuanLy.isSelected()) {
-            chucVu = "Quản lý";
-        } else if (rbNhanVien.isSelected()) {
-            chucVu = "Nhân viên";
-        } else {
-            chucVu = "";
-        }
-        model.setChucVu(chucVu);
+        model.setChucVu(rbQuanLy.isSelected());
 
         return model;
     }
@@ -202,6 +189,7 @@ public class FormNhanVien extends javax.swing.JPanel {
     }
 
     void insert() {
+        
         if (isAnyFieldEmpty()) {
             JOptionPane.showMessageDialog(this, "Có trường đang bị trống");
             return;
@@ -231,19 +219,27 @@ public class FormNhanVien extends javax.swing.JPanel {
         }
 
         NhanVienModel model = getModel();
-        if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn thêm mới?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            if (nhanVienService.insert(model)) {
-                listNV = nhanVienService.selectAll();
-                loadData(listNV);
-                JOptionPane.showMessageDialog(this, "Thêm mới thành công!");
-                this.clerForm();
-            } else {
-                JOptionPane.showMessageDialog(this, "Thêm mới thất bại!");
+
+        if (!Auth.isManager()) {
+            JOptionPane.showMessageDialog(this, "Bạn không có quyền thêm nv!");
+
+        } else {
+            if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn thêm mới?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                if (nhanVienService.insert(model)) {
+                    listNV = nhanVienService.selectAll();
+                    loadData(listNV);
+                    JOptionPane.showMessageDialog(this, "Thêm mới thành công!");
+                    this.clerForm();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Thêm mới thất bại!");
+                }
             }
         }
+
     }
 
     void update() {
+
         if (isAnyFieldEmpty()) {
             JOptionPane.showMessageDialog(this, "Có trường đang bị trống");
             return;
@@ -270,35 +266,46 @@ public class FormNhanVien extends javax.swing.JPanel {
         NhanVienModel model = getModel();
         setModel(model);
 
-        if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn cập nhật?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            if (nhanVienService.update(model)) {
-                listNV = nhanVienService.selectAll();
-                loadData(listNV);
-                JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
-            } else {
-                JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
+        if (!Auth.isManager()) {
+            JOptionPane.showMessageDialog(this, "Không có quyền cập nhật nhân viên!");
+        } else {
+            if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn cập nhật?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                if (nhanVienService.update(model)) {
+                    listNV = nhanVienService.selectAll();
+                    loadData(listNV);
+                    JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
+                }
             }
         }
+
     }
 
     void delete() {
-        if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            String manv = txtID.getText();
-            if (manv.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên muốn xóa!");
-                return;
-            }
 
-            try {
-                nhanVienService.delete(manv);
-                listNV = nhanVienService.selectAll();
-                loadData(listNV);
-                this.clerForm();
-                JOptionPane.showMessageDialog(this, "Xóa thành công!");
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Xóa thất bại!");
+        if (!Auth.isManager()) {
+            JOptionPane.showMessageDialog(this, "Không có quyền cho nhân viên nghỉ làm!");
+        } else {
+            if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn nghỉ làm?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                String manv = txtID.getText();
+                if (manv.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên muốn nghỉ làm!");
+                    return;
+                }
+
+                try {
+                    nhanVienService.delete(manv);
+                    listNV = nhanVienService.selectAll();
+                    loadData(listNV);
+                    this.clerForm();
+                    JOptionPane.showMessageDialog(this, "Nghỉ làm thành công!");
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Nghỉ làm thất bại!");
+                }
             }
         }
+
     }
 
     boolean isInvalidEmail(String email) {
@@ -394,7 +401,7 @@ public class FormNhanVien extends javax.swing.JPanel {
         jLabel8 = new javax.swing.JLabel();
         rbDangLam = new javax.swing.JRadioButton();
         rbDaNghiViec = new javax.swing.JRadioButton();
-        jButton1 = new javax.swing.JButton();
+        jLabel14 = new javax.swing.JLabel();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
         jLabel1.setText("Quản Lý Nhân Viên");
@@ -541,10 +548,9 @@ public class FormNhanVien extends javax.swing.JPanel {
                 .addContainerGap(40, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(btnXoa, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(btnLamMoi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnSua, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnThem, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)))
+                    .addComponent(btnLamMoi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnSua, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnThem, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE))
                 .addGap(46, 46, 46))
         );
         jPanel4Layout.setVerticalGroup(
@@ -671,7 +677,8 @@ public class FormNhanVien extends javax.swing.JPanel {
             }
         });
 
-        jButton1.setText("Tìm Kiếm");
+        jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel14.setText("Tìm Kiếm:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -686,11 +693,11 @@ public class FormNhanVien extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(47, 47, 47)
-                                .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(88, 88, 88)
+                                .addComponent(jLabel14)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton1)
-                                .addGap(251, 251, 251)
+                                .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(247, 247, 247)
                                 .addComponent(jLabel8)
                                 .addGap(18, 18, 18)
                                 .addComponent(rbDangLam)
@@ -717,9 +724,9 @@ public class FormNhanVien extends javax.swing.JPanel {
                     .addComponent(jLabel8)
                     .addComponent(rbDangLam)
                     .addComponent(rbDaNghiViec)
-                    .addComponent(jButton1)
-                    .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
+                    .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14))
+                .addGap(6, 6, 6)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -751,7 +758,7 @@ public class FormNhanVien extends javax.swing.JPanel {
     }//GEN-LAST:event_rbNamActionPerformed
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
-         insert();
+        insert();
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
@@ -765,7 +772,7 @@ public class FormNhanVien extends javax.swing.JPanel {
     private void tblNhanVienMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblNhanVienMousePressed
         if (evt.getClickCount() == 1) {
             this.index = tblNhanVien.rowAtPoint(evt.getPoint());
-            edit();
+              edit();
         }
     }//GEN-LAST:event_tblNhanVienMousePressed
 
@@ -798,12 +805,12 @@ public class FormNhanVien extends javax.swing.JPanel {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.ButtonGroup buttonGroup3;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

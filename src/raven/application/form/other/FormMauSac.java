@@ -5,6 +5,7 @@
 package raven.application.form.other;
 
 import javax.swing.JOptionPane;
+import raven.application.Application;
 
 import raven.application.model.MauSacModel;
 import raven.application.service.MauSacService;
@@ -14,6 +15,7 @@ import raven.application.service.MauSacService;
  * @author dungn
  */
 public class FormMauSac extends javax.swing.JFrame {
+
     private MauSacService msrs = new MauSacService();
 
     /**
@@ -23,6 +25,33 @@ public class FormMauSac extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         setTitle("Màu sắc");
+
+    }
+
+    private boolean validateFields() {
+        String tenChatLieu = txtTenKichThuoc.getText().trim();
+        String moTa = txtMoTa.getText().trim();
+
+        if (tenChatLieu.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên màu sắc!");
+            return false;
+        }
+        if (moTa.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mô tả màu sắc!");
+            return false;
+        }
+
+        if (tenChatLieu.length() > 100) {
+            JOptionPane.showMessageDialog(this, "Tên màu sắc tối đa là 100 ký tự!");
+            return false;
+        }
+
+        if (moTa.length() > 254) {
+            JOptionPane.showMessageDialog(this, "Mô tả tối đa là 254 ký tự!");
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -120,12 +149,22 @@ public class FormMauSac extends javax.swing.JFrame {
     private void btnMauSacActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnMauSacActionPerformed
         String tenMauSac = txtTenKichThuoc.getText();
         String moTa = txtMoTa.getText();
-
+        if (msrs.checkTrungTen(txtTenKichThuoc.getText().trim())) {
+            JOptionPane.showMessageDialog(this, "Tên màu sắc đã tồn tại!");
+            txtTenKichThuoc.requestFocus();
+            return;
+        }
+        if (!validateFields()) {
+            return;
+        }
         String newID = msrs.getNewIDMS();
         MauSacModel mauSac = new MauSacModel(newID, tenMauSac, moTa);
 
         if (msrs.insert(mauSac) > 0) {
+
             JOptionPane.showMessageDialog(this, "Thêm thành công !");
+            Application.showForm(new FormSanPhamChiTiet());
+
         } else {
             JOptionPane.showMessageDialog(this, "Thêm thất bại!");
         }

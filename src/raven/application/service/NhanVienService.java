@@ -19,14 +19,14 @@ import raven.connect.JdbcHelper;
  */
 public class NhanVienService {
 
-    String insert_sql = "INSERT INTO [dbo].[NHANVIEN]([ID],[HoTen] ,[DiaChi] ,[SoDienThoai] ,[Email] ,[NamSinh] ,\n"
+   String insert_sql = "INSERT INTO [dbo].[NHANVIEN]([ID],[HoTen] ,[DiaChi] ,[SoDienThoai] ,[Email] ,[NamSinh] ,\n"
             + "			[GioiTinh] ,[ChucVu] ,[MatKhau] ,[NgayTao] ,[TrangThai])\n"
             + "     VALUES (?,?,?,?,?,?,?,?,?,GETDATE(),'0');";
     String update_sql = "UPDATE [dbo].[NHANVIEN] SET [ID] = ? , [HoTen] = ? ,[DiaChi] = ?  ,[SoDienThoai] = ?  ,[Email] = ? ,[NamSinh] = ? ,\n"
             + "		[GioiTinh] = ? ,[ChucVu] = ? ,[MatKhau] = ?  ,[NgaySua] = GETDATE()  WHERE id = ?";
     String delete_sql = "UPDATE [dbo].[NHANVIEN] SET [TrangThai] = 1 WHERE id = ?";
     String slect_by_id_sql = "SELECT * FROM NhanVien WHERE id = ? ";
-
+    String slect_by_email_sql = "SELECT * FROM NhanVien WHERE Email = ? ";
     String slect_all = "SELECT * FROM NhanVien";
     String slect_all_0_sql = "SELECT * FROM NhanVien WHERE TrangThai = '0'";
     String slect_all_1_sql = "SELECT * FROM NhanVien WHERE TrangThai = '1'";
@@ -39,7 +39,6 @@ public class NhanVienService {
         for (NhanVienModel x : selectAll()) {
             if (x.getId().contains(input)
                     || x.getHoTen().contains(input)
-                    || x.getChucVu().contains(input)
                     || x.getDiaChi().contains(input)
                     || x.getEmail().contains(input)
                     || x.getSdt().contains(input)) {
@@ -48,8 +47,8 @@ public class NhanVienService {
         }
         return listNV;
     }
-    
-    private String hashPassword(String password) throws Exception {
+
+    public String hashPassword(String password) throws Exception {
         MessageDigest md = MessageDigest.getInstance("MD5");
         byte[] hashedBytes = md.digest(password.getBytes("UTF-8"));
 
@@ -65,7 +64,7 @@ public class NhanVienService {
         try {
             String hashedPassword = hashPassword(entity.getMatKhau()); // Mã hóa mật khẩu
             JdbcHelper.update(insert_sql, entity.getId(), entity.getHoTen(), entity.getDiaChi(), entity.getSdt(),
-                    entity.getEmail(), entity.getNamSinh(), entity.getGioiTinh(), entity.getChucVu(), hashedPassword);
+                    entity.getEmail(), entity.getNamSinh(), entity.getGioiTinh(), entity.isChucVu(), hashedPassword);
             return true;
         } catch (Exception e) {
             return false;
@@ -76,7 +75,7 @@ public class NhanVienService {
         try {
             String hashedPassword = hashPassword(entity.getMatKhau()); // Mã hóa mật khẩu
             JdbcHelper.update(update_sql, entity.getId(), entity.getHoTen(), entity.getDiaChi(), entity.getSdt(), entity.getEmail(),
-                    entity.getNamSinh(), entity.getGioiTinh(), entity.getChucVu(), hashedPassword, entity.getId());
+                    entity.getNamSinh(), entity.getGioiTinh(), entity.isChucVu(), hashedPassword, entity.getId());
             return true;
         } catch (Exception e) {
             return false;
@@ -89,6 +88,14 @@ public class NhanVienService {
 
     public NhanVienModel selectById(String id) {
         List<NhanVienModel> list = selectBySql(slect_by_id_sql, id);
+        if (list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
+    }
+    
+    public NhanVienModel selectByEmail(String email) {
+        List<NhanVienModel> list = selectBySql(slect_by_email_sql, email);
         if (list.isEmpty()) {
             return null;
         }
@@ -112,7 +119,7 @@ public class NhanVienService {
         try {
             ResultSet rs = JdbcHelper.query(sql, args);
             while (rs.next()) {
-                NhanVienModel entity = new NhanVienModel();
+                NhanVienModel entity = new NhanVienModel(rs.getString(3));
                 entity.setId(rs.getString("ID"));
                 entity.setHoTen(rs.getString("HoTen"));
                 entity.setDiaChi(rs.getString("DiaChi"));
@@ -120,7 +127,7 @@ public class NhanVienService {
                 entity.setEmail(rs.getString("Email"));
                 entity.setNamSinh(rs.getInt("NamSinh"));
                 entity.setGioiTinh(rs.getString("GioiTinh"));
-                entity.setChucVu(rs.getString("ChucVu"));
+                entity.setChucVu(rs.getBoolean("ChucVu"));
                 entity.setMatKhau(rs.getString("MatKhau"));
                 entity.setTrangThai(rs.getString("TrangThai"));
 

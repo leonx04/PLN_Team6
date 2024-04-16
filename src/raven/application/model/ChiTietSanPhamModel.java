@@ -23,8 +23,15 @@ public class ChiTietSanPhamModel {
     public String MoTa;
     public int stt;
 
-    public ChiTietSanPhamModel(String ID, SanPhamModel tenSP, MauSacModel mauSac, KichCoModel kichCo,
-            ChatLieuModel chatLieu, ThuongHieuModel thuongHieu, BigDecimal giaBan, int SoLuongTon, String MoTa) {
+    public ChiTietSanPhamModel(String ID,
+            SanPhamModel tenSP,
+            MauSacModel mauSac,
+            KichCoModel kichCo,
+            ChatLieuModel chatLieu,
+            ThuongHieuModel thuongHieu,
+            BigDecimal giaBan,
+            int SoLuongTon,
+            String MoTa) {
         this.ID = ID;
         this.tenSP = tenSP;
         this.mauSac = mauSac;
@@ -36,7 +43,15 @@ public class ChiTietSanPhamModel {
         this.MoTa = MoTa;
     }
 
+    public ChiTietSanPhamModel(BigDecimal donGia) {
+        this.giaBan = donGia;
+    }
+
     public ChiTietSanPhamModel() {
+    }
+
+    public ChiTietSanPhamModel(String ID) {
+        this.ID = ID;
     }
 
     public String getMoTa() {
@@ -120,14 +135,14 @@ public class ChiTietSanPhamModel {
     }
 
     public Object[] toData() {
-        return new Object[] { this.stt, this.ID, this.tenSP.getTenSP(), this.mauSac.getTenMS(),
-                this.kichCo.getTenSize(), this.chatLieu.getTenCL(), this.thuongHieu.getTenTH(), this.giaBan,
-                this.SoLuongTon, this.MoTa };
+        return new Object[]{this.stt, this.ID, this.tenSP.getTenSP(), this.mauSac.getTenMS(),
+            this.kichCo.getTenSize(), this.chatLieu.getTenCL(), this.thuongHieu.getTenTH(), this.giaBan,
+            this.SoLuongTon, this.MoTa};
     }
-    
+
     public Object[] toData2() {
-        return new Object[] {  this.ID, this.tenSP.getTenSP(), this.mauSac.getTenMS(),
-                this.kichCo.getTenSize(), this.chatLieu.getTenCL(), this.thuongHieu.getTenTH(), this.giaBan,
-                this.SoLuongTon, this.MoTa };
+        return new Object[]{this.ID, this.tenSP.getTenSP(), this.mauSac.getTenMS(),
+            this.kichCo.getTenSize(), this.chatLieu.getTenCL(), this.thuongHieu.getTenTH(), this.giaBan,
+            this.SoLuongTon, this.MoTa};
     }
 }

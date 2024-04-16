@@ -12,14 +12,14 @@ import java.util.Date;
  */
 public class NhanVienModel {
     
-     private String id;
+    private String id;
     private String hoTen;
     private String diaChi;
     private String sdt;
     private String email;
     private int namSinh;
     private String gioiTinh;
-    private String chucVu;
+    private boolean chucVu;
     private String matKhau;
     private Date ngayTao;
     private Date ngaySua;
@@ -28,7 +28,11 @@ public class NhanVienModel {
     public NhanVienModel() {
     }
 
-    public NhanVienModel(String id, String hoTen, String diaChi, String sdt, String email, int namSinh, String gioiTinh, String chucVu, String matKhau, Date ngayTao, Date ngaySua, String trangThai) {
+    public NhanVienModel(String tenNV) {
+        this.hoTen = tenNV;
+    }
+
+    public NhanVienModel(String id, String hoTen, String diaChi, String sdt, String email, int namSinh, String gioiTinh, boolean chucVu, String matKhau, Date ngayTao, Date ngaySua, String trangThai) {
         this.id = id;
         this.hoTen = hoTen;
         this.diaChi = diaChi;
@@ -42,6 +46,7 @@ public class NhanVienModel {
         this.ngaySua = ngaySua;
         this.trangThai = trangThai;
     }
+
 
     public String getId() {
         return id;
@@ -99,11 +104,11 @@ public class NhanVienModel {
         this.gioiTinh = gioiTinh;
     }
 
-    public String getChucVu() {
+    public boolean isChucVu() {
         return chucVu;
     }
 
-    public void setChucVu(String chucVu) {
+    public void setChucVu(boolean chucVu) {
         this.chucVu = chucVu;
     }
 
@@ -138,5 +143,9 @@ public class NhanVienModel {
     public void setTrangThai(String trangThai) {
         this.trangThai = trangThai;
     }
+
+    
+
+    
     
 }

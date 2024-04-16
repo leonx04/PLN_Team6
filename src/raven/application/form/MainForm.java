@@ -15,11 +15,20 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import raven.application.Application;
 import raven.application.form.other.FormBanHang;
+import raven.application.form.other.FormBanHang1;
+
 import raven.application.form.other.FormHoaDon;
+
 import raven.application.form.other.FormNhanVien;
+
+import raven.application.form.other.FormKhachHang;
+
 import raven.application.form.other.FormSanPham;
 import raven.application.form.other.FormSanPhamChiTiet;
+import raven.application.form.other.FormThongKe;
 import raven.application.form.other.FormThuocTinhSanPham;
+import raven.application.form.other.FormVoucher;
+import raven.application.model.Auth;
 import raven.menu.Menu;
 import raven.menu.MenuAction;
 
@@ -74,7 +83,7 @@ public class MainForm extends JLayeredPane {
             // Application.mainForm.showForm(new DefaultForm("Form : " + index + " " +
             // subIndex));
             if (index == 0) {
-                Application.showForm(new FormBanHang());
+                Application.showForm(new FormBanHang1());
             } else if (index == 1) {
                 if (subIndex == 1) {
                     Application.showForm(new FormSanPham());
@@ -85,15 +94,26 @@ public class MainForm extends JLayeredPane {
                 } else {
                     action.cancel();
                 }
-            }  else if (index == 2) {
+            } else if (index == 2) {
                 Application.showForm(new FormHoaDon());
-            }else if (index == 4) {
+            } else if (index == 3) {
+                Application.showForm(new FormVoucher());
+            } else if (index == 4) {
                 Application.showForm(new FormNhanVien());
+            } else if (index == 5) {
+                Application.showForm(new FormKhachHang());
             } else if (index == 6) {
-                Application.logout();
+                if (Auth.user.isChucVu()) {
+                    Application.showForm(new FormThongKe());
+                } else {
+                    JOptionPane.showMessageDialog(this, "Bạn không có quyền xem thống kê.");
+                    action.cancel();
+                }
             } else if (index == 7) {
+                Application.logout();
+            } else if (index == 8) {
                 int confirm = JOptionPane.showConfirmDialog(null,
-                        "Bạn có muốn thoát chương trình?",
+                        "Bạn có chắc chắn muốn thoát chương trình?",
                         "Xác nhận thoát",
                         JOptionPane.YES_NO_OPTION);
 

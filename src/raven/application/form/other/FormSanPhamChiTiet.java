@@ -1,21 +1,31 @@
 package raven.application.form.other;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import java.awt.event.ItemEvent;
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
+import javax.swing.RowFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.TableRowSorter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import pagination.EventPagination;
+import pagination.style.PaginationItemRenderStyle1;
 
 import raven.application.model.ChatLieuModel;
 import raven.application.model.ChiTietSanPhamModel;
@@ -51,27 +61,69 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
     DefaultComboBoxModel dcb_KC;
     DefaultComboBoxModel dcb_SP;
 
+    // Định nghĩa số lượng bản ghi hiển thị trên mỗi trang
+    private static final int RECORDS_PER_PAGE = 10;
+    private int currentPage = 1; // Trang hiện tại
+
     public FormSanPhamChiTiet() {
         initComponents();
-        this.fillTable(ctsprp.getAllCTSP());
-        lb.putClientProperty(FlatClientProperties.STYLE, ""
-                + "font:$h1.font");
-
+        init();
+        fillTable(ctsprp.getAllCTSP());
+        Cbo_ChatLieu();
+        Cbo_KichCo();
+        Cbo_MauSac();
+        Cbo_ThuongHieu();
+        Cbo_SanPham();
+        JComboBox<String> cboFilterTrangThai = new JComboBox<>(new String[]{"Tất cả", "Còn hàng", "Hết hàng"});
     }
 
-    void fillTable(List<ChiTietSanPhamModel> listCTSP) {
+    void refreshData() {
+        List<ChiTietSanPhamModel> allCTSP = ctsprp.getAllCTSP(); // Lấy tất cả sản phẩm
+        int totalRecords = allCTSP.size(); // Tổng số lượng bản ghi
+        int totalPages = (int) Math.ceil((double) totalRecords / RECORDS_PER_PAGE);
+
+        // Nếu currentPage hiện tại lớn hơn totalPages sau khi tính lại, điều chỉnh currentPage
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+
+        setPagegination(currentPage, totalRecords); // Cập nhật thanh phân trang
+        fillTable(allCTSP); // Hiển thị dữ liệu cho trang hiện tại
+    }
+
+    public void setPagegination(int current, int totalRecords) {
+        int totalPages = (int) Math.ceil((double) totalRecords / RECORDS_PER_PAGE);
+        pagination1.setPagegination(current, totalPages); // Cập nhật thanh phân trang
+    }
+
+    // Thêm bộ lọc và phân trang mới khi số lượng bản ghi trên mỗi trang được thay đổi
+    void fillTable(List<ChiTietSanPhamModel> listSP) {
         model = (DefaultTableModel) tblSPCT.getModel();
         model.setRowCount(0);
-        Cbo_SanPham();
-        Cbo_MauSac();
-        Cbo_KichCo();
-        Cbo_ThuongHieu();
-        Cbo_ChatLieu();
-        int index = 1;
-        for (ChiTietSanPhamModel ctsp : listCTSP) {
-            ctsp.setStt(index++);
-            model.addRow(ctsp.toData());
+
+        int startIndex = (currentPage - 1) * RECORDS_PER_PAGE;
+        int endIndex = Math.min(startIndex + RECORDS_PER_PAGE, listSP.size());
+
+        int index = startIndex + 1;
+
+        for (int i = startIndex; i < endIndex; i++) {
+            ChiTietSanPhamModel sp = listSP.get(i);
+            sp.setStt(index++);
+            model.addRow(sp.toData());
         }
+    }
+
+    private void init() {
+        // Cài đặt thanh phân trang
+        pagination1.addEventPagination(new EventPagination() {
+            @Override
+            public void pageChanged(int page) {
+                currentPage = page; // Cập nhật trang hiện tại khi chuyển trang
+                refreshData(); // Hiển thị dữ liệu cho trang mới
+            }
+        });
+        pagination1.setPaginationItemRender(new PaginationItemRenderStyle1());
+        refreshData(); // Hiển thị dữ liệu ban đầu khi khởi động
     }
 
     void showData(int index) {
@@ -182,6 +234,16 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
 
     }
 
+    void Cbo_FilterMauSac() {
+        List<MauSacModel> listMS = msrs.getALLMauSac();
+        String[] cbo = new String[listMS.size()];
+        for (int i = 0; i < listMS.size(); i++) {
+            cbo[i] = listMS.get(i).getTenMS();
+        }
+        cboFilterMauSac.setModel(new DefaultComboBoxModel<>(cbo));
+
+    }
+
     void Cbo_KichCo() {
         List<KichCoModel> listKC = kcrs.getALLKichCo();
         String[] cbo = new String[listKC.size()];
@@ -189,6 +251,15 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
             cbo[i] = listKC.get(i).getTenSize();
         }
         cboKichThuoc.setModel(new DefaultComboBoxModel<>(cbo));
+        cboFilterKichThuoc.setModel(new DefaultComboBoxModel<>(cbo));
+    }
+
+    void Cbo_FilterKichCo() {
+        List<KichCoModel> listKC = kcrs.getALLKichCo();
+        String[] cbo = new String[listKC.size()];
+        for (int i = 0; i < listKC.size(); i++) {
+            cbo[i] = listKC.get(i).getTenSize();
+        }
         cboFilterKichThuoc.setModel(new DefaultComboBoxModel<>(cbo));
     }
 
@@ -202,6 +273,15 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
         cboFilterSP.setModel(new DefaultComboBoxModel<>(cbo));
     }
 
+    void Cbo_FilTerSanPham() {
+        List<SanPhamModel> listSP = sprs.getAllSP();
+        String[] cbo = new String[listSP.size()];
+        for (int i = 0; i < listSP.size(); i++) {
+            cbo[i] = listSP.get(i).getTenSP();
+        }
+        cboFilterSP.setModel(new DefaultComboBoxModel<>(cbo));
+    }
+
     void Cbo_ThuongHieu() {
         List<ThuongHieuModel> listTH = thrs.getALLThuongHieu();
         String[] cbo = new String[listTH.size()];
@@ -209,6 +289,15 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
             cbo[i] = listTH.get(i).getTenTH();
         }
         cboThuonHieu.setModel(new DefaultComboBoxModel<>(cbo));
+        cboFilterThuongHieu.setModel(new DefaultComboBoxModel<>(cbo));
+    }
+
+    void Cbo_FilterThuongHieu() {
+        List<ThuongHieuModel> listTH = thrs.getALLThuongHieu();
+        String[] cbo = new String[listTH.size()];
+        for (int i = 0; i < listTH.size(); i++) {
+            cbo[i] = listTH.get(i).getTenTH();
+        }
         cboFilterThuongHieu.setModel(new DefaultComboBoxModel<>(cbo));
     }
 
@@ -222,12 +311,34 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
         cboFilterChatLieu.setModel(new DefaultComboBoxModel<>(cbo));
     }
 
+    void Cbo_FilterChatLieu() {
+        List<ChatLieuModel> listCL = clrs.getALLChatLieu();
+        String[] cbo = new String[listCL.size()];
+        for (int i = 0; i < listCL.size(); i++) {
+            cbo[i] = listCL.get(i).getTenCL();
+        }
+        cboFilterChatLieu.setModel(new DefaultComboBoxModel<>(cbo));
+    }
+
     void clear() {
         txtMaCTSP.setText(null);
         txtGiaBan.setText(null);
         txtMoTaCTSP.setText(null);
         txtSoLuong.setText(null);
         txtTimKiem.setText(null);
+    }
+
+    private void searchByProductName() {
+        String searchText = txtTimKiem.getText().trim().toLowerCase();
+        List<ChiTietSanPhamModel> filteredList = new ArrayList<>();
+
+        for (ChiTietSanPhamModel ctsp : ctsprp.getAllCTSP()) {
+            if (ctsp.getTenSP().getTenSP().toLowerCase().contains(searchText)) {
+                filteredList.add(ctsp);
+            }
+        }
+
+        fillTable(filteredList);
     }
 
     void openMauSac() {
@@ -245,6 +356,17 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
     void openKichThuoc() {
         new FormKichThuoc().setVisible(true);
     }
+
+    private String selectedSanPhamID = null;
+    private String selectedFilterSPItem = null;
+    private String selectedMauSacID = null;
+    private String selectedFilterMSItem = null;
+    private String selectedSizeID = null;
+    private String selectedFilterSizeItem = null;
+    private String selectedChatLieuID = null;
+    private String selectedFilterChatLieuItem = null;
+    private String selectedThuongHieuID = null;
+    private String selectedFilterThuongHieuItem = null;
 
     public boolean validatef() {
         // Dữ liệu cần thiết từ các trường nhập liệu
@@ -283,13 +405,13 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
             return false;
         }
 
-        if (giaBanStr.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Vui lòng nhập giá bán", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        if (soLuongTonStr.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập số lượng tồn", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
-        if (soLuongTonStr.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Vui lòng nhập số lượng tồn", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        if (giaBanStr.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập giá bán", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -297,19 +419,47 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập mô tả", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-
-        // Kiểm tra giá bán có phải là số và lớn hơn 1000 không
         try {
-            BigDecimal giaBan = new BigDecimal(giaBanStr);
             int soLuongTon = Integer.parseInt(soLuongTonStr);
-            if (giaBan.compareTo(BigDecimal.valueOf(1000)) <= 0) {
-                // Thông báo lỗi
-                JOptionPane.showMessageDialog(null, "Giá bán phải lớn hơn 1000", "Lỗi", JOptionPane.ERROR_MESSAGE);
+
+            // Kiểm tra số lượng tồn là số nguyên dương lớn hơn 0 và không vượt quá 999
+            if (soLuongTon <= 0 || soLuongTon > 999) {
+                JOptionPane.showMessageDialog(null,
+                        "Số lượng tồn phải là số nguyên dương lớn hơn 0 và không vượt quá 999", "Lỗi",
+                        JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         } catch (NumberFormatException e) {
-            // Thông báo lỗi nếu giá bán không phải là số
+            JOptionPane.showMessageDialog(null, "Số lượng tồn phải là số ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        try {
+            BigDecimal giaBan = new BigDecimal(giaBanStr);
+
+            // Kiểm tra giá bán không âm và lớn hơn 1000
+            if (giaBan.compareTo(BigDecimal.valueOf(1000)) < 0) {
+                JOptionPane.showMessageDialog(null, "Giá bán phải lớn hơn hoặc bằng 1000", "Lỗi",
+                        JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            // Kiểm tra giá bán không vượt quá giới hạn
+            BigDecimal maxGiaBan = new BigDecimal("9999999999999999999");
+            if (giaBan.compareTo(maxGiaBan) > 0) {
+                JOptionPane.showMessageDialog(null, "Giá bán không được vượt quá " + maxGiaBan.toString(), "Lỗi",
+                        JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Giá bán phải là số", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Kiểm tra mô tả không vượt quá 255 ký tự
+        if (moTa.length() > 255) {
+            JOptionPane.showMessageDialog(null, "Mô tả không được vượt quá 255 ký tự", "Lỗi",
+                    JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -374,6 +524,7 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
         jLabel14 = new javax.swing.JLabel();
         cboFilterTrangThai = new javax.swing.JComboBox<>();
         cboFilterSP = new javax.swing.JComboBox<>();
+        pagination1 = new raven.pagination.Pagination();
 
         setPreferredSize(new java.awt.Dimension(1295, 713));
 
@@ -411,7 +562,7 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
         txtMaCTSP.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel3.setText("Giá bán");
+        jLabel3.setText("Giá bán(VNĐ)");
 
         txtSoLuong.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
@@ -747,24 +898,59 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
 
         cboFilterMauSac.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cboFilterMauSac.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboFilterMauSac.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboFilterMauSacActionPerformed(evt);
+            }
+        });
 
         cboFilterKichThuoc.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cboFilterKichThuoc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboFilterKichThuoc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboFilterKichThuocActionPerformed(evt);
+            }
+        });
 
         cboFilterChatLieu.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cboFilterChatLieu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboFilterChatLieu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboFilterChatLieuActionPerformed(evt);
+            }
+        });
 
         cboFilterThuongHieu.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cboFilterThuongHieu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboFilterThuongHieu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboFilterThuongHieuActionPerformed(evt);
+            }
+        });
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel14.setText("Trạng thái");
 
         cboFilterTrangThai.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cboFilterTrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hoạt động", "Không hoạt động" }));
+        cboFilterTrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Còn hàng", "Hết hàng" }));
+        cboFilterTrangThai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboFilterTrangThaiActionPerformed(evt);
+            }
+        });
 
         cboFilterSP.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cboFilterSP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboFilterSP.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboFilterSPItemStateChanged(evt);
+            }
+        });
+        cboFilterSP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboFilterSPActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -778,8 +964,8 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
                         .addComponent(jLabel12)
                         .addGap(18, 18, 18)
                         .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
-                        .addComponent(cboFilterSP, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cboFilterSP, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(cboFilterMauSac, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -809,7 +995,7 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
                     .addComponent(cboFilterTrangThai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cboFilterSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(22, 22, 22)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -823,9 +1009,13 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(495, 495, 495)
+                .addComponent(pagination1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -838,9 +1028,111 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(19, 19, 19))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pagination1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void cboFilterSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFilterSPActionPerformed
+        selectedFilterSPItem = (String) cboFilterSP.getSelectedItem();
+        String selectedSanPham = selectedFilterSPItem;
+        List<SanPhamModel> listSP = sprs.getIDByTenSP(selectedSanPham);
+        if (listSP.size() > 0) {
+            selectedSanPhamID = listSP.get(0).getID();
+            List<ChiTietSanPhamModel> listCTSP = ctsprp.searchBySanPhamID(selectedSanPhamID);
+            fillTable(listCTSP);
+            cboFilterSP.setSelectedItem(selectedFilterSPItem);
+        } else {
+            selectedSanPhamID = null;
+            fillTable(ctsprp.getAllCTSP());
+            cboFilterSP.setSelectedItem(selectedFilterSPItem);
+        }
+    }//GEN-LAST:event_cboFilterSPActionPerformed
+
+    private void cboFilterSPItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboFilterSPItemStateChanged
+
+    }//GEN-LAST:event_cboFilterSPItemStateChanged
+
+    private void cboFilterMauSacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFilterMauSacActionPerformed
+        selectedFilterMSItem = (String) cboFilterMauSac.getSelectedItem();
+        selectedMauSacID = selectedFilterMSItem;
+        List<MauSacModel> listMS = msrs.getIDByTenMS(selectedMauSacID);
+        if (listMS.size() > 0) {
+            selectedMauSacID = listMS.get(0).getID();
+            List<ChiTietSanPhamModel> listCTSP = ctsprp.searchByMauSacID(selectedMauSacID);
+            fillTable(listCTSP);
+            cboFilterMauSac.setSelectedItem(selectedFilterMSItem);
+        } else {
+            selectedMauSacID = null;
+            fillTable(ctsprp.getAllCTSP());
+            cboFilterMauSac.setSelectedItem(selectedFilterMSItem);
+        }
+    }//GEN-LAST:event_cboFilterMauSacActionPerformed
+
+    private void cboFilterKichThuocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFilterKichThuocActionPerformed
+        selectedFilterSizeItem = (String) cboFilterKichThuoc.getSelectedItem();
+        selectedSizeID = selectedFilterSizeItem;
+        List<KichCoModel> listKC = kcrs.getIDByTenKC(selectedSizeID);
+        if (listKC.size() > 0) {
+            selectedSizeID = listKC.get(0).getID();
+            List<ChiTietSanPhamModel> listCTSP = ctsprp.searchBySizeID(selectedSizeID);
+            fillTable(listCTSP);
+            cboFilterKichThuoc.setSelectedItem(selectedFilterSizeItem);
+        } else {
+            selectedMauSacID = null;
+            fillTable(ctsprp.getAllCTSP());
+            cboFilterKichThuoc.setSelectedItem(selectedFilterSizeItem);
+        }
+    }//GEN-LAST:event_cboFilterKichThuocActionPerformed
+
+    private void cboFilterChatLieuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFilterChatLieuActionPerformed
+        selectedFilterChatLieuItem = (String) cboFilterChatLieu.getSelectedItem();
+        selectedChatLieuID = selectedFilterChatLieuItem;
+        List<ChatLieuModel> listCL = clrs.getIDByTenCL(selectedChatLieuID);
+        if (listCL.size() > 0) {
+            selectedChatLieuID = listCL.get(0).getID();
+            List<ChiTietSanPhamModel> listCTSP = ctsprp.searchByChatLieuID(selectedChatLieuID);
+            fillTable(listCTSP);
+            cboFilterChatLieu.setSelectedItem(selectedFilterChatLieuItem);
+        } else {
+            selectedChatLieuID = null;
+            fillTable(ctsprp.getAllCTSP());
+            cboFilterChatLieu.setSelectedItem(selectedFilterChatLieuItem);
+        }
+    }//GEN-LAST:event_cboFilterChatLieuActionPerformed
+
+    private void cboFilterThuongHieuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFilterThuongHieuActionPerformed
+        selectedFilterThuongHieuItem = (String) cboFilterThuongHieu.getSelectedItem();
+        selectedThuongHieuID = selectedFilterThuongHieuItem;
+        List<ThuongHieuModel> listTH = thrs.getIDByTenTH(selectedThuongHieuID);
+        if (listTH.size() > 0) {
+            selectedThuongHieuID = listTH.get(0).getID();
+            List<ChiTietSanPhamModel> listCTSP = ctsprp.searchByThuonghieuID(selectedThuongHieuID);
+            fillTable(listCTSP);
+            cboFilterThuongHieu.setSelectedItem(selectedFilterThuongHieuItem);
+        } else {
+            selectedThuongHieuID = null;
+            fillTable(ctsprp.getAllCTSP());
+            cboFilterThuongHieu.setSelectedItem(selectedFilterThuongHieuItem); // Thiết lập lại giá trị của combobox
+        }
+    }//GEN-LAST:event_cboFilterThuongHieuActionPerformed
+
+    private void cboFilterTrangThaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFilterTrangThaiActionPerformed
+        String selectedTrangThai = (String) cboFilterTrangThai.getSelectedItem();
+        List<ChiTietSanPhamModel> listCTSP;
+
+        if (selectedTrangThai.equals("Còn hàng")) {
+            listCTSP = ctsprp.getAllCTSPSoluongLonHon0();
+        } else if (selectedTrangThai.equals("Hết hàng")) {
+            listCTSP = ctsprp.getAllCTSPSoluong0(); // Sử dụng phương thức getAllCTSPSoluong0 để lấy các sản phẩm có số
+            // lượng tồn bằng 0
+        } else {
+            listCTSP = ctsprp.getAllCTSP();
+        }
+
+        fillTable(listCTSP);
+    }//GEN-LAST:event_cboFilterTrangThaiActionPerformed
 
     private void btnAddMauSacActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnAddMauSacActionPerformed
         this.openMauSac();
@@ -860,7 +1152,7 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
     }// GEN-LAST:event_btnAddThuongHieuActionPerformed
 
     private void cboMauSacActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cboMauSacActionPerformed
-        
+
     }// GEN-LAST:event_cboMauSacActionPerformed
 
     private void cboKichThuocActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cboKichThuocActionPerformed
@@ -876,15 +1168,30 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
     }// GEN-LAST:event_cboChatLieuActionPerformed
 
     private void btnAddCTSPActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnAddCTSPActionPerformed
-        // TODO add your handling code here:
+        if (!validatef()) {
+            return;
+        }
 
-        ChiTietSanPhamModel md = this.readForm();
+        ChiTietSanPhamModel chiTietSanPham = readForm();
+
+        if (ctsprp.checkTrungIdCTSP(chiTietSanPham.getID())) {
+            JOptionPane.showMessageDialog(this, "Mã sản phẩm chi tiết đã tồn tại!");
+            return;
+        }
+
         String newID = ctsprp.getNewSPCTID();
-        md.setID(newID);
-        this.ctsprp.insert(md);
-        this.fillTable(ctsprp.getAllCTSP());
-        JOptionPane.showMessageDialog(this, "Thêm thành công");
-        this.clear();
+        chiTietSanPham.setID(newID);
+
+        int result = ctsprp.insert(chiTietSanPham);
+
+        if (result > 0) {
+            JOptionPane.showMessageDialog(this, "Thêm thành công");
+            fillTable(ctsprp.getAllCTSP());
+            clear();
+            refreshData();
+        } else {
+            JOptionPane.showMessageDialog(this, "Thêm thất bại");
+        }
     }// GEN-LAST:event_btnAddCTSPActionPerformed
 
     private void btnUpdateCTSPActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnUpdateCTSPActionPerformed
@@ -895,6 +1202,11 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
             return;
         }
 
+        // Kiểm tra tính hợp lệ của dữ liệu nhập vào
+        if (!validatef()) {
+            return;
+        }
+
         // Xác nhận cập nhật
         int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn cập nhật sản phẩm này?", "Xác nhận",
                 JOptionPane.YES_NO_OPTION);
@@ -902,15 +1214,22 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
             return; // Nếu không được xác nhận, thoát khỏi phương thức
         }
 
-        ChiTietSanPhamModel md = this.readForm();
-        this.ctsprp.update(md);
-        this.fillTable(ctsprp.getAllCTSP());
+        // Đọc thông tin từ form và tạo đối tượng ChiTietSanPhamModel
+        ChiTietSanPhamModel chiTietSanPham = readForm();
+
+        // Thực hiện cập nhật vào cơ sở dữ liệu
+        ctsprp.update(chiTietSanPham);
+
+        // Hiển thị thông báo cập nhật thành công
         JOptionPane.showMessageDialog(this, "Cập nhật thành công");
-        this.clear();
+        fillTable(ctsprp.getAllCTSP());
+        clear();
+        refreshData();
     }// GEN-LAST:event_btnUpdateCTSPActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnResetActionPerformed
         clear();
+        fillTable(ctsprp.getAllCTSP());
     }// GEN-LAST:event_btnResetActionPerformed
 
     private void btnDeleteCTSPActionPerformed(java.awt.event.ActionEvent evt) {
@@ -919,7 +1238,11 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
         if (rowSel >= 0) {
             // Lấy mã sản phẩm chi tiết từ cột thứ hai (index 1)
             String ma = tblSPCT.getValueAt(rowSel, 1).toString();
-
+            // Kiểm tra xem sản phẩm có tồn tại trong bảng sản phẩm chi tiết không
+            if (ctsprp.checkTonTaiHDCT(ma)) {
+                JOptionPane.showMessageDialog(this, "Không thể xóa sản phẩm chi tiết này vì đang tồn tại trong hóa đơn chi tiết!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
             // Hiển thị hộp thoại xác nhận
             int option = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa sản phẩm này?",
                     "Xác nhận xóa",
@@ -928,10 +1251,11 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
                 // Nếu người dùng đồng ý xóa
                 if (ctsprp.delete(ma) > 0) {
                     JOptionPane.showMessageDialog(this, "Xoá thành công!");
+                    refreshData();
                     fillTable(ctsprp.getAllCTSP());
                     clear();
                 } else {
-                    JOptionPane.showMessageDialog(this, "Xoá thất bại");
+                    JOptionPane.showMessageDialog(this, "Không thể xóa do sản phẩm chi tiết đang được sử dụng ở hóa đơn");
                 }
             }
         } else {
@@ -940,73 +1264,130 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
     }
 
     private void btnXuatExcelActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnXuatExcelActionPerformed
-        // TODO add your handling code here:
-        
+        // 1. Xác định đường dẫn thư mục lưu file mặc định
+        String curentDirectoryFilePath = "A:\\";
+        // 2. Tạo cửa sổ chọn file cho người dùng
+        JFileChooser execlExportChooser = new JFileChooser(curentDirectoryFilePath);
+        // 3. Bộ lọc chỉ hiển thị các file Excel
+        FileNameExtensionFilter excelFNEF = new FileNameExtensionFilter("Tệp Excel", "xls", "xlsx", "xlsm");
+        execlExportChooser.setFileFilter(excelFNEF);
+        // 4. Đặt tiêu đề cho cửa sổ chọn file
+        execlExportChooser.setDialogTitle("Lưu tập tin Excel");
+        // 5. Hiển thị cửa sổ chọn file và kiểm tra kết quả
+        int excelChooser = execlExportChooser.showSaveDialog(null);
+        if (excelChooser == JFileChooser.APPROVE_OPTION) {
+            // 6. Tạo Workbook và Sheet mới trong Excel
+            XSSFWorkbook excelSSFWorkbook = new XSSFWorkbook();
+            XSSFSheet excelSheet = excelSSFWorkbook.createSheet("Danh sách sản phẩm");
+            // Tạo mảng chứa tên cột
+            String[] columnNames = {"STT", "Mã CTSP", "Tên Sản phẩm", " Màu sắc", "Size", "Chất liệu", "Thương hiệu", "Gia ban", "So Luong", "Mô tả"};
+            // Tạo dòng tiêu đề
+            XSSFRow headerRow = excelSheet.createRow(0);
+            for (int i = 0; i < columnNames.length; i++) {
+                XSSFCell headerCell = headerRow.createCell(i);
+                headerCell.setCellValue(columnNames[i]);
+            }
+            // Duyệt qua từng hàng và cột của model1 (bảng dữ liệu)
+            for (int i = 0; i < model.getRowCount(); i++) {
+                XSSFRow excelRow = excelSheet.createRow(i + 1);
+                for (int j = 0; j < model.getColumnCount(); j++) {
+                    XSSFCell excelCell = excelRow.createCell(j);
+                    excelCell.setCellValue(model.getValueAt(i, j).toString());
+                }
+            }
+            // 8. Tạo các luồng để ghi file Excel
+            FileOutputStream excelFIS;
+            BufferedOutputStream excelBOU;
+            try {
+                // 9. Tạo luồng ghi file theo đường dẫn đã chọn
+                excelFIS = new FileOutputStream(execlExportChooser.getSelectedFile() + ".xlsx");
+                excelBOU = new BufferedOutputStream(excelFIS);
+                // 10. Ghi Workbook vào file Excel
+                excelSSFWorkbook.write(excelBOU);
+                // 11. Đóng luồng ghi file
+                excelBOU.close();
+                excelSSFWorkbook.close();
+                JOptionPane.showMessageDialog(this, "Xuất file Excel thành công!");
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Lỗi khi xuất file Excel!");
+            }
+        }
+
     }// GEN-LAST:event_btnXuatExcelActionPerformed
 
     private void btnImportExcelActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnImportExcelActionPerformed
-        // TODO add your handling code here:
-         // 1. Xác định đường dẫn thư mục lưu file mặc định
-    String currentDirectoryFilePath = "A:\\";
+        // Xác định đường dẫn thư mục mặc định
+        String currentDirectoryFilePath = "A:\\";
 
-    // 2. Tạo cửa sổ chọn file cho người dùng
-    JFileChooser excelImportChooser = new JFileChooser(currentDirectoryFilePath);
+        // Tạo cửa sổ chọn file cho người dùng
+        JFileChooser excelImportChooser = new JFileChooser(currentDirectoryFilePath);
 
-    // 3. Bộ lọc chỉ hiển thị các file Excel
-    FileNameExtensionFilter excelFNEF = new FileNameExtensionFilter("Tệp Excel", "xls", "xlsx", "xlsm");
-    excelImportChooser.setFileFilter(excelFNEF);
+        // Bộ lọc chỉ hiển thị các file Excel
+        FileNameExtensionFilter excelFNEF = new FileNameExtensionFilter("Tệp Excel", "xls", "xlsx", "xlsm");
+        excelImportChooser.setFileFilter(excelFNEF);
 
-    // 4. Đặt tiêu đề cho cửa sổ chọn file
-    excelImportChooser.setDialogTitle("Mở tập tin Excel");
+        // Đặt tiêu đề cho cửa sổ chọn file
+        excelImportChooser.setDialogTitle("Mở tập tin Excel");
 
-    // 5. Hiển thị cửa sổ chọn file và kiểm tra kết quả
-    int excelChooser = excelImportChooser.showOpenDialog(null);
-    if (excelChooser == JFileChooser.APPROVE_OPTION) {
+        // Hiển thị cửa sổ chọn file và kiểm tra kết quả
+        int excelChooser = excelImportChooser.showOpenDialog(null);
+        if (excelChooser == JFileChooser.APPROVE_OPTION) {
+            try {
+                // Tạo Workbook và Sheet mới trong Excel từ file đã chọn
+                XSSFWorkbook excelWorkbook = new XSSFWorkbook(new FileInputStream(excelImportChooser.getSelectedFile()));
+                XSSFSheet excelSheet = excelWorkbook.getSheetAt(0);
 
-        // 6. Tạo Workbook và Sheet mới trong Excel
-        try {
-            XSSFWorkbook excelWorkbook = new XSSFWorkbook(new FileInputStream(excelImportChooser.getSelectedFile()));
-            XSSFSheet excelSheet = excelWorkbook.getSheetAt(0);
+                // Xóa toàn bộ dữ liệu trong model trước khi import mới
+                DefaultTableModel model = (DefaultTableModel) tblSPCT.getModel();
+                model.setRowCount(0);
 
-            // 7. Lấy số hàng trong sheet
-            int rowCount = excelSheet.getLastRowNum() + 1;
-
-            // 8. Duyệt qua từng hàng trong sheet
-            for (int i = 1; i < rowCount; i++) {
-
-                // 9. Lấy dòng thứ i
-                XSSFRow excelRow = excelSheet.getRow(i);
-
-                // 10. Duyệt qua từng cột trong dòng
-                for (int j = 0; j < excelRow.getLastCellNum(); j++) {
-
-                    // 11. Lấy ô thứ j trong dòng thứ i
-                    XSSFCell excelCell = excelRow.getCell(j);
-
-                    // 12. Lấy giá trị của ô
-                    String cellValue = excelCell.getStringCellValue();
-
-                    // 13. Gán giá trị của ô vào bảng
-                    int stt = model.getRowCount() + 1;
-                    model.addRow(new Object[]{stt, cellValue});
+                // Duyệt qua từng hàng trong sheet (bắt đầu từ hàng 1 vì hàng 0 là header)
+                for (int i = 1; i <= excelSheet.getLastRowNum(); i++) {
+                    XSSFRow excelRow = excelSheet.getRow(i);
+                    if (excelRow != null) {
+                        // Lấy giá trị từng ô trong dòng và thêm vào model
+                        Vector<Object> row = new Vector<>();
+                        for (int j = 0; j < excelRow.getLastCellNum(); j++) {
+                            XSSFCell excelCell = excelRow.getCell(j);
+                            if (excelCell != null) {
+                                // Kiểm tra kiểu dữ liệu của ô
+                                switch (excelCell.getCellType()) {
+                                    case STRING:
+                                        row.add(excelCell.getStringCellValue());
+                                        break;
+                                    case NUMERIC:
+                                        // Xử lý giá trị dạng số
+                                        row.add(excelCell.getNumericCellValue());
+                                        break;
+                                    default:
+                                        row.add(""); // Xử lý các trường hợp khác
+                                        break;
+                                }
+                            } else {
+                                row.add(""); // Nếu ô là null
+                            }
+                        }
+                        model.addRow(row);
+                    }
                 }
-            }
 
-            // 14. Thông báo nhập dữ liệu thành công
-            JOptionPane.showMessageDialog(this, "Nhập dữ liệu thành công!");
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Hiển thị thông báo lỗi cho người dùng
-            JOptionPane.showMessageDialog(this, "Lỗi khi mở file Excel: " + e.getMessage());
+                // Thông báo nhập dữ liệu thành công
+                JOptionPane.showMessageDialog(this, "Nhập dữ liệu thành công!");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Hiển thị thông báo lỗi cho người dùng
+                JOptionPane.showMessageDialog(this, "Lỗi khi mở file Excel: " + e.getMessage());
+            }
+        } else {
+            // Thông báo người dùng hủy chọn file
+            JOptionPane.showMessageDialog(this, "Bạn đã hủy chọn file!");
         }
-    } else {
-        // 15. Thông báo người dùng hủy chọn file
-        JOptionPane.showMessageDialog(this, "Bạn đã hủy chọn file!");
-    }
     }// GEN-LAST:event_btnImportExcelActionPerformed
 
     private void txtTimKiemKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtTimKiemKeyReleased
-        // TODO add your handling code here:
+        searchByProductName();
     }// GEN-LAST:event_txtTimKiemKeyReleased
 
     private void tblSPCTMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_tblSPCTMouseClicked
@@ -1055,6 +1436,7 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lb;
+    private raven.pagination.Pagination pagination1;
     private javax.swing.JTable tblSPCT;
     private javax.swing.JTextField txtGiaBan;
     private javax.swing.JTextField txtMaCTSP;

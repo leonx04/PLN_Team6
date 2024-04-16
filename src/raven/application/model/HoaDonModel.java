@@ -5,9 +5,8 @@
 package raven.application.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.security.Timestamp;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  *
@@ -16,16 +15,50 @@ import java.sql.Date;
 public class HoaDonModel {
 
     public String ID;
-    public String MaNhanVien;
-    public String MaKhachHang;
-    public String MaVoucher;
-    public String MaHinhThucThanhToan;
-    public BigDecimal TongTien;
-    public LocalDateTime NgayTao;
-    public String TrangThai;
-    private int STT;
+    public Date ngayTao;
+    public NhanVienModel tenNV = new NhanVienModel();
+    public KhachHangModel tenKH = new KhachHangModel();
+    public VoucherModer tenVoucher = new VoucherModer();
+    public BigDecimal tongTien;
+    public String hinhThucThanhToan;
+    public String trangThai;
+    private int stt;
+
+    public HoaDonModel(String ID, Date ngayTao, NhanVienModel tenNV, KhachHangModel tenKH, VoucherModer tenVoucher, BigDecimal tongTien, String hinhThucThanhToan) {
+        this.ID = ID;
+        this.ngayTao = ngayTao;
+        this.tenNV = tenNV;
+        this.tenKH = tenKH;
+        this.tenVoucher = tenVoucher;
+        this.tongTien = tongTien;
+        this.hinhThucThanhToan = hinhThucThanhToan;
+    }
 
     public HoaDonModel() {
+    }
+
+    public HoaDonModel(String ID, Date ngayTao, NhanVienModel tenNV, KhachHangModel tenKH, BigDecimal tongTien, VoucherModer tenVoucher, String hinhThucThanhToan, String trangThai) {
+        this.ID = ID;
+        this.ngayTao = ngayTao;
+        this.tenNV = tenNV;
+        this.tenKH = tenKH;
+        this.tenVoucher = tenVoucher;
+        this.tongTien = tongTien;
+        this.hinhThucThanhToan = hinhThucThanhToan;
+        this.trangThai = trangThai;
+    }
+
+    public HoaDonModel(String ID, Date ngayTao, NhanVienModel tenNV, KhachHangModel tenKH, VoucherModer tenVoucher, BigDecimal tongTien, String hinhThucThanhToan, String trangThai) {
+
+        this.ID = ID;
+        this.ngayTao = ngayTao;
+        this.tenNV = tenNV;
+        this.tenKH = tenKH;
+        this.tongTien = tongTien;
+        this.tenVoucher = tenVoucher;
+
+        this.hinhThucThanhToan = hinhThucThanhToan;
+        this.trangThai = trangThai;
     }
 
     public String getID() {
@@ -36,76 +69,94 @@ public class HoaDonModel {
         this.ID = ID;
     }
 
-    public String getMaNhanVien() {
-        return MaNhanVien;
+    public Date getNgayTao() {
+        return ngayTao;
     }
 
-    public void setMaNhanVien(String MaNhanVien) {
-        this.MaNhanVien = MaNhanVien;
+    public void setNgayTao(Date ngayTao) {
+        this.ngayTao = ngayTao;
     }
 
-    public String getMaKhachHang() {
-        return MaKhachHang;
+    public NhanVienModel getTenNV() {
+        return tenNV;
     }
 
-    public void setMaKhachHang(String MaKhachHang) {
-        this.MaKhachHang = MaKhachHang;
+    public void setTenNV(NhanVienModel tenNV) {
+        this.tenNV = tenNV;
     }
 
-    public String getMaVoucher() {
-        return MaVoucher;
+    public KhachHangModel getTenKH() {
+        return tenKH;
     }
 
-    public void setMaVoucher(String MaVoucher) {
-        this.MaVoucher = MaVoucher;
+    public void setTenKH(KhachHangModel tenKH) {
+        this.tenKH = tenKH;
     }
 
-    public String getMaHinhThucThanhToan() {
-        return MaHinhThucThanhToan;
+    public VoucherModer getTenVoucher() {
+        return tenVoucher;
     }
 
-    public void setMaHinhThucThanhToan(String MaHinhThucThanhToan) {
-        this.MaHinhThucThanhToan = MaHinhThucThanhToan;
+    public void setTenVoucher(VoucherModer tenVoucher) {
+        this.tenVoucher = tenVoucher;
     }
 
     public BigDecimal getTongTien() {
-        return TongTien;
+        return tongTien;
     }
 
-    public void setTongTien(BigDecimal TongTien) {
-        this.TongTien = TongTien;
+    public void setTongTien(BigDecimal tongTien) {
+        this.tongTien = tongTien;
     }
 
-    public LocalDateTime getNgayTao() {
-        return NgayTao;
+    public String getHinhThucThanhToan() {
+        return hinhThucThanhToan;
     }
 
-    public void setNgayTao(LocalDateTime NgayTao) {
-        this.NgayTao = NgayTao;
+    public void setHinhThucThanhToan(String hinhThucThanhToan) {
+        this.hinhThucThanhToan = hinhThucThanhToan;
     }
 
     public String getTrangThai() {
-        return TrangThai;
+        return trangThai;
     }
 
-    public void setTrangThai(String TrangThai) {
-        this.TrangThai = TrangThai;
+    public void setTrangThai(String trangThai) {
+        this.trangThai = trangThai;
     }
 
-    public int getSTT() {
-        return STT;
+    public int getStt() {
+        return stt;
     }
 
-    public void setSTT(int STT) {
-        this.STT = STT;
+    public void setStt(int stt) {
+        this.stt = stt;
     }
 
     public Object[] toData() {
         return new Object[]{
-            this.STT,
-            this.NgayTao,
-            this.MaNhanVien,
-            this.MaKhachHang,
+            this.stt,
+            this.ID,
+            this.ngayTao,
+            this.tenNV.getHoTen(),
+            this.tenKH.getTen(),
+            this.tenVoucher.getTenVoucher(),
+            this.tongTien,
+            this.hinhThucThanhToan};
+
+    }
+
+    public Object[] toData2() {
+        return new Object[]{
+            this.stt,
+            this.ID,
+            this.ngayTao,
+            this.tenNV.getHoTen(),
+            this.tenKH.getTen(),
+            this.tenVoucher.getTenVoucher(),
+            this.tongTien,
+            this.hinhThucThanhToan,
+            this.trangThai
         };
     }
 }

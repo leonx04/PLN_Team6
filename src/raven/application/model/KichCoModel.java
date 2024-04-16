@@ -23,8 +23,8 @@ public class KichCoModel {
         this.MoTa = MoTa;
     }
 
-    public KichCoModel(String TenSize) {
-        this.TenSize = TenSize;
+    public KichCoModel(String kichco) {
+        this.TenSize = kichco;
     }
 
     public String getID() {
