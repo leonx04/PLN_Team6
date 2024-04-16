@@ -24,6 +24,21 @@ public class LoginForm extends javax.swing.JPanel {
     public LoginForm() {
         initComponents();
         init();
+        addKeyListeners();
+    }
+
+    private void addKeyListeners() {
+        txtUser.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
+            }
+        });
+
+        txtPass.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
+            }
+        });
     }
 
     private void init() {
@@ -145,9 +160,35 @@ public class LoginForm extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+            cmdLoginActionPerformed(null);
+        }
+    }
+
     private void cmdLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLoginActionPerformed
         String maNV = txtUser.getText();
         String matKhau = new String(txtPass.getPassword());
+        // Validate các ô input không được để trống
+        if (maNV.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tài khoản.");
+            return;
+        }
+
+        if (matKhau.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu.");
+            return;
+        }
+
+        if (maNV.length() > 10) {
+            JOptionPane.showMessageDialog(this, "Tài khoản không được vượt quá 10 ký tự.");
+            return;
+        }
+
+        if (matKhau.length() > 20) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu không được vượt quá 20 ký tự.");
+            return;
+        }
 
         try {
             NhanVienModel nhanVienModel = nhanVienService.selectById(maNV);
