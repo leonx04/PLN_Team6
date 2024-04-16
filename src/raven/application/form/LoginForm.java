@@ -42,8 +42,8 @@ public class LoginForm extends javax.swing.JPanel {
         cmdLogin.putClientProperty(FlatClientProperties.STYLE, ""
                 + "borderWidth:0;"
                 + "focusWidth:0");
-        txtUser.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "User Name");
-        txtPass.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Password");
+        txtUser.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Mã nhân viên");
+        txtPass.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Mật khẩu");
     }
 
     @SuppressWarnings("unchecked")
@@ -63,7 +63,7 @@ public class LoginForm extends javax.swing.JPanel {
 
         cmdLogin.setBackground(new java.awt.Color(0, 153, 102));
         cmdLogin.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cmdLogin.setText("Login");
+        cmdLogin.setText("Đăng nhập");
         cmdLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdLoginActionPerformed(evt);
@@ -71,15 +71,15 @@ public class LoginForm extends javax.swing.JPanel {
         });
 
         lbTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbTitle.setText("Login");
+        lbTitle.setText("Đăng nhập");
 
-        lbUser.setText("User Name");
+        lbUser.setText("Tên tài khoản");
 
-        lbPass.setText("Password");
+        lbPass.setText("Mật khẩu");
 
         btnExit.setBackground(new java.awt.Color(255, 51, 51));
         btnExit.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnExit.setText("Exit");
+        btnExit.setText("Thoát");
         btnExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExitActionPerformed(evt);
@@ -134,7 +134,7 @@ public class LoginForm extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(204, 204, 204)
                 .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

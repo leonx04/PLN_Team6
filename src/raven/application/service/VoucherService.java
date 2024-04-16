@@ -53,7 +53,9 @@ public class VoucherService {
     public List<VoucherModer> getAllVoucherActive() {
         sql = "SELECT ID, TenVoucher, SoLuong, LoaiVoucher, MucGiamGia, MoTa, NgayBatDau, NgayKetThuc, TrangThai "
                 + "FROM VOUCHER "
-                + "WHERE TrangThai = N'Hoạt động'";
+                + "WHERE TrangThai = N'Hoạt động' "
+                + "AND NgayBatDau <= GETDATE() "
+                + "AND NgayKetThuc > GETDATE()";
         List<VoucherModer> listVoucher = new ArrayList<>();
         try {
             con = DBConnect.getConnection();
@@ -76,6 +78,21 @@ public class VoucherService {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        } finally {
+            // Đóng tài nguyên kết nối
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return listVoucher;
     }
@@ -276,7 +293,7 @@ public class VoucherService {
         }
         return null;
     }
-    
+
     public String getTenByIDVoucher(String ID) {
         sql = "SELECT TenVoucher FROM VOUCHER WHERE ID = ?";
         try {
