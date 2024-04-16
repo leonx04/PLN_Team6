@@ -441,7 +441,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
         Document document = new Document(PageSize.A5);
 
         try {
-            String filePath = "A:\\PDF\\hoa_don.pdf";
+            String filePath = "C:\\Users\\admin\\Documents\\hoa_don.pdf";
             PdfWriter.getInstance(document, new FileOutputStream(filePath));
             document.open();
 
@@ -596,7 +596,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
 
     private void openPDFFile() {
         try {
-            String filePath = "A:\\PDF\\hoa_don.pdf";
+            String filePath = "C:\\Users\\admin\\Documents\\hoa_don.pdf";
             File file = new File(filePath);
             if (file.exists()) {
                 Desktop.getDesktop().open(file);
