@@ -24,13 +24,13 @@ public class HoaDonModel {
     public String trangThai;
     private int stt;
 
-    public HoaDonModel(String ID, Date ngayTao, NhanVienModel tenNV, KhachHangModel tenKH, BigDecimal tongTien, VoucherModer tenVoucher, String hinhThucThanhToan) {
+    public HoaDonModel(String ID, Date ngayTao, NhanVienModel tenNV, KhachHangModel tenKH, VoucherModer tenVoucher, BigDecimal tongTien, String hinhThucThanhToan) {
         this.ID = ID;
         this.ngayTao = ngayTao;
         this.tenNV = tenNV;
         this.tenKH = tenKH;
-        this.tongTien = tongTien;
         this.tenVoucher = tenVoucher;
+        this.tongTien = tongTien;
         this.hinhThucThanhToan = hinhThucThanhToan;
     }
 
@@ -42,8 +42,21 @@ public class HoaDonModel {
         this.ngayTao = ngayTao;
         this.tenNV = tenNV;
         this.tenKH = tenKH;
+        this.tenVoucher = tenVoucher;
+        this.tongTien = tongTien;
+        this.hinhThucThanhToan = hinhThucThanhToan;
+        this.trangThai = trangThai;
+    }
+
+    public HoaDonModel(String ID, Date ngayTao, NhanVienModel tenNV, KhachHangModel tenKH, VoucherModer tenVoucher, BigDecimal tongTien, String hinhThucThanhToan, String trangThai) {
+
+        this.ID = ID;
+        this.ngayTao = ngayTao;
+        this.tenNV = tenNV;
+        this.tenKH = tenKH;
         this.tongTien = tongTien;
         this.tenVoucher = tenVoucher;
+
         this.hinhThucThanhToan = hinhThucThanhToan;
         this.trangThai = trangThai;
     }
@@ -80,20 +93,20 @@ public class HoaDonModel {
         this.tenKH = tenKH;
     }
 
-    public BigDecimal getTongTien() {
-        return tongTien;
-    }
-
-    public void setTongTien(BigDecimal tongTien) {
-        this.tongTien = tongTien;
-    }
-
     public VoucherModer getTenVoucher() {
         return tenVoucher;
     }
 
     public void setTenVoucher(VoucherModer tenVoucher) {
         this.tenVoucher = tenVoucher;
+    }
+
+    public BigDecimal getTongTien() {
+        return tongTien;
+    }
+
+    public void setTongTien(BigDecimal tongTien) {
+        this.tongTien = tongTien;
     }
 
     public String getHinhThucThanhToan() {
@@ -103,6 +116,7 @@ public class HoaDonModel {
     public void setHinhThucThanhToan(String hinhThucThanhToan) {
         this.hinhThucThanhToan = hinhThucThanhToan;
     }
+
     public String getTrangThai() {
         return trangThai;
     }
@@ -129,9 +143,10 @@ public class HoaDonModel {
             this.tenVoucher.getTenVoucher(),
             this.tongTien,
             this.hinhThucThanhToan};
+
     }
 
-    public Object[] toData3() {
+    public Object[] toData2() {
         return new Object[]{
             this.stt,
             this.ID,
@@ -141,7 +156,7 @@ public class HoaDonModel {
             this.tenVoucher.getTenVoucher(),
             this.tongTien,
             this.hinhThucThanhToan,
-            this.trangThai = trangThai
+            this.trangThai
         };
     }
 }

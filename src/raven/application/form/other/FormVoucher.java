@@ -3,6 +3,7 @@ package raven.application.form.other;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.math.BigDecimal;
 import java.util.List;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -18,10 +19,56 @@ public class FormVoucher extends javax.swing.JPanel {
 
     private DefaultTableModel model = new DefaultTableModel();
     private VoucherService service = new VoucherService();
+    private int index = -1;
 
     public FormVoucher() {
         initComponents();
         this.fillTable(service.getAllVoucher());
+//        JComboBox<String> cboTrangThai = new JComboBox<>(
+//                new String[]{"Hoạt động", "Không hoạt động"});
+//        cboTrangThai.setSelectedIndex(0); // Chọn mặc định "Hoạt động"
+//        this.cboTrangThai = cboTrangThai;
+        initCboLoaiVoucher();
+        initCboTrangThai();
+        updateVoucherStatus(); // Gọi hàm cập nhật trạng thái voucher
+        updateActiveVouchers(); // Gọi hàm cập nhật trạng thái voucher hoạt động
+        updateVoucherStatusByQuantity();
+    }
+
+    private void updateVoucherStatusByQuantity() {
+        int updatedCount = service.updateVoucherStatusByQuantity();
+        if (updatedCount > 0) {
+            System.out.println("Đã cập nhật trạng thái của " + updatedCount + " voucher thành Không hoạt động.");
+            fillTable(service.getAllVoucher()); // Cập nhật lại bảng voucher
+        }
+    }
+
+    private void updateVoucherStatus() {
+        int updatedCount = service.updateStatusVoucher();
+        if (updatedCount > 0) {
+            System.out.println("Đã cập nhật trạng thái của " + updatedCount + " voucher thành Hoạt động.");
+            fillTable(service.getAllVoucher()); // Cập nhật lại bảng voucher
+        }
+    }
+
+    private void updateActiveVouchers() {
+        int updatedCount = service.updateActiveVouchers();
+        if (updatedCount > 0) {
+            System.out.println("Đã cập nhật trạng thái của " + updatedCount + " voucher thành Hoạt động.");
+            fillTable(service.getAllVoucher()); // Cập nhật lại bảng voucher
+        }
+    }
+
+    private void initCboLoaiVoucher() {
+        cboLoaiVoucher.addItem("Giảm theo phần trăm");
+        cboLoaiVoucher.addItem("Giảm theo giá tiền");
+        cboLoaiVoucher.setSelectedIndex(0); // Chọn mặc định "Giảm theo phần trăm"
+    }
+
+    private void initCboTrangThai() {
+        cboTrangThai.addItem("Hoạt động");
+        cboTrangThai.addItem("Không hoạt động");
+        cboTrangThai.setSelectedIndex(0);
     }
 
     void fillTable(List<VoucherModer> list) {
@@ -32,10 +79,24 @@ public class FormVoucher extends javax.swing.JPanel {
             voucher.setSTT(index++);
             model.addRow(voucher.toData());
         }
-        if (model.getRowCount() > 0) {
-            tblVoucher.scrollRectToVisible(tblVoucher.getCellRect(0, 0, true));
-            tblVoucher.setRowSelectionInterval(0, 0);
-        }
+    }
+
+    private VoucherModer readForm() {
+        String ma = txtMaVoucher.getText().trim();
+        String ten = txtTenVoucher.getText().trim();
+        int soLuong = Integer.parseInt(txtSoLuong.getText().trim());
+        String loai = (String) cboLoaiVoucher.getSelectedItem();
+        BigDecimal mucGiam = new BigDecimal(txtMucGiamGia.getText().trim());
+        String moTa = txtMoTa.getText().trim();
+        java.util.Date ngayBD = dateBD.getDate();
+        java.util.Date ngayKT = dateKT.getDate();
+        java.sql.Date sqlNgayBD = new java.sql.Date(ngayBD.getTime());
+        java.sql.Date sqlNgayKT = new java.sql.Date(ngayKT.getTime());
+        String trangThai = (String) cboTrangThai.getSelectedItem(); // Đọc dữ liệu từ cboTrangThai
+
+        VoucherModer voucher = new VoucherModer(ma, ten, soLuong, loai, mucGiam, moTa, sqlNgayBD, sqlNgayKT);
+        voucher.setTrangThai(trangThai); // Gán trạng thái vào voucher
+        return voucher;
     }
 
     void showData(int index) {
@@ -43,43 +104,71 @@ public class FormVoucher extends javax.swing.JPanel {
         String tenVoucher = tblVoucher.getValueAt(index, 2).toString().trim();
         String soLuong = String.valueOf(tblVoucher.getValueAt(index, 3)).trim();
         String loaiVoucher = tblVoucher.getValueAt(index, 4).toString().trim();
-        String mucGiamGia = tblVoucher.getValueAt(index, 5).toString().trim();
+        BigDecimal mucGiamGiaBD = (BigDecimal) tblVoucher.getValueAt(index, 5);
+        int mucGiamGia = mucGiamGiaBD.intValue(); // Chuyển đổi từ BigDecimal sang int
         String moTa = tblVoucher.getValueAt(index, 6).toString().trim();
+        java.sql.Date ngayBatDau = (java.sql.Date) tblVoucher.getValueAt(index, 7);
+        java.sql.Date ngayKetThuc = (java.sql.Date) tblVoucher.getValueAt(index, 8);
+        String trangThai = tblVoucher.getValueAt(index, 9).toString().trim();
+
         txtMaVoucher.setText(ID);
         txtTenVoucher.setText(tenVoucher);
         txtSoLuong.setText(String.valueOf(soLuong));
         cboLoaiVoucher.setSelectedItem(loaiVoucher);
-        txtMucGiamGia.setText(mucGiamGia);
+        txtMucGiamGia.setText(String.valueOf(mucGiamGia));
+
         txtMoTa.setText(moTa);
+        dateBD.setDate(ngayBatDau);
+        dateKT.setDate(ngayKetThuc);
+        cboTrangThai.setSelectedItem(trangThai);
     }
 
-//    VoucherModer read() {
-//        VoucherModer voucher = new VoucherModer(rs.getString(5));
-//        
-//        voucher.setID(txtMaVoucher.getText());
-//        voucher.setTenVoucher(txtTenVoucher.getText());
-//        voucher.setSoLuong(Integer.parseInt(txtSoLuong.getText()));
-//        voucher.setLoaiVoucher(cboLoaiVoucher.getSelectedItem().toString());
-//        voucher.setMucGiamGia(new BigDecimal(txtMucGiamGia.getText()));
-//        voucher.setMoTa(txtMoTa.getText());
-//        return voucher;
-//    }
-
     private boolean checkValidate() {
-        if (txtTenVoucher.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên voucher");
+        // Kiểm tra độ dài và không để trống tên voucher
+        String tenVoucher = txtTenVoucher.getText().trim();
+        if (tenVoucher.isEmpty() || tenVoucher.length() > 50) {
+            JOptionPane.showMessageDialog(this, "Tên voucher không được trống và không được vượt quá 50 ký tự.");
             txtTenVoucher.requestFocus();
             return false;
         }
-        try {
-            int soLuong = Integer.parseInt(txtSoLuong.getText());
-            if (soLuong < 0) {
-                JOptionPane.showMessageDialog(null, "Số lượng phải lớn hơn 0 ");
-            }
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(null, "Số lượng phải là số nguyên");
+
+        // Kiểm tra số lượng là số nguyên dương, không vượt quá 999
+        String soLuongStr = txtSoLuong.getText().trim();
+        if (soLuongStr.isEmpty() || !soLuongStr.matches("\\d+") || soLuongStr.contains("-")) {
+            JOptionPane.showMessageDialog(this, "Số lượng phải là số nguyên dương không vượt quá 999 và không chứa ký tự đặc biệt.");
+            txtSoLuong.requestFocus();
+            return false;
         }
-        return true;
+        int soLuong = Integer.parseInt(soLuongStr);
+        if (soLuong <= 0 || soLuong > 999) {
+            JOptionPane.showMessageDialog(this, "Số lượng phải là số nguyên dương từ 1 đến 999.");
+            txtSoLuong.requestFocus();
+            return false;
+        }
+
+        // Kiểm tra mức giảm giá là số, không âm, không vượt quá 20 ký tự
+        String mucGiamGiaStr = txtMucGiamGia.getText().trim();
+        if (mucGiamGiaStr.isEmpty() || !mucGiamGiaStr.matches("^\\d*\\.?\\d+$") || mucGiamGiaStr.contains("-") || mucGiamGiaStr.length() > 20) {
+            JOptionPane.showMessageDialog(this, "Mức giảm giá phải là số không âm và không vượt quá 20 ký tự.");
+            txtMucGiamGia.requestFocus();
+            return false;
+        }
+        BigDecimal mucGiamGia = new BigDecimal(mucGiamGiaStr);
+        if (mucGiamGia.compareTo(BigDecimal.ZERO) < 0) {
+            JOptionPane.showMessageDialog(this, "Mức giảm giá không được âm và không vượt quá 20 ký tự.");
+            txtMucGiamGia.requestFocus();
+            return false;
+        }
+
+        // Kiểm tra mô tả không vượt quá 255 ký tự và không để trống
+        String moTa = txtMoTa.getText().trim();
+        if (moTa.isEmpty() || moTa.length() > 255) {
+            JOptionPane.showMessageDialog(this, "Mô tả không được trống và không vượt quá 255 ký tự.");
+            txtMoTa.requestFocus();
+            return false;
+        }
+
+        return true; // Nếu các điều kiện đều đúng
     }
 
     public void cbo_TrangThai() {
@@ -97,14 +186,18 @@ public class FormVoucher extends javax.swing.JPanel {
         txtMaVoucher.setText("");
         txtTenVoucher.setText("");
         txtSoLuong.setText("");
-        cboLoaiVoucher.setSelectedItem("");
+        cboLoaiVoucher.setSelectedIndex(0);
         txtMucGiamGia.setText("");
         txtMoTa.setText("");
+//        dateBD.setDate(null);
+//        dateKT.setDate(null);
+        cboTrangThai.setSelectedIndex(0);
     }
-    private void filter(String sa){
+
+    private void filter(String searchQuery) {
         TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<>(model);
         tblVoucher.setRowSorter(tableRowSorter);
-        tableRowSorter.setRowFilter(RowFilter.regexFilter("?i" + sa));
+        tableRowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchQuery, 2)); // Sử dụng cột có chỉ số 2 (Tên voucher)
     }
 
     /**
@@ -119,7 +212,6 @@ public class FormVoucher extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         txtMaVoucher = new javax.swing.JTextField();
@@ -132,28 +224,33 @@ public class FormVoucher extends javax.swing.JPanel {
         jLabel8 = new javax.swing.JLabel();
         txtSoLuong = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         dateBD = new com.toedter.calendar.JDateChooser();
         jLabel10 = new javax.swing.JLabel();
         dateKT = new com.toedter.calendar.JDateChooser();
-        btnLoc = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
         cboTrangThai = new javax.swing.JComboBox<>();
         jLabel12 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtMoTa = new javax.swing.JTextArea();
         btnThem = new javax.swing.JButton();
-        btnXoaTrang = new javax.swing.JButton();
+        btnLamMoi = new javax.swing.JButton();
         btnHuy = new javax.swing.JButton();
         btnSua = new javax.swing.JButton();
+        btnXoa = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tblVoucher = new javax.swing.JTable();
         jLabel14 = new javax.swing.JLabel();
         txtTimKiem = new javax.swing.JTextField();
+        btnLoc = new javax.swing.JButton();
+        dateKT1 = new com.toedter.calendar.JDateChooser();
+        jLabel15 = new javax.swing.JLabel();
+        dateBD1 = new com.toedter.calendar.JDateChooser();
+        jLabel16 = new javax.swing.JLabel();
+        cboTrangThai1 = new javax.swing.JComboBox<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblVoucher = new javax.swing.JTable();
 
         setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         setPreferredSize(new java.awt.Dimension(1295, 713));
@@ -182,12 +279,9 @@ public class FormVoucher extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Thiết lập Voucher", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
         jPanel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jPanel2.setPreferredSize(new java.awt.Dimension(800, 400));
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel2.setText("Thiết lập Voucher");
 
         jPanel3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -196,6 +290,7 @@ public class FormVoucher extends javax.swing.JPanel {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel3.setText("Mã Voucher : ");
 
+        txtMaVoucher.setEditable(false);
         txtMaVoucher.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtMaVoucher.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -222,7 +317,6 @@ public class FormVoucher extends javax.swing.JPanel {
         jLabel6.setText("Mức giảm giá :");
 
         cboLoaiVoucher.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cboLoaiVoucher.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Giảm giá theo %", "Giảm giá theo $" }));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel8.setText("Số Lượng :");
@@ -258,7 +352,7 @@ public class FormVoucher extends javax.swing.JPanel {
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(txtSoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap(116, Short.MAX_VALUE))
+                .addContainerGap(153, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -283,7 +377,7 @@ public class FormVoucher extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(txtMucGiamGia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -291,30 +385,21 @@ public class FormVoucher extends javax.swing.JPanel {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel2))
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Thời gian sử dụng ", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14))); // NOI18N
         jPanel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jPanel4.setPreferredSize(new java.awt.Dimension(600, 400));
-
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel7.setText("Thời gian sử dụng ");
 
         jPanel5.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -323,17 +408,17 @@ public class FormVoucher extends javax.swing.JPanel {
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel9.setText("Thời gian bắt đầu :");
 
+        dateBD.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel10.setText("Thời gian kết thúc :");
 
-        btnLoc.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnLoc.setText("Lọc");
+        dateKT.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel11.setText("Trạng thái Voucher");
 
         cboTrangThai.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cboTrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hoạt động", "Không hoạt động" }));
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel12.setText("Mô tả");
@@ -357,22 +442,17 @@ public class FormVoucher extends javax.swing.JPanel {
                             .addComponent(jLabel12)
                             .addComponent(jLabel11))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(cboTrangThai, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(dateBD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cboTrangThai, 0, 166, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnLoc, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(23, 23, 23))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(dateBD, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                         .addComponent(jLabel10)
                         .addGap(18, 18, 18)
-                        .addComponent(dateKT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(31, 31, 31))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(dateKT, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(23, 23, 23))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -384,18 +464,17 @@ public class FormVoucher extends javax.swing.JPanel {
                     .addComponent(dateBD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
                 .addGap(12, 12, 12)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel11)
-                        .addComponent(cboTrangThai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnLoc))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(cboTrangThai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(13, 13, 13)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel12)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(92, Short.MAX_VALUE))
         );
 
+        btnThem.setBackground(new java.awt.Color(0, 204, 51));
         btnThem.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnThem.setText("Thêm");
         btnThem.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -409,11 +488,12 @@ public class FormVoucher extends javax.swing.JPanel {
             }
         });
 
-        btnXoaTrang.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnXoaTrang.setText("Xóa trắng");
-        btnXoaTrang.addActionListener(new java.awt.event.ActionListener() {
+        btnLamMoi.setBackground(new java.awt.Color(153, 153, 255));
+        btnLamMoi.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnLamMoi.setText("Làm mới");
+        btnLamMoi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnXoaTrangActionPerformed(evt);
+                btnLamMoiActionPerformed(evt);
             }
         });
 
@@ -426,6 +506,7 @@ public class FormVoucher extends javax.swing.JPanel {
             }
         });
 
+        btnSua.setBackground(new java.awt.Color(255, 204, 0));
         btnSua.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnSua.setText("Sửa");
         btnSua.addActionListener(new java.awt.event.ActionListener() {
@@ -434,45 +515,50 @@ public class FormVoucher extends javax.swing.JPanel {
             }
         });
 
+        btnXoa.setBackground(new java.awt.Color(255, 0, 0));
+        btnXoa.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnXoa.setText("Xóa");
+        btnXoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 627, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel7))
-                .addContainerGap(27, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnXoaTrang, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(105, 105, 105)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnHuy, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSua, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(180, 180, 180))
+                        .addGap(143, 143, 143)
+                        .addComponent(btnThem)
+                        .addGap(38, 38, 38)
+                        .addComponent(btnSua, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
+                        .addComponent(btnLamMoi)
+                        .addGap(38, 38, 38)
+                        .addComponent(btnHuy)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnXoa)
+                        .addGap(0, 41, Short.MAX_VALUE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 684, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel7)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnThem)
-                    .addComponent(btnSua))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnHuy)
-                    .addComponent(btnXoaTrang))
-                .addContainerGap(8, Short.MAX_VALUE))
+                    .addComponent(btnLamMoi)
+                    .addComponent(btnSua)
+                    .addComponent(btnThem)
+                    .addComponent(btnXoa))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14))); // NOI18N
@@ -481,45 +567,6 @@ public class FormVoucher extends javax.swing.JPanel {
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel13.setText("Danh sách Voucher");
-
-        tblVoucher.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        tblVoucher.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "STT", "Mã Voucher", "Tên Voucher", "Số Lượng", "Loại Voucher", "Mức giảm giá", "Mô tả"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tblVoucher.setMaximumSize(new java.awt.Dimension(400, 40));
-        tblVoucher.setMinimumSize(new java.awt.Dimension(0, 0));
-        tblVoucher.setPreferredSize(new java.awt.Dimension(300, 40));
-        tblVoucher.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblVoucherMouseClicked(evt);
-            }
-        });
-        jScrollPane2.setViewportView(tblVoucher);
-        if (tblVoucher.getColumnModel().getColumnCount() > 0) {
-            tblVoucher.getColumnModel().getColumn(0).setResizable(false);
-            tblVoucher.getColumnModel().getColumn(1).setResizable(false);
-            tblVoucher.getColumnModel().getColumn(2).setResizable(false);
-            tblVoucher.getColumnModel().getColumn(3).setResizable(false);
-            tblVoucher.getColumnModel().getColumn(4).setResizable(false);
-            tblVoucher.getColumnModel().getColumn(5).setResizable(false);
-            tblVoucher.getColumnModel().getColumn(6).setResizable(false);
-        }
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel14.setText("Tìm kiếm Voucher :");
@@ -536,6 +583,66 @@ public class FormVoucher extends javax.swing.JPanel {
             }
         });
 
+        btnLoc.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnLoc.setText("Lọc");
+        btnLoc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLocActionPerformed(evt);
+            }
+        });
+
+        dateKT1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        jLabel15.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel15.setText("Thời gian kết thúc :");
+
+        dateBD1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel16.setText("Thời gian bắt đầu :");
+
+        cboTrangThai1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cboTrangThai1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hoạt động", "Không hoạt động" }));
+        cboTrangThai1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboTrangThai1ActionPerformed(evt);
+            }
+        });
+
+        tblVoucher.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "STT", "Mã Voucher", "Tên Voucher", "Số Lượng", "Loại Voucher", "Mức Giảm Giá", "Mô tả", "Ngày Bắt Đầu", "Ngày Kết Thúc", "Trạng Thái"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, true, true, true, true, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblVoucher.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblVoucherMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tblVoucher);
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -544,30 +651,50 @@ public class FormVoucher extends javax.swing.JPanel {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGap(14, 14, 14)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1204, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel13)))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(43, 43, 43)
+                        .addComponent(jLabel13)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addComponent(jLabel14)
                         .addGap(18, 18, 18)
-                        .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                        .addComponent(cboTrangThai1, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel16)
+                        .addGap(18, 18, 18)
+                        .addComponent(dateBD1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(46, 46, 46)
+                        .addComponent(jLabel15)
+                        .addGap(18, 18, 18)
+                        .addComponent(dateKT1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnLoc, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane2)))
+                .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel13)
-                .addGap(9, 9, 9)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel14)
-                    .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(6, 6, 6)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel14)
+                        .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnLoc)
+                        .addComponent(jLabel15))
+                    .addComponent(dateBD1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel16)
+                        .addComponent(cboTrangThai1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(dateKT1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -581,8 +708,7 @@ public class FormVoucher extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 680, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26))
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 706, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 1265, Short.MAX_VALUE))
                 .addContainerGap(13, Short.MAX_VALUE))
         );
@@ -593,11 +719,11 @@ public class FormVoucher extends javax.swing.JPanel {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -610,39 +736,26 @@ public class FormVoucher extends javax.swing.JPanel {
     }//GEN-LAST:event_txtMucGiamGiaActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
-        // TODO add your handling code here:
-//        if (!checkValidate()) {
-//            return;
-//        } else {
-//            VoucherModer vm = this.read();
-//            VoucherService vs = new VoucherService();
-//            int index = tblVoucher.getSelectedRow();
-//            int option = JOptionPane.showConfirmDialog(this, 
-//                    "Bạn có muốn cập nhật không?", "Xác nhận cập nhật!", JOptionPane.YES_NO_OPTION);
-//            if (option == JOptionPane.YES_OPTION) {
-//                if (vs.update(vm, vm.getID()) > 0) {
-//                    JOptionPane.showMessageDialog(this, "Cập nhật thành công");
-//                    fillTable(vs.getAllVoucher());
-//                    clear();
-//                }else{
-//                    JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
-//                }
-//            }
-//        }
-    }//GEN-LAST:event_btnSuaActionPerformed
+        if (checkValidate()) {
+            int row = tblVoucher.getSelectedRow();
+            if (row >= 0) {
+                VoucherModer voucher = readForm();
 
-    private void tblVoucherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblVoucherMouseClicked
-        // TODO add your handling code here:
-        int row = this.tblVoucher.getSelectedRow();
-        if (model.getRowCount() > 0 && evt.getClickCount() == 1) {
-            txtMaVoucher.setText(this.tblVoucher.getValueAt(row, 1).toString().trim());
-            txtTenVoucher.setText(this.tblVoucher.getValueAt(row, 2).toString().trim());
-            txtSoLuong.setText(String.valueOf(this.tblVoucher.getValueAt(row, 3)).trim());
-            cboLoaiVoucher.setSelectedItem(this.tblVoucher.getValueAt(row, 4).toString().trim());
-            txtMucGiamGia.setText(tblVoucher.getValueAt(row, 5).toString().trim());
-            txtMoTa.setText(this.tblVoucher.getValueAt(row, 6).toString().trim());
+                int result = service.update(voucher);
+                if (result > 0) {
+                    JOptionPane.showMessageDialog(this, "Sửa thành công!");
+                    updateVoucherStatus(); // Gọi hàm cập nhật trạng thái voucher
+                    updateActiveVouchers(); // Gọi hàm cập nhật trạng thái voucher hoạt động
+                    updateVoucherStatusByQuantity();
+                    fillTable(service.getAllVoucher());
+                } else {
+                    JOptionPane.showMessageDialog(this, "Sửa thất bại!");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn voucher để sửa!");
+            }
         }
-    }//GEN-LAST:event_tblVoucherMouseClicked
+    }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnThemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnThemMouseClicked
         // TODO add your handling code here:
@@ -650,45 +763,66 @@ public class FormVoucher extends javax.swing.JPanel {
     }//GEN-LAST:event_btnThemMouseClicked
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
-        // TODO add your handling code here:
-//        String newID = service.getNewVoucherID();
-//        VoucherModer voucherModer = this.read();
-//        if (!checkValidate()) {
-//            return;
-//        } else {
-//            voucherModer.setID(newID);
-//            if (service.insert(voucherModer) > 0) {
-//                JOptionPane.showMessageDialog(this, "Thêm thành công");
-//                this.fillTable(service.getAllVoucher());
-//                clear();
-//            }
-//        }
+        // Đọc dữ liệu từ form
+        VoucherModer voucher = readForm();
+
+        // Kiểm tra trùng ID
+        if (service.checkTrungID(voucher.getID())) {
+            JOptionPane.showMessageDialog(this, "ID đã tồn tại. Vui lòng nhập ID khác.");
+            return; // Dừng thực hiện nếu ID đã tồn tại
+        }
+
+        // Kiểm tra trùng tên voucher
+        if (service.checkTrungTen(voucher.getTenVoucher())) {
+            JOptionPane.showMessageDialog(this, "Tên voucher đã tồn tại. Vui lòng nhập tên khác.");
+            return; // Dừng thực hiện nếu tên voucher đã tồn tại
+        }
+        // Kiểm tra ngày bắt đầu và ngày kết thúc
+        java.util.Date ngayBD = dateBD.getDate();
+        java.util.Date ngayHT = new java.util.Date(); // Ngày hiện tại
+        if (ngayBD == null || ngayBD.before(ngayHT)) {
+            JOptionPane.showMessageDialog(this, "Ngày bắt đầu phải là ngày hiện tại hoặc sau ngày hiện tại.");
+            dateBD.requestFocus();
+            return;
+        }
+
+        java.util.Date ngayKT = dateKT.getDate();
+        if (ngayKT == null || ngayKT.before(ngayBD)) {
+            JOptionPane.showMessageDialog(this, "Ngày kết thúc không được trống và phải là ngày sau ngày bắt đầu.");
+            dateKT.requestFocus();
+            return;
+        }
+        // Lấy ID mới cho voucher
+        String newID = service.getNewVoucherID();
+        voucher.setID(newID);
+
+        // Thêm voucher vào cơ sở dữ liệu
+        int result = service.insert(voucher);
+        if (result > 0) {
+            JOptionPane.showMessageDialog(this, "Thêm voucher thành công.");
+
+            // Lấy lại toàn bộ danh sách voucher từ cơ sở dữ liệu
+            List<VoucherModer> listVoucher = service.getAllVoucher();
+            updateVoucherStatus(); // Gọi hàm cập nhật trạng thái voucher
+            updateActiveVouchers(); // Gọi hàm cập nhật trạng thái voucher hoạt động
+            // Đổ dữ liệu vào bảng
+            fillTable(listVoucher);
+        } else {
+            JOptionPane.showMessageDialog(this, "Đã xảy ra lỗi khi thêm voucher.");
+        }
     }//GEN-LAST:event_btnThemActionPerformed
 
-    private void btnXoaTrangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaTrangActionPerformed
+    private void btnLamMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLamMoiActionPerformed
         // TODO add your handling code here:
+        updateVoucherStatus(); // Gọi hàm cập nhật trạng thái voucher
+        updateActiveVouchers(); // Gọi hàm cập nhật trạng thái voucher hoạt động
         this.clear();
-    }//GEN-LAST:event_btnXoaTrangActionPerformed
+        fillTable(service.getAllVoucher());
+    }//GEN-LAST:event_btnLamMoiActionPerformed
 
     private void btnHuyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHuyActionPerformed
         // TODO add your handling code here:
-        int row = tblVoucher.getSelectedRow();
-        if (row >= 0) {
-            String ID = tblVoucher.getValueAt(row, 1).toString();
-            int option = JOptionPane.showConfirmDialog(this,
-                    "Bạn có muốn hủy không ?", "Xác nhận hủy", JOptionPane.YES_NO_OPTION);
-            if (option == JOptionPane.YES_OPTION) {
-                if (service.delete(ID) > 0) {
-                    JOptionPane.showMessageDialog(this, "Hủy thành công!!");
-                    fillTable(service.getAllVoucher());
-                    clear();
-                }else{
-                    JOptionPane.showMessageDialog(this, "Xóa thất bại!!");
-                }
-            }
-        }else{
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn voucher để hủy");
-        }
+
     }//GEN-LAST:event_btnHuyActionPerformed
 
     private void txtTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTimKiemActionPerformed
@@ -697,33 +831,95 @@ public class FormVoucher extends javax.swing.JPanel {
 
     private void txtTimKiemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimKiemKeyReleased
         // TODO add your handling code here:
-        String sa = txtTimKiem.getText();
-        filter(sa);
+        String searchQuery = txtTimKiem.getText().trim();
+        // Gọi hàm filter để lọc dữ liệu trong bảng
+        filter(searchQuery);
     }//GEN-LAST:event_txtTimKiemKeyReleased
+
+    private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
+        int row = tblVoucher.getSelectedRow();
+        if (row >= 0) {
+            String ID = tblVoucher.getValueAt(row, 1).toString();
+            if (service.checkTonTaiHD(ID)) {
+                JOptionPane.showMessageDialog(this, "Không thể xóa khách hàng vì đang tồn tại trong bảng hóa đơn.");
+                return;
+            }
+            int option = JOptionPane.showConfirmDialog(this,
+                    "Bạn có muốn xóa vucher này không ?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+            if (option == JOptionPane.YES_OPTION) {
+                if (service.delete(ID) > 0) {
+                    JOptionPane.showMessageDialog(this, "Xóa thành công!!");
+                    updateVoucherStatus(); // Gọi hàm cập nhật trạng thái voucher
+                    updateActiveVouchers(); // Gọi hàm cập nhật trạng thái voucher hoạt động
+                    fillTable(service.getAllVoucher());
+                    clear();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Xóa thất bại!!");
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn voucher để xóa");
+        }
+    }//GEN-LAST:event_btnXoaActionPerformed
+
+    private void btnLocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLocActionPerformed
+        java.util.Date ngayBD = dateBD1.getDate();
+        java.util.Date ngayKT = dateKT1.getDate();
+
+        if (ngayBD != null && ngayKT != null) {
+            java.sql.Date sqlNgayBD = new java.sql.Date(ngayBD.getTime());
+            java.sql.Date sqlNgayKT = new java.sql.Date(ngayKT.getTime());
+            List<VoucherModer> list = service.getAllVoucherByNgay(sqlNgayBD, sqlNgayKT);
+            fillTable(list);
+        } else {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn đầy đủ ngày bắt đầu và ngày kết thúc");
+        }
+    }//GEN-LAST:event_btnLocActionPerformed
+
+    private void cboTrangThai1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboTrangThai1ActionPerformed
+        String trangThai = (String) cboTrangThai1.getSelectedItem();
+        List<VoucherModer> list = service.getAllVoucherByTrangThai(trangThai);
+        updateVoucherStatus(); // Gọi hàm cập nhật trạng thái voucher
+        updateActiveVouchers(); // Gọi hàm cập nhật trạng thái voucher hoạt động
+        fillTable(list);
+    }//GEN-LAST:event_cboTrangThai1ActionPerformed
+
+    private void tblVoucherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblVoucherMouseClicked
+        // TODO add your handling code here:
+        int index = tblVoucher.getSelectedRow(); // Lấy chỉ mục của hàng được chọn trong bảng
+        if (index >= 0) { // Kiểm tra nếu hàng được chọn hợp lệ
+            showData(index); // Hiển thị dữ liệu của hàng được chọn
+        }
+
+    }//GEN-LAST:event_tblVoucherMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnHuy;
+    private javax.swing.JButton btnLamMoi;
     private javax.swing.JButton btnLoc;
     private javax.swing.JButton btnSua;
     private javax.swing.JButton btnThem;
-    private javax.swing.JButton btnXoaTrang;
+    private javax.swing.JButton btnXoa;
     private javax.swing.JComboBox<String> cboLoaiVoucher;
     private javax.swing.JComboBox<String> cboTrangThai;
+    private javax.swing.JComboBox<String> cboTrangThai1;
     private com.toedter.calendar.JDateChooser dateBD;
+    private com.toedter.calendar.JDateChooser dateBD1;
     private com.toedter.calendar.JDateChooser dateKT;
+    private com.toedter.calendar.JDateChooser dateKT1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;

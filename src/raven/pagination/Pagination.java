@@ -1,52 +1,48 @@
 package raven.pagination;
 
-import static com.itextpdf.kernel.pdf.PdfName.Page;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import pagination.DefaultPaginationItemRender;
-import pagination.EventPagination;
-import pagination.PaginationItemRender;
 
 public class Pagination extends JPanel {
 
-    public PaginationItemRender getPaginationItemRender() {
+    public pagination.PaginationItemRender getPaginationItemRender() {
         return paginationItemRender;
     }
 
-    public void setPaginationItemRender(PaginationItemRender paginationItemRender) {
+    public void setPaginationItemRender(pagination.PaginationItemRender paginationItemRender) {
         this.paginationItemRender = paginationItemRender;
         changePage(page.getCurrent(), page.getTotalPage());
     }
 
-    private PaginationItemRender paginationItemRender;
-    private List<EventPagination> events = new ArrayList<>();
-    private Page page;
+    private pagination.PaginationItemRender paginationItemRender;
+    private List<pagination.EventPagination> events = new ArrayList<>();
+    private pagination.Page page;
 
     public Pagination() {
         init();
     }
 
     private void init() {
-        paginationItemRender = new DefaultPaginationItemRender();
+        paginationItemRender = new pagination.DefaultPaginationItemRender();
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
         setPagegination(1, 1);
     }
 
     private void runEvent() {
-        for (EventPagination event : events) {
+        for (pagination.EventPagination event : events) {
             event.pageChanged(page.getCurrent());
         }
     }
 
     private boolean isEnable(Object item) {
-        return (item instanceof Page.BreakLabel || Integer.valueOf(item.toString()) != page.getCurrent());
+        return (item instanceof pagination.Page.BreakLabel || Integer.valueOf(item.toString()) != page.getCurrent());
     }
 
-    public void addEventPagination(EventPagination event) {
+    public void addEventPagination(pagination.EventPagination event) {
         events.add(event);
     }
 
@@ -85,8 +81,8 @@ public class Pagination extends JPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (!cmd.isSelected() && item != null) {
-                        if (item instanceof Page.BreakLabel) {
-                            Page.BreakLabel pb = (Page.BreakLabel) item;
+                        if (item instanceof pagination.Page.BreakLabel) {
+                            pagination.Page.BreakLabel pb = (pagination.Page.BreakLabel) item;
                             setPagegination(pb.getPage(), totalPage);
                         } else {
                             setPagegination(Integer.valueOf(item.toString()), totalPage);
@@ -115,29 +111,29 @@ public class Pagination extends JPanel {
         revalidate();
     }
 
-    private Page paginate(int current, int max) {
+    private pagination.Page paginate(int current, int max) {
         boolean prev = current > 1;
         boolean next = current < max;
         List<Object> items = new ArrayList<>();
         items.add(1);
         if (current == 1 && max == 1) {
-            return new Page(current, prev, next, items, max);
+            return new pagination.Page(current, prev, next, items, max);
         }
         int r = 2;
         int r1 = current - r;
         int r2 = current + r;
         if (current > 4) {
-            items.add(new Page.BreakLabel((r1 > 2 ? r1 : 2) - 1));
+            items.add(new pagination.Page.BreakLabel((r1 > 2 ? r1 : 2) - 1));
         }
         for (int i = r1 > 2 ? r1 : 2; i <= Math.min(max, r2); i++) {
             items.add(i);
         }
         if (r2 + 1 < max) {
-            items.add(new Page.BreakLabel(Integer.valueOf(items.get(items.size() - 1).toString()) + 1));
+            items.add(new pagination.Page.BreakLabel(Integer.valueOf(items.get(items.size() - 1).toString()) + 1));
         }
         if (r2 < max) {
             items.add(max);
         }
-        return new Page(current, prev, next, items, max);
+        return new pagination.Page(current, prev, next, items, max);
     }
 }

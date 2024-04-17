@@ -64,73 +64,48 @@ public class ChiTietHoaDonService {
         }
     }
 
-    public List<ChiTietHoaDonModel> getAllCTHD2() {
-        sql = "SELECT        HOADONCHITIET.ID, SANPHAMCHITIET.ID AS Expr1, SANPHAM.TenSanPham, MAUSAC.TenMau, SIZE.Ten, THUONGHIEU.Ten AS Expr2, CHATLIEU.Ten AS Expr3, SANPHAMCHITIET.GiaBan, HOADONCHITIET.SoLuong, \n"
-                + "                         HOADONCHITIET.ThanhTien\n"
-                + "FROM            HOADONCHITIET INNER JOIN\n"
-                + "                         SANPHAMCHITIET ON HOADONCHITIET.ID_SanPhamChiTiet = SANPHAMCHITIET.ID INNER JOIN\n"
-                + "                         SANPHAM ON SANPHAMCHITIET.ID_SanPham = SANPHAM.ID INNER JOIN\n"
-                + "                         MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID INNER JOIN\n"
-                + "                         SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID INNER JOIN\n"
-                + "                         THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID INNER JOIN\n"
-                + "                         CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID";
-        try {
-            con = DBConnect.getConnection();
-            ps = con.prepareStatement(sql);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                ChiTietHoaDonModel cthh = new ChiTietHoaDonModel(
-                        rs.getString(1),
-                        new SanPhamModel(rs.getString(2)),
-                        new MauSacModel(rs.getString(3)),
-                        new KichCoModel(rs.getString(4)),
-                        new ChatLieuModel(rs.getString(5)),
-                        new ThuongHieuModel(rs.getString(6)),
-                        new ChiTietSanPhamModel(rs.getBigDecimal(7)),
-                        rs.getInt(8),
-                        rs.getBigDecimal(9)
-                );
-                listCTHD.add(cthh);
-            }
-            return listCTHD;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     public List<ChiTietHoaDonModel> searchByHoaDonID(String hoaDonID) {
-        sql = "SELECT        HOADONCHITIET.ID, SANPHAM.TenSanPham AS TenSP, MAUSAC.TenMau AS TenMS, SIZE.Ten AS TenSize, THUONGHIEU.Ten AS TenTT, CHATLIEU.Ten AS TenCL, SANPHAMCHITIET.GiaBan AS DonGia, \n"
-                + "                         HOADONCHITIET.SoLuong, HOADONCHITIET.ThanhTien\n"
-                + "FROM            HOADONCHITIET INNER JOIN\n"
-                + "                          SANPHAMCHITIET ON HOADONCHITIET.ID_SanPhamChiTiet = SANPHAMCHITIET.ID INNER JOIN\n"
-                + "                         SANPHAM ON SANPHAM.ID = SANPHAMCHITIET.ID_SanPham INNER JOIN\n"
-                + "                         MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID INNER JOIN\n"
-                + "                         SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID INNER JOIN\n"
-                + "                         THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID INNER JOIN\n"
-                + "                         CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID\n"
-                + "						 where HOADONCHITIET.ID = ? ";
+        List<ChiTietHoaDonModel> listCTHD = new ArrayList<>();
+        String sql = "SELECT HOADONCHITIET.ID, SANPHAM.TenSanPham AS TenSP, MAUSAC.TenMau AS TenMS, SIZE.Ten AS TenSize, THUONGHIEU.Ten AS TenTT, CHATLIEU.Ten AS TenCL, SANPHAMCHITIET.GiaBan AS DonGia, "
+                + "HOADONCHITIET.SoLuong, HOADONCHITIET.ThanhTien "
+                + "FROM HOADONCHITIET "
+                + "INNER JOIN SANPHAMCHITIET ON HOADONCHITIET.ID_SanPhamChiTiet = SANPHAMCHITIET.ID "
+                + "INNER JOIN SANPHAM ON SANPHAM.ID = SANPHAMCHITIET.ID_SanPham "
+                + "INNER JOIN MAUSAC ON SANPHAMCHITIET.ID_MauSac = MAUSAC.ID "
+                + "INNER JOIN SIZE ON SANPHAMCHITIET.ID_Size = SIZE.ID "
+                + "INNER JOIN THUONGHIEU ON SANPHAMCHITIET.ID_ThuongHieu = THUONGHIEU.ID "
+                + "INNER JOIN CHATLIEU ON SANPHAMCHITIET.ID_ChatLieu = CHATLIEU.ID "
+                + "WHERE HOADONCHITIET.ID_HoaDon = ?";
+
         try {
-            con = DBConnect.getConnection();
-            ps = con.prepareStatement(sql);
-            rs = ps.executeQuery();
+            Connection con = DBConnect.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, hoaDonID); // Thiết lập giá trị tham số cho câu truy vấn
+            ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
                 ChiTietHoaDonModel cthh = new ChiTietHoaDonModel(
-                        rs.getString(1),
-                        new SanPhamModel(rs.getString(2)),
-                        new MauSacModel(rs.getString(3)),
-                        new KichCoModel(rs.getString(4)),
-                        new ChatLieuModel(rs.getString(5)),
-                        new ThuongHieuModel(rs.getString(6)),
-                        new ChiTietSanPhamModel(rs.getBigDecimal(7)),
-                        rs.getInt(8),
-                        rs.getBigDecimal(9)
+                        rs.getString("ID"),
+                        new SanPhamModel(rs.getString("TenSP")),
+                        new MauSacModel(rs.getString("TenMS")),
+                        new KichCoModel(rs.getString("TenSize")),
+                        new ChatLieuModel(rs.getString("TenCL")),
+                        new ThuongHieuModel(rs.getString("TenTT")),
+                        new ChiTietSanPhamModel(rs.getBigDecimal("DonGia")),
+                        rs.getInt("SoLuong"),
+                        rs.getBigDecimal("ThanhTien")
                 );
                 listCTHD.add(cthh);
             }
+
+            // Đóng kết nối và trả về danh sách chi tiết hoá đơn
+            rs.close();
+            ps.close();
+            con.close();
             return listCTHD;
-        } catch (Exception e) {
-            e.printStackTrace();;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }

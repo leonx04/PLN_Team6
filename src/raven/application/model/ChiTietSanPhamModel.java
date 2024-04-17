@@ -49,7 +49,7 @@ public class ChiTietSanPhamModel {
 
     public ChiTietSanPhamModel() {
     }
-    
+
     public ChiTietSanPhamModel(String ID) {
         this.ID = ID;
     }
@@ -135,14 +135,14 @@ public class ChiTietSanPhamModel {
     }
 
     public Object[] toData() {
-        return new Object[] { this.stt, this.ID, this.tenSP.getTenSP(), this.mauSac.getTenMS(),
-                this.kichCo.getTenSize(), this.chatLieu.getTenCL(), this.thuongHieu.getTenTH(), this.giaBan,
-                this.SoLuongTon, this.MoTa };
+        return new Object[]{this.stt, this.ID, this.tenSP.getTenSP(), this.mauSac.getTenMS(),
+            this.kichCo.getTenSize(), this.chatLieu.getTenCL(), this.thuongHieu.getTenTH(), this.giaBan,
+            this.SoLuongTon, this.MoTa};
     }
-    
+
     public Object[] toData2() {
-        return new Object[] {  this.ID, this.tenSP.getTenSP(), this.mauSac.getTenMS(),
-                this.kichCo.getTenSize(), this.chatLieu.getTenCL(), this.thuongHieu.getTenTH(), this.giaBan,
-                this.SoLuongTon, this.MoTa };
+        return new Object[]{this.ID, this.tenSP.getTenSP(), this.mauSac.getTenMS(),
+            this.kichCo.getTenSize(), this.chatLieu.getTenCL(), this.thuongHieu.getTenTH(), this.giaBan,
+            this.SoLuongTon, this.MoTa};
     }
 }

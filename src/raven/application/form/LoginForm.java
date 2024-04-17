@@ -24,6 +24,21 @@ public class LoginForm extends javax.swing.JPanel {
     public LoginForm() {
         initComponents();
         init();
+        addKeyListeners();
+    }
+
+    private void addKeyListeners() {
+        txtUser.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
+            }
+        });
+
+        txtPass.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
+            }
+        });
     }
 
     private void init() {
@@ -42,8 +57,8 @@ public class LoginForm extends javax.swing.JPanel {
         cmdLogin.putClientProperty(FlatClientProperties.STYLE, ""
                 + "borderWidth:0;"
                 + "focusWidth:0");
-        txtUser.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "User Name");
-        txtPass.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Password");
+        txtUser.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Mã nhân viên");
+        txtPass.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Mật khẩu");
     }
 
     @SuppressWarnings("unchecked")
@@ -63,7 +78,7 @@ public class LoginForm extends javax.swing.JPanel {
 
         cmdLogin.setBackground(new java.awt.Color(0, 153, 102));
         cmdLogin.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cmdLogin.setText("Login");
+        cmdLogin.setText("Đăng nhập");
         cmdLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdLoginActionPerformed(evt);
@@ -71,15 +86,15 @@ public class LoginForm extends javax.swing.JPanel {
         });
 
         lbTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbTitle.setText("Login");
+        lbTitle.setText("Đăng nhập");
 
-        lbUser.setText("User Name");
+        lbUser.setText("Tên tài khoản");
 
-        lbPass.setText("Password");
+        lbPass.setText("Mật khẩu");
 
         btnExit.setBackground(new java.awt.Color(255, 51, 51));
         btnExit.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnExit.setText("Exit");
+        btnExit.setText("Thoát");
         btnExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExitActionPerformed(evt);
@@ -134,7 +149,7 @@ public class LoginForm extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(204, 204, 204)
                 .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,9 +160,45 @@ public class LoginForm extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+            cmdLoginActionPerformed(null);
+        } else if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_TAB) {
+            if (evt.getSource() == txtUser) {
+                txtPass.requestFocus();
+            } else if (evt.getSource() == txtPass) {
+                txtUser.requestFocus();
+            }
+        }
+    }
+
     private void cmdLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLoginActionPerformed
         String maNV = txtUser.getText();
         String matKhau = new String(txtPass.getPassword());
+        // Validate các ô input không được để trống
+        if (maNV.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tài khoản.");
+            txtUser.requestFocus();
+            return;
+        }
+
+        if (matKhau.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu.");
+            txtPass.requestFocus();
+            return;
+        }
+
+        if (maNV.length() > 10) {
+            JOptionPane.showMessageDialog(this, "Tài khoản không được vượt quá 10 ký tự.");
+            txtUser.requestFocus();
+            return;
+        }
+
+        if (matKhau.length() > 20) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu không được vượt quá 20 ký tự.");
+            txtPass.requestFocus();
+            return;
+        }
 
         try {
             NhanVienModel nhanVienModel = nhanVienService.selectById(maNV);
@@ -160,7 +211,9 @@ public class LoginForm extends javax.swing.JPanel {
                 if (!nhanVienModel.getMatKhau().equals(hashedPassword)) {
                     JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu");
                 } else {
-                    JOptionPane.showMessageDialog(this, "Đăng nhập thành công " + nhanVienModel.isChucVu());
+                    String loginMessage = nhanVienModel.isChucVu() ? "Đăng nhập thành công với vai trò khoản quản lý"
+                            : "Đăng nhập thành công với vai trò nhân viên";
+                    JOptionPane.showMessageDialog(this, loginMessage);
                     Auth.user = nhanVienModel;
                     Application.login();
                 }

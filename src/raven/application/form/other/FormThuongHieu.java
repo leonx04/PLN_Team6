@@ -5,6 +5,7 @@
 package raven.application.form.other;
 
 import javax.swing.JOptionPane;
+import raven.application.Application;
 
 import raven.application.model.MauSacModel;
 import raven.application.model.ThuongHieuModel;
@@ -15,6 +16,7 @@ import raven.application.service.ThuongHieuService;
  * @author dungn
  */
 public class FormThuongHieu extends javax.swing.JFrame {
+
     private ThuongHieuService thrs = new ThuongHieuService();
 
     /**
@@ -23,7 +25,33 @@ public class FormThuongHieu extends javax.swing.JFrame {
     public FormThuongHieu() {
         initComponents();
         this.setLocationRelativeTo(null);
-        setTitle("Thương hiệu");
+        setTitle("Hãng");
+    }
+
+    private boolean validateFields() {
+        String tenChatLieu = txtTenKichThuoc.getText().trim();
+        String moTa = txtMoTa.getText().trim();
+
+        if (tenChatLieu.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên hãng!");
+            return false;
+        }
+        if (moTa.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mô tả hãng!");
+            return false;
+        }
+
+        if (tenChatLieu.length() > 100) {
+            JOptionPane.showMessageDialog(this, "Tên hãng tối đa là 100 ký tự!");
+            return false;
+        }
+
+        if (moTa.length() > 254) {
+            JOptionPane.showMessageDialog(this, "Mô tả tối đa là 254 ký tự!");
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -121,12 +149,20 @@ public class FormThuongHieu extends javax.swing.JFrame {
     private void btnThuongHieuActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnThuongHieuActionPerformed
         String tenTH = txtTenKichThuoc.getText();
         String moTa = txtMoTa.getText();
-
+        if (thrs.checkTrungTen(txtTenKichThuoc.getText().trim())) {
+            JOptionPane.showMessageDialog(this, "Tên hãng đã tồn tại!");
+            txtTenKichThuoc.requestFocus();
+            return;
+        }
+        if (!validateFields()) {
+            return;
+        }
         String newID = thrs.getNewIDTH();
         ThuongHieuModel thuongHieu = new ThuongHieuModel(newID, tenTH, moTa);
 
         if (thrs.insert(thuongHieu) > 0) {
             JOptionPane.showMessageDialog(this, "Thêm thành công !");
+            Application.showForm(new FormSanPhamChiTiet());
         } else {
             JOptionPane.showMessageDialog(this, "Thêm thất bại!");
         }

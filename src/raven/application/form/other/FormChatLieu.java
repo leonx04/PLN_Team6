@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import raven.application.Application;
 
 import raven.application.model.ChatLieuModel;
 import raven.application.model.SanPhamModel;
@@ -21,7 +22,6 @@ public class FormChatLieu extends javax.swing.JFrame {
 
     private DefaultTableModel model = new DefaultTableModel();
     private ChatLieuService clrs = new ChatLieuService();
-    public FormSanPhamChiTiet ctsp = new FormSanPhamChiTiet();
 
     /**
      * Creates new form FormMauSac
@@ -32,6 +32,36 @@ public class FormChatLieu extends javax.swing.JFrame {
         setTitle("Chất liệu");
     }
 
+    private boolean validateFields() {
+        String tenChatLieu = txtTenKichThuoc.getText().trim();
+        String moTa = txtMoTa.getText().trim();
+
+        if (tenChatLieu.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên chất liệu!");
+            txtTenKichThuoc.requestFocus();
+            return false;
+        }
+        if (moTa.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mô tả chất liệu!");
+            txtMoTa.requestFocus();
+            return false;
+        }
+
+        if (tenChatLieu.length() > 100) {
+            JOptionPane.showMessageDialog(this, "Tên chất liệu tối đa là 100 ký tự!");
+            txtTenKichThuoc.requestFocus();
+            return false;
+        }
+
+        if (moTa.length() > 254) {
+            JOptionPane.showMessageDialog(this, "Mô tả tối đa là 254 ký tự!");
+            txtMoTa.requestFocus();
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -39,7 +69,8 @@ public class FormChatLieu extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         btnChatLieu = new javax.swing.JButton();
@@ -74,42 +105,52 @@ public class FormChatLieu extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnChatLieu)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(54, 54, 54)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtTenKichThuoc, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(btnChatLieu)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout
+                                                                .createSequentialGroup()
+                                                                .addComponent(jLabel1)
+                                                                .addPreferredGap(
+                                                                        javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(jLabel2)
+                                                                .addGap(54, 54, 54)))
+                                                .addGroup(layout
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING,
+                                                                false)
+                                                        .addComponent(txtTenKichThuoc,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, 287,
+                                                                Short.MAX_VALUE)
+                                                        .addComponent(jScrollPane1))))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtTenKichThuoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(jLabel2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
-                .addComponent(btnChatLieu)
-                .addGap(21, 21, 21))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(17, 17, 17)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel1)
+                                        .addComponent(txtTenKichThuoc, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGap(28, 28, 28)
+                                                .addComponent(jLabel2))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24,
+                                        Short.MAX_VALUE)
+                                .addComponent(btnChatLieu)
+                                .addGap(21, 21, 21)));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -117,14 +158,21 @@ public class FormChatLieu extends javax.swing.JFrame {
     private void btnChatLieuActionPerformed(java.awt.event.ActionEvent evt) {
         String tenChatLieu = txtTenKichThuoc.getText();
         String moTa = txtMoTa.getText();
-
+        if (clrs.checkTrungTen(txtTenKichThuoc.getText().trim())) {
+            JOptionPane.showMessageDialog(this, "Tên chất liệu đã tồn tại!");
+            txtTenKichThuoc.requestFocus();
+            return;
+        }
+        if (!validateFields()) {
+            return;
+        }
         ChatLieuService service = new ChatLieuService();
         String newID = service.getNewIDCL();
         ChatLieuModel chatLieu = new ChatLieuModel(newID, tenChatLieu, moTa);
 
         if (clrs.insert(chatLieu) > 0) {
             JOptionPane.showMessageDialog(this, "Thêm thành công !");
-            
+            Application.showForm(new FormSanPhamChiTiet());
         } else {
             JOptionPane.showMessageDialog(this, "Thêm thất bại!");
         }
@@ -170,7 +218,6 @@ public class FormChatLieu extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new FormChatLieu().setVisible(true);
-                
             }
         });
     }

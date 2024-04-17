@@ -11,10 +11,13 @@ import java.awt.Image;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import raven.application.form.LoginForm;
 import raven.application.form.MainForm;
+import raven.application.form.other.FormAddKhachHang;
+import raven.application.form.other.FormBanHang;
 import raven.toast.Notifications;
 
 /**
@@ -140,6 +143,7 @@ public class Application extends javax.swing.JFrame {
         UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
         // Thiết lập giao diện MacDark
         FlatMacDarkLaf.setup();
+        
 
         // Chạy ứng dụng trong Event Dispatch Thread
         java.awt.EventQueue.invokeLater(() -> {
@@ -149,6 +153,17 @@ public class Application extends javax.swing.JFrame {
             // Hiển thị cửa sổ ứng dụng
             app.setVisible(true);
         });
+//        // Khởi tạo JPanel của FormBanHang
+//        FormBanHang formBanHangPanel = new FormBanHang();
+//
+//        // Khởi tạo JFrame của FormAddKhachHang và truyền tham chiếu đến JPanel của FormBanHang
+//        FormAddKhachHang formAddKhachHangFrame = new FormAddKhachHang(formBanHangPanel);
+//
+//        // Thiết lập đóng ứng dụng khi đóng cửa sổ
+//        formAddKhachHangFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//
+//        // Hiển thị JFrame của FormAddKhachHang
+//        formAddKhachHangFrame.setVisible(true);
     }
 
     // Trong lớp Application
