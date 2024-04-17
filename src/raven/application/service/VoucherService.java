@@ -86,6 +86,18 @@ public class VoucherService {
         return updatedCount;
     }
 
+    public int updateVoucherStatusByQuantity() {
+        sql = "UPDATE VOUCHER SET TrangThai = N'Không hoạt động' WHERE SoLuong = 0";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
     public List<VoucherModer> getAllVoucherActive() {
         sql = "SELECT ID, TenVoucher, SoLuong, LoaiVoucher, MucGiamGia, MoTa, NgayBatDau, NgayKetThuc, TrangThai "
                 + "FROM VOUCHER "

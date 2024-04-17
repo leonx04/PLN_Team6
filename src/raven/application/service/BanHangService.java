@@ -1000,12 +1000,12 @@ public class BanHangService {
         }
     }
 
-    public int updateSoLuongVoucher(String voucherID) {
+    public int updateSoLuongVoucher(String tenVoucher) {
         sql = "UPDATE VOUCHER SET SoLuong = SoLuong - 1 WHERE TenVoucher = ?";
         try {
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
-            ps.setString(1, voucherID);
+            ps.setString(1, tenVoucher);
             return ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

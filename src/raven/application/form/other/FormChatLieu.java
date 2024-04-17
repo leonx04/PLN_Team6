@@ -38,20 +38,24 @@ public class FormChatLieu extends javax.swing.JFrame {
 
         if (tenChatLieu.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập tên chất liệu!");
+            txtTenKichThuoc.requestFocus();
             return false;
         }
         if (moTa.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập mô tả chất liệu!");
+            txtMoTa.requestFocus();
             return false;
         }
 
         if (tenChatLieu.length() > 100) {
             JOptionPane.showMessageDialog(this, "Tên chất liệu tối đa là 100 ký tự!");
+            txtTenKichThuoc.requestFocus();
             return false;
         }
 
         if (moTa.length() > 254) {
             JOptionPane.showMessageDialog(this, "Mô tả tối đa là 254 ký tự!");
+            txtMoTa.requestFocus();
             return false;
         }
 

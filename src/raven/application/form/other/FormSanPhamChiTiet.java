@@ -407,16 +407,19 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
 
         if (soLuongTonStr.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập số lượng tồn", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            txtSoLuong.requestFocus();
             return false;
         }
 
         if (giaBanStr.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập giá bán", "Lỗi", JOptionPane.ERROR_MESSAGE);
+           txtGiaBan.requestFocus();
             return false;
         }
 
         if (moTa.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập mô tả", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            txtMoTaCTSP.requestFocus();
             return false;
         }
         try {
@@ -427,10 +430,12 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(null,
                         "Số lượng tồn phải là số nguyên dương lớn hơn 0 và không vượt quá 999", "Lỗi",
                         JOptionPane.ERROR_MESSAGE);
+                txtSoLuong.requestFocus();
                 return false;
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Số lượng tồn phải là số ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            txtSoLuong.requestFocus();
             return false;
         }
 
@@ -441,6 +446,7 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
             if (giaBan.compareTo(BigDecimal.valueOf(1000)) < 0) {
                 JOptionPane.showMessageDialog(null, "Giá bán phải lớn hơn hoặc bằng 1000", "Lỗi",
                         JOptionPane.ERROR_MESSAGE);
+                txtGiaBan.requestFocus();
                 return false;
             }
 
@@ -449,10 +455,12 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
             if (giaBan.compareTo(maxGiaBan) > 0) {
                 JOptionPane.showMessageDialog(null, "Giá bán không được vượt quá " + maxGiaBan.toString(), "Lỗi",
                         JOptionPane.ERROR_MESSAGE);
+                txtGiaBan.requestFocus();
                 return false;
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Giá bán phải là số", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            txtGiaBan.requestFocus();
             return false;
         }
 
@@ -460,6 +468,7 @@ public class FormSanPhamChiTiet extends javax.swing.JPanel {
         if (moTa.length() > 255) {
             JOptionPane.showMessageDialog(null, "Mô tả không được vượt quá 255 ký tự", "Lỗi",
                     JOptionPane.ERROR_MESSAGE);
+            txtMoTaCTSP.requestFocus();
             return false;
         }
 

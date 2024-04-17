@@ -178,21 +178,25 @@ public class LoginForm extends javax.swing.JPanel {
         // Validate các ô input không được để trống
         if (maNV.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập tài khoản.");
+            txtUser.requestFocus();
             return;
         }
 
         if (matKhau.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu.");
+            txtPass.requestFocus();
             return;
         }
 
         if (maNV.length() > 10) {
             JOptionPane.showMessageDialog(this, "Tài khoản không được vượt quá 10 ký tự.");
+            txtUser.requestFocus();
             return;
         }
 
         if (matKhau.length() > 20) {
             JOptionPane.showMessageDialog(this, "Mật khẩu không được vượt quá 20 ký tự.");
+            txtPass.requestFocus();
             return;
         }
 

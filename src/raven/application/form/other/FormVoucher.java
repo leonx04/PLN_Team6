@@ -32,6 +32,15 @@ public class FormVoucher extends javax.swing.JPanel {
         initCboTrangThai();
         updateVoucherStatus(); // Gọi hàm cập nhật trạng thái voucher
         updateActiveVouchers(); // Gọi hàm cập nhật trạng thái voucher hoạt động
+        updateVoucherStatusByQuantity();
+    }
+
+    private void updateVoucherStatusByQuantity() {
+        int updatedCount = service.updateVoucherStatusByQuantity();
+        if (updatedCount > 0) {
+            System.out.println("Đã cập nhật trạng thái của " + updatedCount + " voucher thành Không hoạt động.");
+            fillTable(service.getAllVoucher()); // Cập nhật lại bảng voucher
+        }
     }
 
     private void updateVoucherStatus() {
@@ -737,6 +746,7 @@ public class FormVoucher extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "Sửa thành công!");
                     updateVoucherStatus(); // Gọi hàm cập nhật trạng thái voucher
                     updateActiveVouchers(); // Gọi hàm cập nhật trạng thái voucher hoạt động
+                    updateVoucherStatusByQuantity();
                     fillTable(service.getAllVoucher());
                 } else {
                     JOptionPane.showMessageDialog(this, "Sửa thất bại!");

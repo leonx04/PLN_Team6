@@ -127,7 +127,15 @@ public class FormBanHang1 extends javax.swing.JPanel {
                 + "font:$h1.font");
         JComboBox<String> cboTrangThai = new JComboBox<>(
                 new String[]{"Tất cả", "Chờ thanh toán", "Đã thanh toán", "Đã hủy"});
+        
+    }
 
+    private void updateVoucherStatusByQuantity() {
+        int updatedCount = vcrs.updateVoucherStatusByQuantity();
+        if (updatedCount > 0) {
+            System.out.println("Đã cập nhật trạng thái của " + updatedCount + " voucher thành Không hoạt động.");
+            Cbo_Voucher();
+        }
     }
 
     public void updateTenKhachHang(String tenKhachHang) {
@@ -332,6 +340,8 @@ public class FormBanHang1 extends javax.swing.JPanel {
         txtTienThua.setText(null);
         txtTimSDT.setText(null);
         fillTable(bhrs.getAllCTSP());
+        btnOpenKH.setEnabled(true);
+        selectedHoaDonID = null;
     }
 
     private void refreshGioHangTable() {
@@ -347,7 +357,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
             fillToTable(chiTietHoaDons);
         } else {
             // Hiển thị thông báo nếu không có hàng nào được chọn
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn một hàng từ bảng hóa đơn!");
+//            JOptionPane.showMessageDialog(this, "Vui lòng chọn một hàng từ bảng hóa đơn!");
         }
     }
 
@@ -410,9 +420,10 @@ public class FormBanHang1 extends javax.swing.JPanel {
                     // Thực hiện các thao tác khác nếu cần
                     // Lấy thông tin hóa đơn
                     HoaDonModel hoaDon = bhrs.getHoaDonByID(hoaDonID);
-                    String tenVoucher = hoaDon.getTenVoucher().getTenVoucher();
+                    String tenVoucher = hoaDon.getTenVoucher().getTenVoucher().trim();
                     // Cập nhật số lượng voucher
                     bhrs.updateSoLuongVoucher(tenVoucher);
+                    updateVoucherStatusByQuantity();
                     // Gọi phương thức exportToPDF với đối số HoaDonModel và JTable
                     exportToPDF(hoaDon, tblGioHang);
 
@@ -1518,7 +1529,9 @@ public class FormBanHang1 extends javax.swing.JPanel {
                     xoaMemHD(selectedHoaDonID); // Xóa hóa đơn đã thanh toán khỏi bảng
                 } else {
                     JOptionPane.showMessageDialog(this, "Số tiền nhập vào không được nhỏ hơn số tiền phải thanh toán.");
+                    
                     txtTienThua.setText("0");
+                    txtTienThua.requestFocus();
                     return;
                 }
             } else {
@@ -1544,6 +1557,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
         // Kiểm tra trường rỗng
         if (tienMatStr.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập số tiền mặt.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            txtTienMat.requestFocus();
             return false;
         }
 
@@ -1551,6 +1565,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
         if (tienMatStr.length() > 20) {
             JOptionPane.showMessageDialog(this, "Số tiền mặt không được vượt quá 20 ký tự.", "Lỗi",
                     JOptionPane.ERROR_MESSAGE);
+            txtTienMat.requestFocus();
             return false;
         }
 
@@ -1558,6 +1573,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
         if (!tienMatStr.matches("^\\d+$")) {
             JOptionPane.showMessageDialog(this, "Số tiền mặt phải là số và không được chứa ký tự đặc biệt.", "Lỗi",
                     JOptionPane.ERROR_MESSAGE);
+            txtTienMat.requestFocus();
             return false;
         }
 
@@ -1565,6 +1581,8 @@ public class FormBanHang1 extends javax.swing.JPanel {
         BigDecimal tienMat = new BigDecimal(tienMatStr);
         if (tienMat.compareTo(BigDecimal.ZERO) < 0) {
             JOptionPane.showMessageDialog(this, "Số tiền mặt không được là số âm.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            txtTienMat.requestFocus();
+            
             return false;
         }
 
@@ -1578,6 +1596,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
         if (tienCKStr.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập số tiền chuyển khoản.", "Lỗi",
                     JOptionPane.ERROR_MESSAGE);
+            txtTienCK.requestFocus();
             return false;
         }
 
@@ -1585,6 +1604,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
         if (tienCKStr.length() > 20) {
             JOptionPane.showMessageDialog(this, "Số tiền chuyển khoản không được vượt quá 20 ký tự.", "Lỗi",
                     JOptionPane.ERROR_MESSAGE);
+            txtTienCK.requestFocus();
             return false;
         }
 
@@ -1593,6 +1613,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Số tiền chuyển khoản phải là số và không được chứa ký tự đặc biệt.",
                     "Lỗi",
                     JOptionPane.ERROR_MESSAGE);
+            txtTienCK.requestFocus();
             return false;
         }
 
@@ -1601,6 +1622,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
         if (tienCK.compareTo(BigDecimal.ZERO) < 0) {
             JOptionPane.showMessageDialog(this, "Số tiền chuyển khoản không được là số âm.", "Lỗi",
                     JOptionPane.ERROR_MESSAGE);
+            txtTienCK.requestFocus();
             return false;
         }
 
@@ -1615,6 +1637,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Số tiền thừa không thể nhỏ hơn 0.");
             // Nếu tiền thừa nhỏ hơn 0, đặt giá trị của txtTienThua thành 0
             txtTienThua.setText("");
+            txtTienThua.requestFocus();
         }
     }
 
@@ -1684,11 +1707,8 @@ public class FormBanHang1 extends javax.swing.JPanel {
                 String maSanPhamChiTiet = chiTietHoaDon.getMactsp().getID();
                 int soLuong = chiTietHoaDon.getSoLuong();
 
-                // Lấy số lượng tồn hiện tại của sản phẩm chi tiết
-                int soLuongTonHienTai = bhrs.laySoLuongTonByID(maSanPhamChiTiet);
-
                 // Cập nhật số lượng tồn mới sau khi xoá hoá đơn chi tiết
-                int soLuongTonSauXoa = soLuongTonHienTai + soLuong;
+                int soLuongTonSauXoa = bhrs.laySoLuongTonByID(maSanPhamChiTiet) + soLuong;
                 bhrs.updateSoLuongTon(maSanPhamChiTiet, soLuongTonSauXoa);
             }
 
@@ -1708,7 +1728,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
             // Xóa các sản phẩm được chọn
             List<String> maSanPhamChiTietDaChon = new ArrayList<>();
             for (int i = 0; i < rowCount; i++) {
-                // Kiểm tra giá trị ở cột "Chọn" (columnIndex = 5)
+                // Kiểm tra giá trị ở cột "Chọn" (columnIndex = 5)
                 Object value = model.getValueAt(i, 5);
                 if (value instanceof Boolean && (Boolean) value) {
                     String maSanPhamChiTiet = model.getValueAt(i, 0).toString();
@@ -1723,9 +1743,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
 
             for (String maCTSP : maSanPhamChiTietDaChon) {
                 // Lấy số lượng của sản phẩm đã chọn để cập nhật lại số lượng tồn
-                int soLuong = Integer.parseInt(model.getValueAt(model.getRowCount() - 1, 3).toString());
-                // Cập nhật số lượng tồn của sản phẩm đã chọn
-                bhrs.updateSoLuongTon(maCTSP, bhrs.laySoLuongTonByID(maCTSP) + soLuong);
+                int soLuong = (int) model.getValueAt(model.getRowCount() - 1, 3);
 
                 // Xóa dữ liệu từ cơ sở dữ liệu
                 int result = bhrs.xoaHoaDonChiTiet(maCTSP, selectedHoaDonID);
@@ -1733,6 +1751,9 @@ public class FormBanHang1 extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "Xóa thất bại!");
                     return;
                 }
+
+                // Cập nhật số lượng tồn của sản phẩm đã chọn
+                bhrs.updateSoLuongTon(maCTSP, bhrs.laySoLuongTonByID(maCTSP) + soLuong);
 
                 // Xóa hàng từ bảng sau khi xóa dữ liệu từ cơ sở dữ liệu
                 for (int i = 0; i < rowCount; i++) {
@@ -1978,6 +1999,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
 
         JTextField txtSoLuong = new JTextField();
         Object[] message = {"Nhập số lượng:", txtSoLuong};
+        txtSoLuong.requestFocus();
 
         int option = JOptionPane.showConfirmDialog(this, message, "Nhập số lượng", JOptionPane.OK_CANCEL_OPTION);
         txtSoLuong.requestFocus();
@@ -1988,11 +2010,13 @@ public class FormBanHang1 extends javax.swing.JPanel {
             // Validate số lượng
             if (soLuongStr.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng!");
+                txtSoLuong.requestFocus();
                 return;
             }
 
             if (soLuongStr.contains("-")) {
                 JOptionPane.showMessageDialog(this, "Số lượng không được là số âm !");
+                txtSoLuong.requestFocus();
                 return;
             }
 
@@ -2001,10 +2025,12 @@ public class FormBanHang1 extends javax.swing.JPanel {
 
                 if (quantity <= 0) {
                     JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!");
+                    txtSoLuong.requestFocus();
                     return;
                 }
                 if (soLuongStr.length() > 20) {
                     JOptionPane.showMessageDialog(this, "Số lượng không được quá 20 ký tự!");
+                    txtSoLuong.requestFocus();
                     return;
                 }
 
@@ -2012,6 +2038,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
 
                 if (quantity > currentQuantity) {
                     JOptionPane.showMessageDialog(this, "Số lượng nhập vào vượt quá số lượng tồn của sản phẩm!");
+                    txtSoLuong.requestFocus();
                     return;
                 }
 
