@@ -21,7 +21,7 @@ public class FormChatLieu extends javax.swing.JFrame {
 
     private DefaultTableModel model = new DefaultTableModel();
     private ChatLieuService clrs = new ChatLieuService();
-    
+    public FormSanPhamChiTiet ctsp = new FormSanPhamChiTiet();
 
     /**
      * Creates new form FormMauSac
@@ -124,6 +124,7 @@ public class FormChatLieu extends javax.swing.JFrame {
 
         if (clrs.insert(chatLieu) > 0) {
             JOptionPane.showMessageDialog(this, "Thêm thành công !");
+            
         } else {
             JOptionPane.showMessageDialog(this, "Thêm thất bại!");
         }
@@ -169,6 +170,7 @@ public class FormChatLieu extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new FormChatLieu().setVisible(true);
+                
             }
         });
     }

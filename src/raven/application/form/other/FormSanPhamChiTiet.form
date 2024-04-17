@@ -34,6 +34,11 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="501" max="-2" attributes="0"/>
+              <Component id="pagination1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -47,8 +52,10 @@
                   <Component id="jPanel3" max="32767" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="jPanel6" max="32767" attributes="0"/>
-              <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+              <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="pagination1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="35" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -651,7 +658,7 @@
                           <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="txtTimKiem" min="-2" pref="175" max="-2" attributes="0"/>
-                          <EmptySpace pref="47" max="32767" attributes="0"/>
+                          <EmptySpace pref="41" max="32767" attributes="0"/>
                           <Component id="cboFilterSP" min="-2" pref="130" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="cboFilterMauSac" min="-2" pref="130" max="-2" attributes="0"/>
@@ -687,7 +694,7 @@
                       <Component id="cboFilterSP" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
-                  <Component id="jScrollPane4" pref="291" max="32767" attributes="0"/>
+                  <Component id="jScrollPane4" pref="242" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -888,8 +895,8 @@
             </Property>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="2">
-                <StringItem index="0" value="Hoa&#x323;t &#x111;&#xf4;&#x323;ng"/>
-                <StringItem index="1" value="Kh&#xf4;ng hoa&#x323;t &#x111;&#xf4;&#x323;ng"/>
+                <StringItem index="0" value="Co&#x300;n ha&#x300;ng"/>
+                <StringItem index="1" value="H&#xea;&#x301;t ha&#x300;ng"/>
               </StringArray>
             </Property>
           </Properties>
@@ -917,5 +924,7 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="raven.pagination.Pagination" name="pagination1">
+    </Component>
   </SubComponents>
 </Form>
