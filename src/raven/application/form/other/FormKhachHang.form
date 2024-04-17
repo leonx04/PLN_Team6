@@ -536,8 +536,8 @@
             <Container class="javax.swing.JPanel" name="panel2">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="Danh sa&#x301;ch ho&#x301;a &#x111;&#x1a1;n kha&#x301;ch ha&#x300;ng">
-                    <Property name="tabTitle" type="java.lang.String" value="Danh sa&#x301;ch ho&#x301;a &#x111;&#x1a1;n kha&#x301;ch ha&#x300;ng"/>
+                  <JTabbedPaneConstraints tabName="Li&#x323;ch s&#x1b0;&#x309; giao di&#x323;ch">
+                    <Property name="tabTitle" type="java.lang.String" value="Li&#x323;ch s&#x1b0;&#x309; giao di&#x323;ch"/>
                   </JTabbedPaneConstraints>
                 </Constraint>
               </Constraints>

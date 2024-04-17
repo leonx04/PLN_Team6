@@ -482,7 +482,7 @@ public class FormKhachHang extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        Jpanel.addTab("Danh sách hóa đơn khách hàng", panel2);
+        Jpanel.addTab("Lịch sử giao dịch", panel2);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
