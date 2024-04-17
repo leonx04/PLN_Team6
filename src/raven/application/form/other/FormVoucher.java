@@ -30,6 +30,24 @@ public class FormVoucher extends javax.swing.JPanel {
 //        this.cboTrangThai = cboTrangThai;
         initCboLoaiVoucher();
         initCboTrangThai();
+        updateVoucherStatus(); // Gọi hàm cập nhật trạng thái voucher
+        updateActiveVouchers(); // Gọi hàm cập nhật trạng thái voucher hoạt động
+    }
+
+    private void updateVoucherStatus() {
+        int updatedCount = service.updateStatusVoucher();
+        if (updatedCount > 0) {
+            System.out.println("Đã cập nhật trạng thái của " + updatedCount + " voucher thành Hoạt động.");
+            fillTable(service.getAllVoucher()); // Cập nhật lại bảng voucher
+        }
+    }
+
+    private void updateActiveVouchers() {
+        int updatedCount = service.updateActiveVouchers();
+        if (updatedCount > 0) {
+            System.out.println("Đã cập nhật trạng thái của " + updatedCount + " voucher thành Hoạt động.");
+            fillTable(service.getAllVoucher()); // Cập nhật lại bảng voucher
+        }
     }
 
     private void initCboLoaiVoucher() {
@@ -171,25 +189,6 @@ public class FormVoucher extends javax.swing.JPanel {
         TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<>(model);
         tblVoucher.setRowSorter(tableRowSorter);
         tableRowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchQuery, 2)); // Sử dụng cột có chỉ số 2 (Tên voucher)
-    }
-
-    private void checkAndUpdateStatus() {
-        int selectedRow = tblVoucher.getSelectedRow();
-        if (selectedRow != -1) {
-            java.util.Date currentDate = new java.util.Date(); // Lấy thời gian hiện tại
-
-            java.sql.Date ngayKetThuc = (java.sql.Date) tblVoucher.getValueAt(selectedRow, 8);
-            if (ngayKetThuc != null && ngayKetThuc.before(currentDate)) {
-                // Thời gian kết thúc đã qua
-                String trangThai = "Không hoạt động";
-                tblVoucher.setValueAt(trangThai, selectedRow, 9); // Cập nhật trạng thái trên bảng
-
-                // Cập nhật trạng thái trong đối tượng VoucherModer (nếu có)
-                VoucherModer voucher = readForm(); // Đọc dữ liệu từ form
-                voucher.setTrangThai(trangThai); // Cập nhật trạng thái trong đối tượng
-                // Lưu ý: Cần thêm logic lưu trạng thái này vào cơ sở dữ liệu nếu cần
-            }
-        }
     }
 
     /**
@@ -736,6 +735,8 @@ public class FormVoucher extends javax.swing.JPanel {
                 int result = service.update(voucher);
                 if (result > 0) {
                     JOptionPane.showMessageDialog(this, "Sửa thành công!");
+                    updateVoucherStatus(); // Gọi hàm cập nhật trạng thái voucher
+                    updateActiveVouchers(); // Gọi hàm cập nhật trạng thái voucher hoạt động
                     fillTable(service.getAllVoucher());
                 } else {
                     JOptionPane.showMessageDialog(this, "Sửa thất bại!");
@@ -792,7 +793,8 @@ public class FormVoucher extends javax.swing.JPanel {
 
             // Lấy lại toàn bộ danh sách voucher từ cơ sở dữ liệu
             List<VoucherModer> listVoucher = service.getAllVoucher();
-
+            updateVoucherStatus(); // Gọi hàm cập nhật trạng thái voucher
+            updateActiveVouchers(); // Gọi hàm cập nhật trạng thái voucher hoạt động
             // Đổ dữ liệu vào bảng
             fillTable(listVoucher);
         } else {
@@ -802,6 +804,8 @@ public class FormVoucher extends javax.swing.JPanel {
 
     private void btnLamMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLamMoiActionPerformed
         // TODO add your handling code here:
+        updateVoucherStatus(); // Gọi hàm cập nhật trạng thái voucher
+        updateActiveVouchers(); // Gọi hàm cập nhật trạng thái voucher hoạt động
         this.clear();
         fillTable(service.getAllVoucher());
     }//GEN-LAST:event_btnLamMoiActionPerformed
@@ -835,6 +839,8 @@ public class FormVoucher extends javax.swing.JPanel {
             if (option == JOptionPane.YES_OPTION) {
                 if (service.delete(ID) > 0) {
                     JOptionPane.showMessageDialog(this, "Xóa thành công!!");
+                    updateVoucherStatus(); // Gọi hàm cập nhật trạng thái voucher
+                    updateActiveVouchers(); // Gọi hàm cập nhật trạng thái voucher hoạt động
                     fillTable(service.getAllVoucher());
                     clear();
                 } else {
@@ -863,6 +869,8 @@ public class FormVoucher extends javax.swing.JPanel {
     private void cboTrangThai1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboTrangThai1ActionPerformed
         String trangThai = (String) cboTrangThai1.getSelectedItem();
         List<VoucherModer> list = service.getAllVoucherByTrangThai(trangThai);
+        updateVoucherStatus(); // Gọi hàm cập nhật trạng thái voucher
+        updateActiveVouchers(); // Gọi hàm cập nhật trạng thái voucher hoạt động
         fillTable(list);
     }//GEN-LAST:event_cboTrangThai1ActionPerformed
 
@@ -872,8 +880,7 @@ public class FormVoucher extends javax.swing.JPanel {
         if (index >= 0) { // Kiểm tra nếu hàng được chọn hợp lệ
             showData(index); // Hiển thị dữ liệu của hàng được chọn
         }
-        // Kiểm tra và cập nhật trạng thái
-        checkAndUpdateStatus();
+
     }//GEN-LAST:event_tblVoucherMouseClicked
 
 

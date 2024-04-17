@@ -50,6 +50,42 @@ public class VoucherService {
         }
     }
 
+    public int updateStatusVoucher() {
+        sql = "UPDATE VOUCHER SET TrangThai = N'Không hoạt động' WHERE NgayKetThuc < GETDATE()";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int updateActiveVouchers() {
+        int updatedCount = 0;
+        String sql = "UPDATE VOUCHER SET TrangThai = N'Hoạt động' WHERE NgayKetThuc >= GETDATE()";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            updatedCount = ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return updatedCount;
+    }
+
     public List<VoucherModer> getAllVoucherActive() {
         sql = "SELECT ID, TenVoucher, SoLuong, LoaiVoucher, MucGiamGia, MoTa, NgayBatDau, NgayKetThuc, TrangThai "
                 + "FROM VOUCHER "
