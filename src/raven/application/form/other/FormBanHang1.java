@@ -39,6 +39,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -201,8 +202,11 @@ public class FormBanHang1 extends javax.swing.JPanel {
             return null; // Trả về null nếu nhập tổng tiền không hợp lệ
         }
 
+        // Chuyển đổi tổng tiền sang kiểu int
+        int tongTienInt = tongTien.intValue();
+
         // Kiểm tra nếu tổng tiền bằng 0 thì không thể áp dụng voucher
-        if (tongTien.compareTo(BigDecimal.ZERO) == 0) {
+        if (tongTienInt == 0) {
             JOptionPane.showMessageDialog(this, "Không thể áp dụng voucher với hóa đơn trống.");
             return null; // Trả về null nếu tổng tiền bằng 0
         }
@@ -223,29 +227,29 @@ public class FormBanHang1 extends javax.swing.JPanel {
                 // Áp dụng logic tính tổng tiền sau khi giảm giá theo loại voucher
                 if ("Giảm theo phần trăm".equals(loaiVoucher)) {
                     BigDecimal percentDiscount = discountAmount.divide(BigDecimal.valueOf(100));
-                    BigDecimal amountToDeduct = tongTien.multiply(percentDiscount);
-                    BigDecimal tongTienSauGiamGia = tongTien.subtract(amountToDeduct);
-                    hdm.setTongTien(tongTienSauGiamGia);
+                    BigDecimal amountToDeduct = tongTien.subtract(tongTien.multiply(percentDiscount));
+                    int tongTienSauGiamGiaInt = amountToDeduct.intValue();
+                    hdm.setTongTien(BigDecimal.valueOf(tongTienSauGiamGiaInt));
                     // Format tổng tiền sau khi giảm giá thành chuỗi string và set vào txtThanhToan
-                    txtThanhToan.setText(tongTienSauGiamGia.toString());
+                    txtThanhToan.setText(String.valueOf(tongTienSauGiamGiaInt));
                 } else if ("Giảm theo giá tiền".equals(loaiVoucher)) {
                     BigDecimal tongTienSauGiamGia = tongTien.subtract(discountAmount);
-                    hdm.setTongTien(tongTienSauGiamGia);
+                    int tongTienSauGiamGiaInt = tongTienSauGiamGia.intValue();
+                    hdm.setTongTien(BigDecimal.valueOf(tongTienSauGiamGiaInt));
                     // Format tổng tiền sau khi giảm giá thành chuỗi string và set vào txtThanhToan
-                    txtThanhToan.setText(tongTienSauGiamGia.toString());
+                    txtThanhToan.setText(String.valueOf(tongTienSauGiamGiaInt));
                 }
             } else {
                 hdm.setTongTien(tongTien); // Không có giảm giá, giữ nguyên tổng tiền
                 // Format tổng tiền thành chuỗi string và set vào txtThanhToan
-                txtThanhToan.setText(tongTien.toString());
+                txtThanhToan.setText(String.valueOf(tongTienInt));
             }
         } else {
             hdm.setTenVoucher(null);
             hdm.setTongTien(tongTien); // Không có voucher, giữ nguyên tổng tiền
             // Format tổng tiền thành chuỗi string và set vào txtThanhToan
-            txtThanhToan.setText(tongTien.toString());
+            txtThanhToan.setText(String.valueOf(tongTienInt));
         }
-
         return hdm;
     }
 
@@ -1018,6 +1022,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
         txtMaHD.setBackground(new java.awt.Color(255, 255, 255));
         txtMaHD.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel10.setText("Tổng tiền(VNĐ)");
 
@@ -1633,10 +1638,10 @@ public class FormBanHang1 extends javax.swing.JPanel {
                         BigDecimal phanTramGiam = discountAmount.divide(BigDecimal.valueOf(100));
                         BigDecimal tienGiam = tongTien.multiply(phanTramGiam);
                         BigDecimal thanhToan = tongTien.subtract(tienGiam);
-                        txtThanhToan.setText(thanhToan.toString());
+                        txtThanhToan.setText(String.valueOf(thanhToan.intValue()));
                     } else if ("Giảm theo giá tiền".equals(loaiVoucher)) {
                         BigDecimal thanhToan = tongTien.subtract(discountAmount);
-                        txtThanhToan.setText(thanhToan.toString());
+                        txtThanhToan.setText(String.valueOf(thanhToan.intValue()));
                     } else {
                         JOptionPane.showMessageDialog(this, "Loại voucher không hợp lệ.");
                     }
@@ -1665,18 +1670,28 @@ public class FormBanHang1 extends javax.swing.JPanel {
 
     private void btnDeleteGHActionPerformed(java.awt.event.ActionEvent evt) {
         DefaultTableModel model = (DefaultTableModel) tblGioHang.getModel();
-        int[] selectedRows = tblGioHang.getSelectedRows();
+        int rowCount = model.getRowCount();
 
         // Kiểm tra xem checkbox selectAll đã được chọn hay không
         boolean selectAllActivated = selectAll.isSelected();
 
-        // Kiểm tra xem có sản phẩm nào được chọn không
-        if (!selectAllActivated && selectedRows.length == 0) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm muốn xoá.");
-            return; // Dừng thực hiện khi không có sản phẩm nào được chọn
-        }
-
         if (selectAllActivated && selectedHoaDonID != null) {
+            // Lấy danh sách chi tiết hoá đơn của hoá đơn đã chọn trước khi xóa
+            List<ChiTietHoaDonModel> chiTietHoaDons = bhrs.searchByHoaDonID(selectedHoaDonID);
+
+            // Cập nhật số lượng tồn của từng sản phẩm chi tiết sau khi xóa
+            for (ChiTietHoaDonModel chiTietHoaDon : chiTietHoaDons) {
+                String maSanPhamChiTiet = chiTietHoaDon.getMactsp().getID();
+                int soLuong = chiTietHoaDon.getSoLuong();
+
+                // Lấy số lượng tồn hiện tại của sản phẩm chi tiết
+                int soLuongTonHienTai = bhrs.laySoLuongTonByID(maSanPhamChiTiet);
+
+                // Cập nhật số lượng tồn mới sau khi xoá hoá đơn chi tiết
+                int soLuongTonSauXoa = soLuongTonHienTai + soLuong;
+                bhrs.updateSoLuongTon(maSanPhamChiTiet, soLuongTonSauXoa);
+            }
+
             // Xóa toàn bộ hoá đơn chi tiết
             int result = bhrs.xoaToanBoHoaDonChiTiet(selectedHoaDonID);
             if (result <= 0) {
@@ -1690,27 +1705,47 @@ public class FormBanHang1 extends javax.swing.JPanel {
             fillChiTietHoaDonTable(selectedHoaDonID);
             cleanForm();
         } else {
-            // Xóa từng sản phẩm chi tiết được chọn
-            for (int selectedRow : selectedRows) {
-                String maSanPhamChiTiet = model.getValueAt(selectedRow, 0).toString();
+            // Xóa các sản phẩm được chọn
+            List<String> maSanPhamChiTietDaChon = new ArrayList<>();
+            for (int i = 0; i < rowCount; i++) {
+                // Kiểm tra giá trị ở cột "Chọn" (columnIndex = 5)
+                Object value = model.getValueAt(i, 5);
+                if (value instanceof Boolean && (Boolean) value) {
+                    String maSanPhamChiTiet = model.getValueAt(i, 0).toString();
+                    maSanPhamChiTietDaChon.add(maSanPhamChiTiet);
+                }
+            }
 
-                // Cập nhật số lượng tồn của sản phẩm
-                int soLuong = Integer.parseInt(model.getValueAt(selectedRow, 3).toString());
-                bhrs.updateSoLuongTon(maSanPhamChiTiet, bhrs.laySoLuongTonByID(maSanPhamChiTiet) + soLuong);
+            if (maSanPhamChiTietDaChon.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm muốn xoá.");
+                return;
+            }
+
+            for (String maCTSP : maSanPhamChiTietDaChon) {
+                // Lấy số lượng của sản phẩm đã chọn để cập nhật lại số lượng tồn
+                int soLuong = Integer.parseInt(model.getValueAt(model.getRowCount() - 1, 3).toString());
+                // Cập nhật số lượng tồn của sản phẩm đã chọn
+                bhrs.updateSoLuongTon(maCTSP, bhrs.laySoLuongTonByID(maCTSP) + soLuong);
 
                 // Xóa dữ liệu từ cơ sở dữ liệu
-                int result = bhrs.xoaHoaDonChiTiet(maSanPhamChiTiet, selectedHoaDonID);
+                int result = bhrs.xoaHoaDonChiTiet(maCTSP, selectedHoaDonID);
                 if (result <= 0) {
                     JOptionPane.showMessageDialog(this, "Xóa thất bại!");
                     return;
                 }
 
-                // Cập nhật tổng tiền của hóa đơn
-                bhrs.updateBillWhileDeleteOne(selectedHoaDonID);
-
                 // Xóa hàng từ bảng sau khi xóa dữ liệu từ cơ sở dữ liệu
-                model.removeRow(selectedRow);
+                for (int i = 0; i < rowCount; i++) {
+                    if (model.getValueAt(i, 0).toString().equals(maCTSP)) {
+                        model.removeRow(i);
+                        rowCount--; // Giảm số lượng hàng sau mỗi lần xóa
+                        break;
+                    }
+                }
             }
+
+            // Cập nhật tổng tiền của hóa đơn
+            bhrs.updateBillWhileDeleteOne(selectedHoaDonID);
         }
 
         // Cập nhật lại bảng hiển thị

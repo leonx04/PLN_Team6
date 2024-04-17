@@ -24,17 +24,24 @@ public class FormVoucher extends javax.swing.JPanel {
     public FormVoucher() {
         initComponents();
         this.fillTable(service.getAllVoucher());
-        JComboBox<String> cboTrangThai = new JComboBox<>(
-                new String[]{"Hoạt động", "Không hoạt động"});
-        cboTrangThai.setSelectedIndex(0); // Chọn mặc định "Hoạt động"
-        this.cboTrangThai = cboTrangThai;
+//        JComboBox<String> cboTrangThai = new JComboBox<>(
+//                new String[]{"Hoạt động", "Không hoạt động"});
+//        cboTrangThai.setSelectedIndex(0); // Chọn mặc định "Hoạt động"
+//        this.cboTrangThai = cboTrangThai;
         initCboLoaiVoucher();
+        initCboTrangThai();
     }
 
     private void initCboLoaiVoucher() {
         cboLoaiVoucher.addItem("Giảm theo phần trăm");
         cboLoaiVoucher.addItem("Giảm theo giá tiền");
         cboLoaiVoucher.setSelectedIndex(0); // Chọn mặc định "Giảm theo phần trăm"
+    }
+
+    private void initCboTrangThai() {
+        cboTrangThai.addItem("Hoạt động");
+        cboTrangThai.addItem("Không hoạt động");
+        cboTrangThai.setSelectedIndex(0);
     }
 
     void fillTable(List<VoucherModer> list) {
@@ -70,7 +77,8 @@ public class FormVoucher extends javax.swing.JPanel {
         String tenVoucher = tblVoucher.getValueAt(index, 2).toString().trim();
         String soLuong = String.valueOf(tblVoucher.getValueAt(index, 3)).trim();
         String loaiVoucher = tblVoucher.getValueAt(index, 4).toString().trim();
-        String mucGiamGia = tblVoucher.getValueAt(index, 5).toString().trim();
+        BigDecimal mucGiamGiaBD = (BigDecimal) tblVoucher.getValueAt(index, 5);
+        int mucGiamGia = mucGiamGiaBD.intValue(); // Chuyển đổi từ BigDecimal sang int
         String moTa = tblVoucher.getValueAt(index, 6).toString().trim();
         java.sql.Date ngayBatDau = (java.sql.Date) tblVoucher.getValueAt(index, 7);
         java.sql.Date ngayKetThuc = (java.sql.Date) tblVoucher.getValueAt(index, 8);
@@ -80,7 +88,7 @@ public class FormVoucher extends javax.swing.JPanel {
         txtTenVoucher.setText(tenVoucher);
         txtSoLuong.setText(String.valueOf(soLuong));
         cboLoaiVoucher.setSelectedItem(loaiVoucher);
-        txtMucGiamGia.setText(mucGiamGia);
+        txtMucGiamGia.setText(String.valueOf(mucGiamGia));
 
         txtMoTa.setText(moTa);
         dateBD.setDate(ngayBatDau);
@@ -163,6 +171,25 @@ public class FormVoucher extends javax.swing.JPanel {
         TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<>(model);
         tblVoucher.setRowSorter(tableRowSorter);
         tableRowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchQuery, 2)); // Sử dụng cột có chỉ số 2 (Tên voucher)
+    }
+
+    private void checkAndUpdateStatus() {
+        int selectedRow = tblVoucher.getSelectedRow();
+        if (selectedRow != -1) {
+            java.util.Date currentDate = new java.util.Date(); // Lấy thời gian hiện tại
+
+            java.sql.Date ngayKetThuc = (java.sql.Date) tblVoucher.getValueAt(selectedRow, 8);
+            if (ngayKetThuc != null && ngayKetThuc.before(currentDate)) {
+                // Thời gian kết thúc đã qua
+                String trangThai = "Không hoạt động";
+                tblVoucher.setValueAt(trangThai, selectedRow, 9); // Cập nhật trạng thái trên bảng
+
+                // Cập nhật trạng thái trong đối tượng VoucherModer (nếu có)
+                VoucherModer voucher = readForm(); // Đọc dữ liệu từ form
+                voucher.setTrangThai(trangThai); // Cập nhật trạng thái trong đối tượng
+                // Lưu ý: Cần thêm logic lưu trạng thái này vào cơ sở dữ liệu nếu cần
+            }
+        }
     }
 
     /**
@@ -384,7 +411,6 @@ public class FormVoucher extends javax.swing.JPanel {
         jLabel11.setText("Trạng thái Voucher");
 
         cboTrangThai.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cboTrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hoạt động", "Không hoạt động" }));
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel12.setText("Mô tả");
@@ -842,31 +868,12 @@ public class FormVoucher extends javax.swing.JPanel {
 
     private void tblVoucherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblVoucherMouseClicked
         // TODO add your handling code here:
-        // Lấy chỉ số của hàng được chọn
-        int rowIndex = tblVoucher.getSelectedRow();
-
-        // Kiểm tra xem người dùng đã nhấp chuột đúng vào hàng hay không
-        if (rowIndex >= 0) {
-            // Lấy dữ liệu của hàng được chọn
-            String maVoucher = tblVoucher.getValueAt(rowIndex, 1).toString();
-            String tenVoucher = tblVoucher.getValueAt(rowIndex, 2).toString();
-            String soLuong = tblVoucher.getValueAt(rowIndex, 3).toString();
-            String loaiVoucher = tblVoucher.getValueAt(rowIndex, 4).toString();
-            String mucGiamGia = tblVoucher.getValueAt(rowIndex, 5).toString();
-            String moTa = tblVoucher.getValueAt(rowIndex, 6).toString();
-            String ngayBatDau = tblVoucher.getValueAt(rowIndex, 7).toString();
-            String ngayKetThuc = tblVoucher.getValueAt(rowIndex, 8).toString();
-            String trangThai = tblVoucher.getValueAt(rowIndex, 9).toString();
-
-            // Hiển thị dữ liệu trên các thành phần giao diện người dùng khác
-            txtMaVoucher.setText(maVoucher);
-            txtTenVoucher.setText(tenVoucher);
-            txtSoLuong.setText(soLuong);
-            cboLoaiVoucher.setSelectedItem(loaiVoucher);
-            txtMucGiamGia.setText(mucGiamGia);
-            txtMoTa.setText(moTa);
-            cboTrangThai.setSelectedItem(trangThai);
+        int index = tblVoucher.getSelectedRow(); // Lấy chỉ mục của hàng được chọn trong bảng
+        if (index >= 0) { // Kiểm tra nếu hàng được chọn hợp lệ
+            showData(index); // Hiển thị dữ liệu của hàng được chọn
         }
+        // Kiểm tra và cập nhật trạng thái
+        checkAndUpdateStatus();
     }//GEN-LAST:event_tblVoucherMouseClicked
 
 

@@ -93,47 +93,7 @@ public class BanHangService {
         return null;
     }
 
-//    public List<HoaDonModel> getAllHD2() {
-//        sql = "SELECT HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang, VOUCHER.TenVoucher, SUM(HOADONCHITIET.ThanhTien) AS TongTien, HOADON.HinhThucThanhToan, HOADON.TrangThai\n"
-//                + "FROM HOADON\n"
-//                + "INNER JOIN NHANVIEN ON HOADON.ID_NhanVien = NHANVIEN.ID\n"
-//                + "INNER JOIN KHACHHANG ON HOADON.ID_KhachHang = KHACHHANG.ID\n"
-//                + "LEFT JOIN VOUCHER ON HOADON.ID_Voucher = VOUCHER.ID\n"
-//                + "INNER JOIN HOADONCHITIET ON HOADON.ID = HOADONCHITIET.ID_HoaDon\n"
-//                + "GROUP BY HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen, VOUCHER.TenVoucher, HOADON.HinhThucThanhToan, HOADON.TrangThai\n"
-//                + "HAVING SUM(HOADONCHITIET.ThanhTien) > 0\n"
-//                + "UNION ALL\n"
-//                + "SELECT HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang, VOUCHER.TenVoucher, 0 AS TongTien, HOADON.HinhThucThanhToan, HOADON.TrangThai\n"
-//                + "FROM HOADON\n"
-//                + "INNER JOIN NHANVIEN ON HOADON.ID_NhanVien = NHANVIEN.ID\n"
-//                + "INNER JOIN KHACHHANG ON HOADON.ID_KhachHang = KHACHHANG.ID\n"
-//                + "LEFT JOIN VOUCHER ON HOADON.ID_Voucher = VOUCHER.ID\n"
-//                + "WHERE HOADON.TrangThai = N'Chờ thanh toán'\n"
-//                + "GROUP BY HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen, VOUCHER.TenVoucher, HOADON.HinhThucThanhToan, HOADON.TrangThai";
-//
-//        try {
-//            con = DBConnect.getConnection();
-//            ps = con.prepareStatement(sql);
-//            rs = ps.executeQuery();
-//            List<HoaDonModel> listHD = new ArrayList<>();
-//            while (rs.next()) {
-//                HoaDonModel hdModel = new HoaDonModel(
-//                        rs.getString(1),
-//                        rs.getDate(2),
-//                        new NhanVienModel(rs.getString(3)),
-//                        new KhachHangModel(rs.getString(4)),
-//                        new VoucherModer(rs.getString(5)),
-//                        rs.getBigDecimal(6),
-//                        rs.getString(7),
-//                        rs.getString(8));
-//                listHD.add(hdModel);
-//            }
-//            return listHD;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
+
     public List<HoaDonModel> getHoaDonChoThanhToan() {
         String sql
                 = "SELECT HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang,\n"
@@ -1133,26 +1093,6 @@ public class BanHangService {
         return isSuccess;
     }
 
-//    public boolean updateVoucherHoaDon(String hoaDonID, String tenVoucher) {
-//        sql = "UPDATE HOADON\n"
-//                + "SET ID_Voucher = ( SELECT ID FROM VOUCHER WHERE TenVoucher = ?)\n"
-//                + "WHERE HOADON.ID = ?;";
-//        boolean isSuccess = false; // Biến để xác định việc cập nhật thành công hay không
-//        try {
-//            // Kết nối cơ sở dữ liệu và thực hiện cập nhật
-//            con = DBConnect.getConnection();
-//
-//            ps = con.prepareStatement(sql);
-//            ps.setString(1, tenVoucher);
-//            ps.setString(2, hoaDonID);
-//
-//            int rowsUpdated = ps.executeUpdate();
-//            isSuccess = rowsUpdated > 0;
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return isSuccess;
-//    }
     public boolean updateVoucherHoaDon(String hoaDonID, String voucherID) {
         sql = "UPDATE HOADON SET ID_Voucher = ? WHERE ID = ?";
         try {
