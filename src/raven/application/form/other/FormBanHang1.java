@@ -39,6 +39,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -201,8 +202,11 @@ public class FormBanHang1 extends javax.swing.JPanel {
             return null; // Trả về null nếu nhập tổng tiền không hợp lệ
         }
 
+        // Chuyển đổi tổng tiền sang kiểu int
+        int tongTienInt = tongTien.intValue();
+
         // Kiểm tra nếu tổng tiền bằng 0 thì không thể áp dụng voucher
-        if (tongTien.compareTo(BigDecimal.ZERO) == 0) {
+        if (tongTienInt == 0) {
             JOptionPane.showMessageDialog(this, "Không thể áp dụng voucher với hóa đơn trống.");
             return null; // Trả về null nếu tổng tiền bằng 0
         }
@@ -223,29 +227,29 @@ public class FormBanHang1 extends javax.swing.JPanel {
                 // Áp dụng logic tính tổng tiền sau khi giảm giá theo loại voucher
                 if ("Giảm theo phần trăm".equals(loaiVoucher)) {
                     BigDecimal percentDiscount = discountAmount.divide(BigDecimal.valueOf(100));
-                    BigDecimal amountToDeduct = tongTien.multiply(percentDiscount);
-                    BigDecimal tongTienSauGiamGia = tongTien.subtract(amountToDeduct);
-                    hdm.setTongTien(tongTienSauGiamGia);
+                    BigDecimal amountToDeduct = tongTien.subtract(tongTien.multiply(percentDiscount));
+                    int tongTienSauGiamGiaInt = amountToDeduct.intValue();
+                    hdm.setTongTien(BigDecimal.valueOf(tongTienSauGiamGiaInt));
                     // Format tổng tiền sau khi giảm giá thành chuỗi string và set vào txtThanhToan
-                    txtThanhToan.setText(tongTienSauGiamGia.toString());
+                    txtThanhToan.setText(String.valueOf(tongTienSauGiamGiaInt));
                 } else if ("Giảm theo giá tiền".equals(loaiVoucher)) {
                     BigDecimal tongTienSauGiamGia = tongTien.subtract(discountAmount);
-                    hdm.setTongTien(tongTienSauGiamGia);
+                    int tongTienSauGiamGiaInt = tongTienSauGiamGia.intValue();
+                    hdm.setTongTien(BigDecimal.valueOf(tongTienSauGiamGiaInt));
                     // Format tổng tiền sau khi giảm giá thành chuỗi string và set vào txtThanhToan
-                    txtThanhToan.setText(tongTienSauGiamGia.toString());
+                    txtThanhToan.setText(String.valueOf(tongTienSauGiamGiaInt));
                 }
             } else {
                 hdm.setTongTien(tongTien); // Không có giảm giá, giữ nguyên tổng tiền
                 // Format tổng tiền thành chuỗi string và set vào txtThanhToan
-                txtThanhToan.setText(tongTien.toString());
+                txtThanhToan.setText(String.valueOf(tongTienInt));
             }
         } else {
             hdm.setTenVoucher(null);
             hdm.setTongTien(tongTien); // Không có voucher, giữ nguyên tổng tiền
             // Format tổng tiền thành chuỗi string và set vào txtThanhToan
-            txtThanhToan.setText(tongTien.toString());
+            txtThanhToan.setText(String.valueOf(tongTienInt));
         }
-
         return hdm;
     }
 
@@ -432,7 +436,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
         Document document = new Document(PageSize.A5);
 
         try {
-            String filePath = "A:\\PDF\\hoa_don.pdf";
+            String filePath = "C:\\Users\\admin\\Documents\\hoa_don.pdf";
             PdfWriter.getInstance(document, new FileOutputStream(filePath));
             document.open();
 
@@ -587,7 +591,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
 
     private void openPDFFile() {
         try {
-            String filePath = "A:\\PDF\\hoa_don.pdf";
+            String filePath = "C:\\Users\\admin\\Documents\\hoa_don.pdf";
             File file = new File(filePath);
             if (file.exists()) {
                 Desktop.getDesktop().open(file);
@@ -1634,10 +1638,10 @@ public class FormBanHang1 extends javax.swing.JPanel {
                         BigDecimal phanTramGiam = discountAmount.divide(BigDecimal.valueOf(100));
                         BigDecimal tienGiam = tongTien.multiply(phanTramGiam);
                         BigDecimal thanhToan = tongTien.subtract(tienGiam);
-                        txtThanhToan.setText(thanhToan.toString());
+                        txtThanhToan.setText(String.valueOf(thanhToan.intValue()));
                     } else if ("Giảm theo giá tiền".equals(loaiVoucher)) {
                         BigDecimal thanhToan = tongTien.subtract(discountAmount);
-                        txtThanhToan.setText(thanhToan.toString());
+                        txtThanhToan.setText(String.valueOf(thanhToan.intValue()));
                     } else {
                         JOptionPane.showMessageDialog(this, "Loại voucher không hợp lệ.");
                     }

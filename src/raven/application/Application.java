@@ -43,7 +43,7 @@ public class Application extends javax.swing.JFrame {
         // Sử dụng hàm setIconImage để đặt biểu tượng 
         setIconImage();
         // Cài đặt kích thước và vị trí của cửa sổ
-        setSize(new Dimension(1600, 768));
+        setSize(new Dimension(1370, 768));
         setLocationRelativeTo(null);
 
         // Khởi tạo MainForm và LoginForm
