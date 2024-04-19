@@ -639,6 +639,29 @@ public class FormBanHang1 extends javax.swing.JPanel {
         return true;
     }
 
+    // Hàm cập nhật lại thông tin trên form sau khi thay đổi
+    private void refreshFormData() {
+        int selectedRow = tblHoaDon.getSelectedRow();
+        if (selectedRow >= 0) {
+            // Cập nhật lại bảng chi tiết hoá đơn
+            fillChiTietHoaDonTable(selectedHoaDonID);
+
+            // Cập nhật lại bảng hoá đơn 
+            fillTable2(bhrs.getHoaDonChoThanhToan());
+            // Lấy thông tin từ bảng hoá đơn
+            selectedHoaDonID = tblHoaDon.getValueAt(selectedRow, 1).toString();
+
+            // Hiển thị thông tin chi tiết của hoá đơn lên form
+            showData(selectedRow);
+        } else {
+            // Nếu không có hoá đơn nào được chọn, làm sạch form và tắt các nút
+            cleanForm();
+            btnHuyDon.setEnabled(true);
+            btnSuccesHoaDon.setEnabled(true);
+            btnDeleteGH.setEnabled(true);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
@@ -1754,18 +1777,15 @@ public class FormBanHang1 extends javax.swing.JPanel {
                 int SL_update = hdct.getSoLuong() + spct.getSoLuongTon();
                 int result_update_SL = bhrs.updateSoLuongTon(maCTSP, SL_update);
                 int result_delete_HDCT = bhrs.xoaHoaDonChiTiet(maCTSP, selectedHoaDonID);
-//                if (result_delete_HDCT != 0 && result_update_SL != 0) {
-//                    JOptionPane.showMessageDialog(this, "Update lại SL " + maCTSP + " xóa HDCT" + hdct.getID());
-//                }
+                //  if (result_delete_HDCT != 0 && result_update_SL != 0) {
+                //  JOptionPane.showMessageDialog(this, "Update lại SL " + maCTSP + " xóa HDCT" + hdct.getID());
+                //   }
             }
             // Cập nhật tổng tiền của hóa đơn
             bhrs.updateBillWhileDeleteOne(selectedHoaDonID);
         }
-//        System.out.println(selectedHoaDonID);
-//        fillChiTietHoaDonTable(selectedHoaDonID);
-        // Cập nhật lại bảng hiển thị
-        fillTable2(bhrs.getHoaDonChoThanhToan()); // Cập nhật lại bảng hoá đơn chính
-        fillTable(bhrs.getAllCTSP()); // Cập nhật lại bảng sản phẩm chi tiết
+        // Cập nhật lại thông tin trên form
+        refreshFormData();
 
         // Thông báo xóa thành công
         JOptionPane.showMessageDialog(this, "Xóa thành công!");
@@ -2075,11 +2095,14 @@ public class FormBanHang1 extends javax.swing.JPanel {
                         JOptionPane.showMessageDialog(this, "Thêm sản phẩm vào giỏ hàng thành công!");
                         boolean updated = bhrs.capNhatTongTienHoaDon(selectedHoaDonID);
                         refreshGioHangTable();
-                        fillTable2(bhrs.getHoaDonChoThanhToan());
-                        fillTable(bhrs.getAllCTSP());
+//                        refreshFormData();
+//                        fillTable2(bhrs.getHoaDonChoThanhToan());
+//                        fillTable(bhrs.getAllCTSP());
                         if (updated) {
-                            fillChiTietHoaDonTable(selectedHoaDonID);
+//                            fillChiTietHoaDonTable(selectedHoaDonID);
                             JOptionPane.showMessageDialog(this, "Cập nhật tổng tiền hóa đơn thành công!");
+                            // Cập nhật lại thông tin trên form
+                            refreshFormData();
                         } else {
                             JOptionPane.showMessageDialog(this, "Cập nhật tổng tiền hóa đơn thất bại!");
                         }
