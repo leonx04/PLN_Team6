@@ -20,6 +20,7 @@ import raven.application.model.SanPhamModel;
 import raven.application.model.ThuongHieuModel;
 import raven.application.model.VoucherModer;
 import raven.connect.DBConnect;
+import raven.connect.JdbcHelper;
 
 /**
  *
@@ -93,47 +94,6 @@ public class BanHangService {
         return null;
     }
 
-//    public List<HoaDonModel> getAllHD2() {
-//        sql = "SELECT HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang, VOUCHER.TenVoucher, SUM(HOADONCHITIET.ThanhTien) AS TongTien, HOADON.HinhThucThanhToan, HOADON.TrangThai\n"
-//                + "FROM HOADON\n"
-//                + "INNER JOIN NHANVIEN ON HOADON.ID_NhanVien = NHANVIEN.ID\n"
-//                + "INNER JOIN KHACHHANG ON HOADON.ID_KhachHang = KHACHHANG.ID\n"
-//                + "LEFT JOIN VOUCHER ON HOADON.ID_Voucher = VOUCHER.ID\n"
-//                + "INNER JOIN HOADONCHITIET ON HOADON.ID = HOADONCHITIET.ID_HoaDon\n"
-//                + "GROUP BY HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen, VOUCHER.TenVoucher, HOADON.HinhThucThanhToan, HOADON.TrangThai\n"
-//                + "HAVING SUM(HOADONCHITIET.ThanhTien) > 0\n"
-//                + "UNION ALL\n"
-//                + "SELECT HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang, VOUCHER.TenVoucher, 0 AS TongTien, HOADON.HinhThucThanhToan, HOADON.TrangThai\n"
-//                + "FROM HOADON\n"
-//                + "INNER JOIN NHANVIEN ON HOADON.ID_NhanVien = NHANVIEN.ID\n"
-//                + "INNER JOIN KHACHHANG ON HOADON.ID_KhachHang = KHACHHANG.ID\n"
-//                + "LEFT JOIN VOUCHER ON HOADON.ID_Voucher = VOUCHER.ID\n"
-//                + "WHERE HOADON.TrangThai = N'Chờ thanh toán'\n"
-//                + "GROUP BY HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen, VOUCHER.TenVoucher, HOADON.HinhThucThanhToan, HOADON.TrangThai";
-//
-//        try {
-//            con = DBConnect.getConnection();
-//            ps = con.prepareStatement(sql);
-//            rs = ps.executeQuery();
-//            List<HoaDonModel> listHD = new ArrayList<>();
-//            while (rs.next()) {
-//                HoaDonModel hdModel = new HoaDonModel(
-//                        rs.getString(1),
-//                        rs.getDate(2),
-//                        new NhanVienModel(rs.getString(3)),
-//                        new KhachHangModel(rs.getString(4)),
-//                        new VoucherModer(rs.getString(5)),
-//                        rs.getBigDecimal(6),
-//                        rs.getString(7),
-//                        rs.getString(8));
-//                listHD.add(hdModel);
-//            }
-//            return listHD;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
     public List<HoaDonModel> getHoaDonChoThanhToan() {
         String sql
                 = "SELECT HOADON.ID, HOADON.NgayTao, NHANVIEN.HoTen, KHACHHANG.HoTen AS TenKhachHang,\n"
@@ -345,6 +305,50 @@ public class BanHangService {
         }
     }
 
+    public boolean updateBillWhileDeleteOne(String maHoaDon) {
+        BigDecimal tongTien = BigDecimal.ZERO;
+
+        // Lấy danh sách chi tiết hóa đơn còn lại
+        List<ChiTietHoaDonModel> chiTietHoaDons = searchByHoaDonID(maHoaDon);
+
+        // Tính tổng tiền của các chi tiết hóa đơn còn lại
+        for (ChiTietHoaDonModel chiTietHoaDon : chiTietHoaDons) {
+            tongTien = tongTien.add(chiTietHoaDon.getThanhTien());
+        }
+
+        // Cập nhật tổng tiền của hóa đơn
+        String sqlUpdateTongTien = "UPDATE HOADON SET TongTien = ? WHERE ID = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sqlUpdateTongTien);
+            ps.setBigDecimal(1, tongTien);
+            ps.setString(2, maHoaDon);
+            int rowsAffected = ps.executeUpdate();
+
+//            // Cập nhật số lượng tồn của sản phẩm chi tiết
+//            for (ChiTietHoaDonModel chiTietHoaDon : chiTietHoaDons) {
+//                updateSoLuongTon(chiTietHoaDon.getMactsp().getID(),
+//                        laySoLuongTonByID(chiTietHoaDon.getMactsp().getID()) + chiTietHoaDon.getSoLuong());
+//            }
+            return rowsAffected > 0; // Trả về true nếu cập nhật thành công
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            // Đóng kết nối
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
     public List<ChiTietSanPhamModel> getAllCTSP() {
         sql = "SELECT SANPHAMCHITIET.ID, SANPHAM.TenSanPham, MAUSAC.TenMau AS TenMau, SIZE.Ten AS TenKichCo, CHATLIEU.Ten AS TenChatLieu, THUONGHIEU.Ten AS TenThuongHieu, SANPHAMCHITIET.GiaBan, SANPHAMCHITIET.SoLuongTon, MAUSAC.MoTa\n"
                 + "FROM SANPHAMCHITIET\n"
@@ -512,32 +516,14 @@ public class BanHangService {
         return soLuongTon;
     }
 
-    public void updateSoLuongTon(String idSanPhamChiTiet, int soLuongMoi) {
-        String sql = "UPDATE SANPHAMCHITIET SET SoLuongTon = ? WHERE ID = ?";
-
+    public int updateSoLuongTon(String idSanPhamChiTiet, int soLuongMoi) {
+        sql = "UPDATE SANPHAMCHITIET SET SoLuongTon = ? WHERE ID = ?";
         try {
-            con = DBConnect.getConnection();
-            ps = con.prepareStatement(sql);
-
-            ps.setInt(1, soLuongMoi);
-            ps.setString(2, idSanPhamChiTiet);
-
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // Đóng kết nối
-            try {
-                if (ps != null) {
-                    ps.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
+            int result = JdbcHelper.update(sql, soLuongMoi, idSanPhamChiTiet);
+            return result;
+        } catch (Exception e) {
         }
+        return 0;
     }
 
     public List<ChiTietHoaDonModel> getAllGH() {
@@ -995,12 +981,12 @@ public class BanHangService {
         }
     }
 
-    public int updateSoLuongVoucher(String voucherID) {
+    public int updateSoLuongVoucher(String tenVoucher) {
         sql = "UPDATE VOUCHER SET SoLuong = SoLuong - 1 WHERE TenVoucher = ?";
         try {
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
-            ps.setString(1, voucherID);
+            ps.setString(1, tenVoucher);
             return ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1088,26 +1074,6 @@ public class BanHangService {
         return isSuccess;
     }
 
-//    public boolean updateVoucherHoaDon(String hoaDonID, String tenVoucher) {
-//        sql = "UPDATE HOADON\n"
-//                + "SET ID_Voucher = ( SELECT ID FROM VOUCHER WHERE TenVoucher = ?)\n"
-//                + "WHERE HOADON.ID = ?;";
-//        boolean isSuccess = false; // Biến để xác định việc cập nhật thành công hay không
-//        try {
-//            // Kết nối cơ sở dữ liệu và thực hiện cập nhật
-//            con = DBConnect.getConnection();
-//
-//            ps = con.prepareStatement(sql);
-//            ps.setString(1, tenVoucher);
-//            ps.setString(2, hoaDonID);
-//
-//            int rowsUpdated = ps.executeUpdate();
-//            isSuccess = rowsUpdated > 0;
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return isSuccess;
-//    }
     public boolean updateVoucherHoaDon(String hoaDonID, String voucherID) {
         sql = "UPDATE HOADON SET ID_Voucher = ? WHERE ID = ?";
         try {
@@ -1148,6 +1114,39 @@ public class BanHangService {
             e.printStackTrace();
         }
         return rowsAffected;
+    }
+
+    // Lấy HĐCT theo ID_SPCT 
+    public ChiTietHoaDonModel getHDCT_BY_Id_HD_Id_SPCT(String id_HD, String ma_SPCT) {
+        sql = "select * from HOADONCHITIET\n"
+                + "WHERE ID_SanPhamChiTiet = ? AND ID_HoaDon = ?";
+        ChiTietHoaDonModel hdct = new ChiTietHoaDonModel();
+        try {
+            rs = JdbcHelper.query(sql, ma_SPCT, id_HD);
+            while (rs.next()) {
+                hdct.setID(rs.getString("ID"));//ID_SPCT
+                hdct.setSoLuong(rs.getInt("SoLuong"));//SL_SP
+            }
+            return hdct;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    // Lấy ra SPCT dựa vào ID_SPCT
+    public ChiTietSanPhamModel get_SPCT_BY_Id_SPCT(String id_SPCT) {
+        sql = "select * from SANPHAMCHITIET\n"
+                + "where ID = ?";
+        ChiTietSanPhamModel spct = new ChiTietSanPhamModel();
+        try {
+            rs = JdbcHelper.query(sql, id_SPCT);
+            while (rs.next()) {
+                spct.setSoLuongTon(rs.getInt("SoLuongTon"));
+            }
+            return spct;
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
 }

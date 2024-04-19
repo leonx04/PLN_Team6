@@ -136,7 +136,7 @@ public class FormBanHang extends javax.swing.JPanel {
 
     private void initCBOVoucher() {
         // Định nghĩa mảng chứa các lựa chọn cho combobox
-        String[] options = {"Discount10%", "Discount20%", "Discount300K", "Discount700K"};
+        String[] options = {"Discount0","Discount10%", "Discount20%", "Discount300K", "Discount700K"};
 
         // Khởi tạo combobox với các giá trị từ mảng options
         cboVoucher.setModel(new DefaultComboBoxModel<>(options));
@@ -384,7 +384,7 @@ public class FormBanHang extends javax.swing.JPanel {
 
         try {
             // Đường dẫn đến tập tin PDF
-            String filePath = "A:\\PDF\\hoa_don.pdf";
+            String filePath = "C:\\Users\\admin\\Documents\\hoa_don.pdf";
             PdfWriter.getInstance(document, new FileOutputStream(filePath));
 
             // Mở tài liệu để bắt đầu thêm nội dung
@@ -552,7 +552,7 @@ public class FormBanHang extends javax.swing.JPanel {
 
     private void openPDFFile() {
         try {
-            String filePath = "A:\\PDF\\hoa_don.pdf";
+            String filePath = "C:\\Users\\admin\\Documents\\hoa_don.pdf";
             File file = new File(filePath);
             if (file.exists()) {
                 Desktop.getDesktop().open(file);

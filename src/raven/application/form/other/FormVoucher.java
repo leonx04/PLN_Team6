@@ -24,17 +24,51 @@ public class FormVoucher extends javax.swing.JPanel {
     public FormVoucher() {
         initComponents();
         this.fillTable(service.getAllVoucher());
-        JComboBox<String> cboTrangThai = new JComboBox<>(
-                new String[]{"Hoạt động", "Không hoạt động"});
-        cboTrangThai.setSelectedIndex(0); // Chọn mặc định "Hoạt động"
-        this.cboTrangThai = cboTrangThai;
+//        JComboBox<String> cboTrangThai = new JComboBox<>(
+//                new String[]{"Hoạt động", "Không hoạt động"});
+//        cboTrangThai.setSelectedIndex(0); // Chọn mặc định "Hoạt động"
+//        this.cboTrangThai = cboTrangThai;
         initCboLoaiVoucher();
+        initCboTrangThai();
+        updateVoucherStatus(); // Gọi hàm cập nhật trạng thái voucher
+        updateActiveVouchers(); // Gọi hàm cập nhật trạng thái voucher hoạt động
+        updateVoucherStatusByQuantity();
+    }
+
+    private void updateVoucherStatusByQuantity() {
+        int updatedCount = service.updateVoucherStatusByQuantity();
+        if (updatedCount > 0) {
+            System.out.println("Đã cập nhật trạng thái của " + updatedCount + " voucher thành Không hoạt động.");
+            fillTable(service.getAllVoucher()); // Cập nhật lại bảng voucher
+        }
+    }
+
+    private void updateVoucherStatus() {
+        int updatedCount = service.updateStatusVoucher();
+        if (updatedCount > 0) {
+            System.out.println("Đã cập nhật trạng thái của " + updatedCount + " voucher thành Hoạt động.");
+            fillTable(service.getAllVoucher()); // Cập nhật lại bảng voucher
+        }
+    }
+
+    private void updateActiveVouchers() {
+        int updatedCount = service.updateActiveVouchers();
+        if (updatedCount > 0) {
+            System.out.println("Đã cập nhật trạng thái của " + updatedCount + " voucher thành Hoạt động.");
+            fillTable(service.getAllVoucher()); // Cập nhật lại bảng voucher
+        }
     }
 
     private void initCboLoaiVoucher() {
         cboLoaiVoucher.addItem("Giảm theo phần trăm");
         cboLoaiVoucher.addItem("Giảm theo giá tiền");
         cboLoaiVoucher.setSelectedIndex(0); // Chọn mặc định "Giảm theo phần trăm"
+    }
+
+    private void initCboTrangThai() {
+        cboTrangThai.addItem("Hoạt động");
+        cboTrangThai.addItem("Không hoạt động");
+        cboTrangThai.setSelectedIndex(0);
     }
 
     void fillTable(List<VoucherModer> list) {
@@ -70,7 +104,8 @@ public class FormVoucher extends javax.swing.JPanel {
         String tenVoucher = tblVoucher.getValueAt(index, 2).toString().trim();
         String soLuong = String.valueOf(tblVoucher.getValueAt(index, 3)).trim();
         String loaiVoucher = tblVoucher.getValueAt(index, 4).toString().trim();
-        String mucGiamGia = tblVoucher.getValueAt(index, 5).toString().trim();
+        BigDecimal mucGiamGiaBD = (BigDecimal) tblVoucher.getValueAt(index, 5);
+        int mucGiamGia = mucGiamGiaBD.intValue(); // Chuyển đổi từ BigDecimal sang int
         String moTa = tblVoucher.getValueAt(index, 6).toString().trim();
         java.sql.Date ngayBatDau = (java.sql.Date) tblVoucher.getValueAt(index, 7);
         java.sql.Date ngayKetThuc = (java.sql.Date) tblVoucher.getValueAt(index, 8);
@@ -80,7 +115,7 @@ public class FormVoucher extends javax.swing.JPanel {
         txtTenVoucher.setText(tenVoucher);
         txtSoLuong.setText(String.valueOf(soLuong));
         cboLoaiVoucher.setSelectedItem(loaiVoucher);
-        txtMucGiamGia.setText(mucGiamGia);
+        txtMucGiamGia.setText(String.valueOf(mucGiamGia));
 
         txtMoTa.setText(moTa);
         dateBD.setDate(ngayBatDau);
@@ -384,7 +419,6 @@ public class FormVoucher extends javax.swing.JPanel {
         jLabel11.setText("Trạng thái Voucher");
 
         cboTrangThai.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cboTrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hoạt động", "Không hoạt động" }));
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel12.setText("Mô tả");
@@ -710,6 +744,9 @@ public class FormVoucher extends javax.swing.JPanel {
                 int result = service.update(voucher);
                 if (result > 0) {
                     JOptionPane.showMessageDialog(this, "Sửa thành công!");
+                    updateVoucherStatus(); // Gọi hàm cập nhật trạng thái voucher
+                    updateActiveVouchers(); // Gọi hàm cập nhật trạng thái voucher hoạt động
+                    updateVoucherStatusByQuantity();
                     fillTable(service.getAllVoucher());
                 } else {
                     JOptionPane.showMessageDialog(this, "Sửa thất bại!");
@@ -766,7 +803,8 @@ public class FormVoucher extends javax.swing.JPanel {
 
             // Lấy lại toàn bộ danh sách voucher từ cơ sở dữ liệu
             List<VoucherModer> listVoucher = service.getAllVoucher();
-
+            updateVoucherStatus(); // Gọi hàm cập nhật trạng thái voucher
+            updateActiveVouchers(); // Gọi hàm cập nhật trạng thái voucher hoạt động
             // Đổ dữ liệu vào bảng
             fillTable(listVoucher);
         } else {
@@ -776,6 +814,8 @@ public class FormVoucher extends javax.swing.JPanel {
 
     private void btnLamMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLamMoiActionPerformed
         // TODO add your handling code here:
+        updateVoucherStatus(); // Gọi hàm cập nhật trạng thái voucher
+        updateActiveVouchers(); // Gọi hàm cập nhật trạng thái voucher hoạt động
         this.clear();
         fillTable(service.getAllVoucher());
     }//GEN-LAST:event_btnLamMoiActionPerformed
@@ -809,6 +849,8 @@ public class FormVoucher extends javax.swing.JPanel {
             if (option == JOptionPane.YES_OPTION) {
                 if (service.delete(ID) > 0) {
                     JOptionPane.showMessageDialog(this, "Xóa thành công!!");
+                    updateVoucherStatus(); // Gọi hàm cập nhật trạng thái voucher
+                    updateActiveVouchers(); // Gọi hàm cập nhật trạng thái voucher hoạt động
                     fillTable(service.getAllVoucher());
                     clear();
                 } else {
@@ -837,36 +879,18 @@ public class FormVoucher extends javax.swing.JPanel {
     private void cboTrangThai1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboTrangThai1ActionPerformed
         String trangThai = (String) cboTrangThai1.getSelectedItem();
         List<VoucherModer> list = service.getAllVoucherByTrangThai(trangThai);
+        updateVoucherStatus(); // Gọi hàm cập nhật trạng thái voucher
+        updateActiveVouchers(); // Gọi hàm cập nhật trạng thái voucher hoạt động
         fillTable(list);
     }//GEN-LAST:event_cboTrangThai1ActionPerformed
 
     private void tblVoucherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblVoucherMouseClicked
         // TODO add your handling code here:
-        // Lấy chỉ số của hàng được chọn
-        int rowIndex = tblVoucher.getSelectedRow();
-
-        // Kiểm tra xem người dùng đã nhấp chuột đúng vào hàng hay không
-        if (rowIndex >= 0) {
-            // Lấy dữ liệu của hàng được chọn
-            String maVoucher = tblVoucher.getValueAt(rowIndex, 1).toString();
-            String tenVoucher = tblVoucher.getValueAt(rowIndex, 2).toString();
-            String soLuong = tblVoucher.getValueAt(rowIndex, 3).toString();
-            String loaiVoucher = tblVoucher.getValueAt(rowIndex, 4).toString();
-            String mucGiamGia = tblVoucher.getValueAt(rowIndex, 5).toString();
-            String moTa = tblVoucher.getValueAt(rowIndex, 6).toString();
-            String ngayBatDau = tblVoucher.getValueAt(rowIndex, 7).toString();
-            String ngayKetThuc = tblVoucher.getValueAt(rowIndex, 8).toString();
-            String trangThai = tblVoucher.getValueAt(rowIndex, 9).toString();
-
-            // Hiển thị dữ liệu trên các thành phần giao diện người dùng khác
-            txtMaVoucher.setText(maVoucher);
-            txtTenVoucher.setText(tenVoucher);
-            txtSoLuong.setText(soLuong);
-            cboLoaiVoucher.setSelectedItem(loaiVoucher);
-            txtMucGiamGia.setText(mucGiamGia);
-            txtMoTa.setText(moTa);
-            cboTrangThai.setSelectedItem(trangThai);
+        int index = tblVoucher.getSelectedRow(); // Lấy chỉ mục của hàng được chọn trong bảng
+        if (index >= 0) { // Kiểm tra nếu hàng được chọn hợp lệ
+            showData(index); // Hiển thị dữ liệu của hàng được chọn
         }
+
     }//GEN-LAST:event_tblVoucherMouseClicked
 
 

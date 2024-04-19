@@ -120,39 +120,48 @@ public class FormKhachHang extends javax.swing.JPanel {
         // Kiểm tra tên
         if (ten.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập tên.");
+            txtTen.requestFocus();
             return false;
         } else if (ten.length() > 100) {
             JOptionPane.showMessageDialog(null, "Tên không được vượt quá 100 ký tự.");
+            txtTen.requestFocus();
             return false;
         }
 
         // Kiểm tra số điện thoại
         if (sdt.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập số điện thoại.");
+            txtSDT.requestFocus();
             return false;
         } else if (sdt.length() != 10) {
             JOptionPane.showMessageDialog(null, "Số điện thoại phải có đúng 10 số.");
+             txtSDT.requestFocus();
             return false;
         } else if (!sdt.matches("\\d+")) {
             JOptionPane.showMessageDialog(null, "Số điện thoại chỉ được chứa các chữ số.");
+             txtSDT.requestFocus();
             return false;
         }
 
         // Kiểm tra địa chỉ
         if (diachi.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập địa chỉ.");
+            txtDiaChi.requestFocus();
             return false;
         } else if (diachi.length() > 255) {
             JOptionPane.showMessageDialog(null, "Địa chỉ không được vượt quá 255 ký tự.");
+            txtDiaChi.requestFocus();
             return false;
         }
 
         // Kiểm tra email
         if (email.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập email.");
+            txtEmail.requestFocus();
             return false;
         } else if (!email.contains("@")) {
             JOptionPane.showMessageDialog(null, "Email phải chứa ký tự '@'.");
+            txtEmail.requestFocus();
             return false;
         }
         return true;
@@ -482,7 +491,7 @@ public class FormKhachHang extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        Jpanel.addTab("Danh sách hóa đơn khách hàng", panel2);
+        Jpanel.addTab("Lịch sử giao dịch", panel2);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -568,18 +577,21 @@ public class FormKhachHang extends javax.swing.JPanel {
         // Kiểm tra trùng tên
         if (khrs.checkTrungTen(kh.getTen())) {
             JOptionPane.showMessageDialog(this, "Tên khách hàng đã tồn tại. Vui lòng chọn tên khác.");
+            txtTen.requestFocus();
             return;
         }
 
         // Kiểm tra trùng số điện thoại
         if (khrs.checkTrungSDT(kh.getSodt())) {
             JOptionPane.showMessageDialog(this, "Số điện thoại đã tồn tại. Vui lòng chọn số điện thoại khác.");
+            txtSDT.requestFocus();
             return;
         }
 
         // Kiểm tra trùng email
         if (khrs.checkTrungEmail(kh.getEmail())) {
             JOptionPane.showMessageDialog(this, "Email đã tồn tại. Vui lòng chọn email khác.");
+            txtEmail.requestFocus();
             return;
         }
         // Lấy mã khách hàng mới
