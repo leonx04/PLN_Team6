@@ -127,7 +127,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
                 + "font:$h1.font");
         JComboBox<String> cboTrangThai = new JComboBox<>(
                 new String[]{"Tất cả", "Chờ thanh toán", "Đã thanh toán", "Đã hủy"});
-        
+
     }
 
     private void updateVoucherStatusByQuantity() {
@@ -1529,7 +1529,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
                     xoaMemHD(selectedHoaDonID); // Xóa hóa đơn đã thanh toán khỏi bảng
                 } else {
                     JOptionPane.showMessageDialog(this, "Số tiền nhập vào không được nhỏ hơn số tiền phải thanh toán.");
-                    
+
                     txtTienThua.setText("0");
                     txtTienThua.requestFocus();
                     return;
@@ -1582,7 +1582,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
         if (tienMat.compareTo(BigDecimal.ZERO) < 0) {
             JOptionPane.showMessageDialog(this, "Số tiền mặt không được là số âm.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             txtTienMat.requestFocus();
-            
+
             return false;
         }
 
@@ -1692,13 +1692,13 @@ public class FormBanHang1 extends javax.swing.JPanel {
     }// GEN-LAST:event_btnTimKiemActionPerformed
 
     private void btnDeleteGHActionPerformed(java.awt.event.ActionEvent evt) {
-        DefaultTableModel model = (DefaultTableModel) tblGioHang.getModel();
-        int rowCount = model.getRowCount();
-
+        DefaultTableModel modelHDCT = (DefaultTableModel) tblGioHang.getModel();
+        int rowCount = modelHDCT.getRowCount();
         // Kiểm tra xem checkbox selectAll đã được chọn hay không
         boolean selectAllActivated = selectAll.isSelected();
-
-        if (selectAllActivated && selectedHoaDonID != null) {
+        System.out.println("selectAllActivated " + selectAll.isSelected());
+        if (selectedHoaDonID != null && selectAllActivated) {
+            System.out.println("Chạy vào xóa tất cả.");
             // Lấy danh sách chi tiết hoá đơn của hoá đơn đã chọn trước khi xóa
             List<ChiTietHoaDonModel> chiTietHoaDons = bhrs.searchByHoaDonID(selectedHoaDonID);
 
@@ -1726,12 +1726,15 @@ public class FormBanHang1 extends javax.swing.JPanel {
             cleanForm();
         } else {
             // Xóa các sản phẩm được chọn
+            System.out.println("Chạy vào xóa 1 số cái");
             List<String> maSanPhamChiTietDaChon = new ArrayList<>();
-            for (int i = 0; i < rowCount; i++) {
-                // Kiểm tra giá trị ở cột "Chọn" (columnIndex = 5)
-                Object value = model.getValueAt(i, 5);
-                if (value instanceof Boolean && (Boolean) value) {
-                    String maSanPhamChiTiet = model.getValueAt(i, 0).toString();
+            // Duyệt qua từng hàng của bảng
+            for (int i = rowCount - 1; i >= 0; i--) {
+                // Lấy giá trị của checkbox tại cột "Chọn"
+                Boolean isSelected = (Boolean) modelHDCT.getValueAt(i, 5); // Cột 5 là cột "Chọn"
+                if (isSelected != null && isSelected) { // Nếu checkbox được chọn
+                    String maSanPhamChiTiet = modelHDCT.getValueAt(i, 0).toString(); // Lấy mã sản phẩm chi tiết
+                    System.out.println("Danh sách SPCT đc chọn " + maSanPhamChiTiet);// SPCT02 , SPCT03
                     maSanPhamChiTietDaChon.add(maSanPhamChiTiet);
                 }
             }
@@ -1741,34 +1744,25 @@ public class FormBanHang1 extends javax.swing.JPanel {
                 return;
             }
 
+            // Duyệt qua danh sách các sản phẩm đã chọn để xóa
             for (String maCTSP : maSanPhamChiTietDaChon) {
-                // Lấy số lượng của sản phẩm đã chọn để cập nhật lại số lượng tồn
-                int soLuong = (int) model.getValueAt(model.getRowCount() - 1, 3);
-
-                // Xóa dữ liệu từ cơ sở dữ liệu
-                int result = bhrs.xoaHoaDonChiTiet(maCTSP, selectedHoaDonID);
-                if (result <= 0) {
-                    JOptionPane.showMessageDialog(this, "Xóa thất bại!");
-                    return;
-                }
-
-                // Cập nhật số lượng tồn của sản phẩm đã chọn
-                bhrs.updateSoLuongTon(maCTSP, bhrs.laySoLuongTonByID(maCTSP) + soLuong);
-
-                // Xóa hàng từ bảng sau khi xóa dữ liệu từ cơ sở dữ liệu
-                for (int i = 0; i < rowCount; i++) {
-                    if (model.getValueAt(i, 0).toString().equals(maCTSP)) {
-                        model.removeRow(i);
-                        rowCount--; // Giảm số lượng hàng sau mỗi lần xóa
-                        break;
-                    }
-                }
+                //Dựa vào danh sách ID_SPCT + MaHD  
+                // Lấy ra HĐCT --> Lấy SL_SP + Xóa nó
+                // Lấy ra SPCT --> Update lại SL 
+                ChiTietHoaDonModel hdct = bhrs.getHDCT_BY_Id_HD_Id_SPCT(selectedHoaDonID, maCTSP);
+                ChiTietSanPhamModel spct = bhrs.get_SPCT_BY_Id_SPCT(maCTSP);
+                int SL_update = hdct.getSoLuong() + spct.getSoLuongTon();
+                int result_update_SL = bhrs.updateSoLuongTon(maCTSP, SL_update);
+                int result_delete_HDCT = bhrs.xoaHoaDonChiTiet(maCTSP, selectedHoaDonID);
+//                if (result_delete_HDCT != 0 && result_update_SL != 0) {
+//                    JOptionPane.showMessageDialog(this, "Update lại SL " + maCTSP + " xóa HDCT" + hdct.getID());
+//                }
             }
-
             // Cập nhật tổng tiền của hóa đơn
             bhrs.updateBillWhileDeleteOne(selectedHoaDonID);
         }
-
+//        System.out.println(selectedHoaDonID);
+//        fillChiTietHoaDonTable(selectedHoaDonID);
         // Cập nhật lại bảng hiển thị
         fillTable2(bhrs.getHoaDonChoThanhToan()); // Cập nhật lại bảng hoá đơn chính
         fillTable(bhrs.getAllCTSP()); // Cập nhật lại bảng sản phẩm chi tiết
