@@ -240,7 +240,7 @@ public class SanPhamService {
         try {
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
-            ps.setObject(4, ma);
+            ps.setObject(3, ma);
             ps.setObject(1, sp.getTenSP());
             ps.setObject(2, sp.getMoTa());
             return ps.executeUpdate();

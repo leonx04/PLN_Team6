@@ -112,7 +112,7 @@ public class FormBanHang extends javax.swing.JPanel {
         initCBOVoucher();
         fillTable(bhrs.getAllCTSP());
         fillTable2(bhrs.getHoaDonChoThanhToan());
-        txtTenNV.setText(Auth.user.getHoTen());
+//        txtTenNV.setText(Auth.user.getHoTen());
         lb1.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:$h1.font");
         JComboBox<String> cboTrangThai = new JComboBox<>(

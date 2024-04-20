@@ -713,6 +713,10 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
         String maTT = txtMaTT.getText();
 
         if (rdoMauSac.isSelected()) {
+            if (msrs.checkTonTaiSPCT(maTT)) {
+                JOptionPane.showMessageDialog(this, "Không thể xóa thuộc tính này vì đang tồn tại trong sản phẩm chi tiết!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
             int del = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa màu sắc này ?"
                     + (msrs.delete(maTT) > 0), "Xác nhận", JOptionPane.YES_NO_OPTION);
             if (del == JOptionPane.YES_OPTION) {
@@ -723,6 +727,10 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Xóa thất bại!");
             }
         } else if (rdoChatLieu.isSelected()) {
+            if (clrs.checkTonTaiSPCT(maTT)) {
+                JOptionPane.showMessageDialog(this, "Không thể xóa thuộc tính này vì đang tồn tại trong sản phẩm chi tiết!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
             int del = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa chất liệu này ?"
                     + (clrs.delete(maTT) > 0), "Xác nhận", JOptionPane.YES_NO_OPTION);
             if (del == JOptionPane.YES_OPTION) {
@@ -733,6 +741,10 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Xóa thất bại!");
             }
         } else if (rdoKichCo.isSelected()) {
+            if (kcrs.checkTonTaiSPCT(maTT)) {
+                JOptionPane.showMessageDialog(this, "Không thể xóa thuộc tính này vì đang tồn tại trong sản phẩm chi tiết!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
             int del = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa kích cỡ này ?"
                     + (kcrs.delete(maTT) > 0), "Xác nhận", JOptionPane.YES_NO_OPTION);
             if (del == JOptionPane.YES_OPTION) {
@@ -743,6 +755,10 @@ public class FormThuocTinhSanPham extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Xóa thất bại!");
             }
         } else if (rdoThuongHieu.isSelected()) {
+            if (thrs.checkTonTaiSPCT(maTT)) {
+                JOptionPane.showMessageDialog(this, "Không thể xóa thuộc tính này vì đang tồn tại trong sản phẩm chi tiết!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
             int del = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa thương hiệu này ?"
                     + (thrs.delete(maTT) > 0), "Xác nhận", JOptionPane.YES_NO_OPTION);
             if (del == JOptionPane.YES_OPTION) {

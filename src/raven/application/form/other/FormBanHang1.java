@@ -648,6 +648,8 @@ public class FormBanHang1 extends javax.swing.JPanel {
 
             // Cập nhật lại bảng hoá đơn 
             fillTable2(bhrs.getHoaDonChoThanhToan());
+            fillTable(bhrs.getAllCTSP());
+            
             // Lấy thông tin từ bảng hoá đơn
             selectedHoaDonID = tblHoaDon.getValueAt(selectedRow, 1).toString();
 
@@ -1843,6 +1845,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
                 btnHuyDon.setEnabled(false);
                 btnSuccesHoaDon.setEnabled(false);
                 btnDeleteGH.setEnabled(false);
+                
             } else {
                 // Nếu trạng thái không phải là "Đã thanh toán" hoặc "Đã hủy", bật lại các nút
                 btnHuyDon.setEnabled(true);
@@ -2075,6 +2078,8 @@ public class FormBanHang1 extends javax.swing.JPanel {
                         if (updated) {
                             fillChiTietHoaDonTable(selectedHoaDonID);
                             JOptionPane.showMessageDialog(this, "Cập nhật tổng tiền hóa đơn thành công!");
+                            fillTable2(bhrs.getHoaDonChoThanhToan());
+                           
                         } else {
                             JOptionPane.showMessageDialog(this, "Cập nhật tổng tiền hóa đơn thất bại!");
                         }
@@ -2102,7 +2107,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
 //                            fillChiTietHoaDonTable(selectedHoaDonID);
                             JOptionPane.showMessageDialog(this, "Cập nhật tổng tiền hóa đơn thành công!");
                             // Cập nhật lại thông tin trên form
-                            refreshFormData();
+                            
                         } else {
                             JOptionPane.showMessageDialog(this, "Cập nhật tổng tiền hóa đơn thất bại!");
                         }
@@ -2114,6 +2119,7 @@ public class FormBanHang1 extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Số lượng không hợp lệ!");
             }
         }
+        refreshFormData();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

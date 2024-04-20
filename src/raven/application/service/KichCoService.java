@@ -7,7 +7,12 @@ package raven.application.service;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import raven.application.model.ChatLieuModel;
+import raven.application.model.ChiTietSanPhamModel;
 import raven.application.model.KichCoModel;
+import raven.application.model.MauSacModel;
+import raven.application.model.SanPhamModel;
+import raven.application.model.ThuongHieuModel;
 import raven.connect.DBConnect;
 
 /**
@@ -186,4 +191,20 @@ public class KichCoService {
             return 0;
         }
     }
+    public boolean checkTonTaiSPCT(String sizeID) {
+    String sql = "SELECT COUNT(*) FROM SANPHAMCHITIET WHERE ID_Size = ?";
+    try {
+        con = DBConnect.getConnection();
+        ps = con.prepareStatement(sql);
+        ps.setString(1, sizeID);
+        rs = ps.executeQuery();
+        if (rs.next()) {
+            int count = rs.getInt(1);
+            return count > 0;
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return false;
+}
 }

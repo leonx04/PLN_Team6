@@ -8,7 +8,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import raven.application.model.ChatLieuModel;
+import raven.application.model.ChiTietSanPhamModel;
+import raven.application.model.KichCoModel;
+import raven.application.model.MauSacModel;
 import raven.application.model.SanPhamModel;
+import raven.application.model.ThuongHieuModel;
 import raven.connect.DBConnect;
 
 /**
@@ -188,4 +192,34 @@ public class ChatLieuService {
         return false; // Trả về false nếu có lỗi xảy ra
     }
 
+    public boolean checkTonTaiSPCT(String idChatLieu) {
+        String sql = "SELECT COUNT(*) FROM SANPHAMCHITIET WHERE ID_ChatLieu = ?";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, idChatLieu);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                return count > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
 }
