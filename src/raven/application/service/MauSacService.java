@@ -211,4 +211,29 @@ public class MauSacService {
             return null;
         }
     }
+    
+    public boolean checkTonTaiSPCT(String maMauSac) {
+    String sql = "SELECT COUNT(*) FROM SANPHAMCHITIET WHERE ID_MauSac = ?";
+    try {
+        con = DBConnect.getConnection();
+        ps = con.prepareStatement(sql);
+        ps.setString(1, maMauSac);
+        rs = ps.executeQuery();
+        if (rs.next()) {
+            int count = rs.getInt(1);
+            return count > 0; 
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        try {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+            if (con != null) con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    return false; 
+}
 }

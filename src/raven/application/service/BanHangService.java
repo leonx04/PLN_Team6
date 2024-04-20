@@ -20,6 +20,7 @@ import raven.application.model.SanPhamModel;
 import raven.application.model.ThuongHieuModel;
 import raven.application.model.VoucherModer;
 import raven.connect.DBConnect;
+import raven.connect.JdbcHelper;
 
 /**
  *
@@ -92,7 +93,6 @@ public class BanHangService {
         }
         return null;
     }
-
 
     public List<HoaDonModel> getHoaDonChoThanhToan() {
         String sql
@@ -325,12 +325,11 @@ public class BanHangService {
             ps.setString(2, maHoaDon);
             int rowsAffected = ps.executeUpdate();
 
-            // Cập nhật số lượng tồn của sản phẩm chi tiết
-            for (ChiTietHoaDonModel chiTietHoaDon : chiTietHoaDons) {
-                updateSoLuongTon(chiTietHoaDon.getMactsp().getID(),
-                        laySoLuongTonByID(chiTietHoaDon.getMactsp().getID()) + chiTietHoaDon.getSoLuong());
-            }
-
+//            // Cập nhật số lượng tồn của sản phẩm chi tiết
+//            for (ChiTietHoaDonModel chiTietHoaDon : chiTietHoaDons) {
+//                updateSoLuongTon(chiTietHoaDon.getMactsp().getID(),
+//                        laySoLuongTonByID(chiTietHoaDon.getMactsp().getID()) + chiTietHoaDon.getSoLuong());
+//            }
             return rowsAffected > 0; // Trả về true nếu cập nhật thành công
         } catch (Exception e) {
             e.printStackTrace();
@@ -517,32 +516,14 @@ public class BanHangService {
         return soLuongTon;
     }
 
-    public void updateSoLuongTon(String idSanPhamChiTiet, int soLuongMoi) {
-        String sql = "UPDATE SANPHAMCHITIET SET SoLuongTon = ? WHERE ID = ?";
-
+    public int updateSoLuongTon(String idSanPhamChiTiet, int soLuongMoi) {
+        sql = "UPDATE SANPHAMCHITIET SET SoLuongTon = ? WHERE ID = ?";
         try {
-            con = DBConnect.getConnection();
-            ps = con.prepareStatement(sql);
-
-            ps.setInt(1, soLuongMoi);
-            ps.setString(2, idSanPhamChiTiet);
-
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // Đóng kết nối
-            try {
-                if (ps != null) {
-                    ps.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
+            int result = JdbcHelper.update(sql, soLuongMoi, idSanPhamChiTiet);
+            return result;
+        } catch (Exception e) {
         }
+        return 0;
     }
 
     public List<ChiTietHoaDonModel> getAllGH() {
@@ -1134,5 +1115,38 @@ public class BanHangService {
         }
         return rowsAffected;
     }
-    
+
+    // Lấy HĐCT theo ID_SPCT 
+    public ChiTietHoaDonModel getHDCT_BY_Id_HD_Id_SPCT(String id_HD, String ma_SPCT) {
+        sql = "select * from HOADONCHITIET\n"
+                + "WHERE ID_SanPhamChiTiet = ? AND ID_HoaDon = ?";
+        ChiTietHoaDonModel hdct = new ChiTietHoaDonModel();
+        try {
+            rs = JdbcHelper.query(sql, ma_SPCT, id_HD);
+            while (rs.next()) {
+                hdct.setID(rs.getString("ID"));//ID_SPCT
+                hdct.setSoLuong(rs.getInt("SoLuong"));//SL_SP
+            }
+            return hdct;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    // Lấy ra SPCT dựa vào ID_SPCT
+    public ChiTietSanPhamModel get_SPCT_BY_Id_SPCT(String id_SPCT) {
+        sql = "select * from SANPHAMCHITIET\n"
+                + "where ID = ?";
+        ChiTietSanPhamModel spct = new ChiTietSanPhamModel();
+        try {
+            rs = JdbcHelper.query(sql, id_SPCT);
+            while (rs.next()) {
+                spct.setSoLuongTon(rs.getInt("SoLuongTon"));
+            }
+            return spct;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
 }
