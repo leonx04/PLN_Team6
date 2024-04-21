@@ -631,7 +631,7 @@ public class FormKhachHang extends javax.swing.JPanel {
         if (selectedRow >= 0) {
             String id = (String) tblKH.getValueAt(selectedRow, 1);
             if (khrs.checkExistInHoaDon(id)) {
-                JOptionPane.showMessageDialog(this, "Không thể xóa khách hàng vì đang tồn tại trong bảng hóa đơn.");
+                JOptionPane.showMessageDialog(this, "Không thể xóa khách hàng vì khách hàng đang tồn tại trong bảng hóa đơn.");
                 return;
             }
             int result = khrs.delete(id);
@@ -643,7 +643,7 @@ public class FormKhachHang extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Xóa khách hàng thất bại!");
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng cần xóa.");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng muốn xóa.");
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
 

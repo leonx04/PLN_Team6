@@ -236,14 +236,27 @@ public class SanPhamService {
     }
 
     public int update(SanPhamModel sp, String ma) {
-        sql = "UPDATE SANPHAM SET TenSanPham = ?, MoTa = ? ,TrangThai = ?, NgaySua  = CURRENT_TIMESTAMP WHERE ID = ? ;";
+        sql = "UPDATE SANPHAM SET TenSanPham = ?, MoTa = ? , NgaySua  = CURRENT_TIMESTAMP WHERE ID = ? ;";
         try {
             con = DBConnect.getConnection();
             ps = con.prepareStatement(sql);
-            ps.setObject(4, ma);
+            ps.setObject(3, ma);
             ps.setObject(1, sp.getTenSP());
             ps.setObject(2, sp.getMoTa());
-            ps.setObject(3, "Đang kinh doanh");
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    public int updateActiveTrangThai(SanPhamModel sp, String ma) {
+        sql = "UPDATE SANPHAM SET TrangThai = ?, NgaySua  = CURRENT_TIMESTAMP WHERE ID = ? ;";
+        try {
+            con = DBConnect.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setObject(2, ma);
+            ps.setObject(1, "Đang kinh doanh");
             return ps.executeUpdate();
         } catch (Exception e) {
             // TODO: handle exception
