@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eclipse-userlibraries>
+  <library name="lib">
+    <archive path="A:/PLN_Team6/lib/flatlaf-3.2.jar" />
+    <archive path="A:/PLN_Team6/lib/swing-toast-notifications-1.0.1.jar" />
+    <archive path="A:/PLN_Team6/lib/jsvg-1.2.0.jar" />
+    <archive path="A:/PLN_Team6/lib/flatlaf-extras-3.2.jar" />
+    <archive path="A:/PLN_Team6/lib/flatlaf-fonts-roboto-2.137.jar" />
+  </library>
+</eclipse-userlibraries>
+

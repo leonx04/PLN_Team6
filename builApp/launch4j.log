@@ -1,0 +1,159 @@
+
+
+Version:	3.50
+CmdLine:	A:\PLN_Team6\builApp\ThePoloMan.exe --l4j-debug
+JNI:		No
+WOW64:		Yes
+Working dir:	A:\PLN_Team6\builApp\.
+Requires JDK:	Yes
+Requires 64-Bit: Yes
+Java min ver:	1.007.000_045
+Java max ver:	
+JRE paths:	jdk-17.0.9
+Check launcher:	A:\PLN_Team6\builApp\jdk-17.0.9\bin\javaw.exe (not found)
+64-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+64-bit search:	SOFTWARE\JavaSoft\JDK...
+Check:		SOFTWARE\JavaSoft\JDK\17.0.9
+Version string: 1.017.000_009 / 64-Bit (OK)
+Check launcher:	C:\Program Files\Java\jdk-17\bin\javaw.exe (OK)
+Check javac:	C:\Program Files\Java\jdk-17\bin\javac.exe (OK)
+Match:		1.017.000_009
+Runtime used:	1.017.000_009 (64-bit)
+Main class:	raven.application.Application
+Substitute:	20(1).jar;lib\lombok-1.18.24.jar;lib\miglayout-4.0.jar;lib\mssql-jdbc-12.2.0.jre11.jar;lib\AbsoluteLayout.jar;lib\SparseBitSet-1.2.jar;lib\TimingFramework-0.55.jar;lib\artoolkitplus-2.3.1-1.5.9.jar;lib\barcode.jar;lib\barcode4j.jar;lib\bin;lib\bouncy-castle-connector-8.0.2.jar;lib\bridj-0.6.2-windows-only.jar;lib\bridj-0.7.0.jar;lib\commons-7.2.5.jar;lib\commons-8.0.2.jar;lib\commons-codec-1.11.jar;lib\commons-codec-1.15.jar;lib\commons-collections4-4.2.jar;lib\commons-collections4-4.4.jar;lib\commons-compress-1.18.jar;lib\commons-compress-1.21.jar;lib\commons-io-2.11.0.jar;lib\commons-logging-1.2.jar;lib\commons-math3-3.6.1.jar;lib\connector-1.0.3.jar;lib\core-3.3.0.jar;lib\core-3.3.3.jar;lib\core-3.4.0-javadoc.jar;lib\core-3.5.1.jar;lib\curvesapi-1.07.jar;lib\doc;lib\ffmpeg-2.1.1-windows-x86_64.jar;lib\ffmpeg-6.0-1.5.9.jar;lib\flatlaf-3.0.jar;lib\flatlaf-3.1.1.jar;lib\flatlaf-3.2.5.jar;lib\flatlaf-demo-3.2.5.jar;lib\flatlaf-extras-3.1.jar;lib\flatlaf-fonts-roboto-2.137.jar;lib\flycapture-2.13.3.31-1.5.9.jar;lib\font-asian-7.2.5.jar;lib\io-8.0.2.jar;lib\itext-1.3.1.jar;lib\itextpdf-5.4.0.jar;lib\itextpdf-5.5.12.jar;lib\jakarta.activation-2.0.1.jar;lib\jakarta.xml.bind-api-3.0.1.jar;lib\javacpp-1.5.9.jar;lib\javacv-1.5.9.jar;lib\javacv-windows-x86.jar;lib\javacv-windows-x86_64.jar;lib\javacv.jar;lib\javafx-base-11-linux.jar;lib\javafx-base-11.jar;lib\javafx-graphics-11-linux.jar;lib\javafx-graphics-11.jar;lib\javase-3.3.0.jar;lib\javase-3.5.1.jar;lib\javase-3.5.2-javadoc.jar;lib\javax.activation-1.2.0.jar;lib\javax.mail.jar;lib\jcalendar-1.2.2.jar;lib\jcalendar-1.4.jar;lib\jcommander-1.82.jar;lib\jgoodies-common-1.2.0.jar;lib\jgoodies-looks-2.4.1.jar;lib\jna-3.2.4.jar;lib\junit-4.6.jar;lib\kernel-8.0.2.jar;lib\layout-7.0.1.jar;lib\layout-8.0.1.jar;lib\leptonica-1.83.0-1.5.9.jar;lib\lib;lib\lib-core-3.1.0.jar;lib\libdc1394-2.2.6-1.5.9.jar;lib\libfreenect-0.5.7-1.5.9.jar;lib\libfreenect2-0.2.0-1.5.9.jar;lib\librealsense-1.12.4-1.5.9.jar;lib\librealsense2-2.53.1-1.5.9.jar;lib\log4j-1.2.17.jar;lib\log4j-api-2.18.0.jar;lib\log4j-core-2.20.0.jar;lib\miglayout-4.0.jar;lib\mssql-jdbc-11.2.0.jre17.jar;lib\mssql-jdbc-11.2.3.jre11.jar;lib\mssql-jdbc-11.2.3.jre18.jar;lib\mssql-jdbc-11.2.3.jre8.jar;lib\mssql-jdbc-12.4.1.jre11.jar;lib\mssql-jdbc-12.4.1.jre8.jar;lib\mssql-jdbc-12.4.2.jre8.jar;lib\mssql-jdbc-9.4.0.jre16.jar;lib\mysql-connector-java-5.1.42-bin.jar;lib\mysql-connector-java-5.1.49.jar;lib\mysql-connector-java-8.0.30.jar;lib\mysql-connector.jar;lib\openblas-0.3.23-1.5.9.jar;lib\opencv-2.4.8-windows-x86_64.jar;lib\opencv-4.7.0-1.5.9.jar;lib\pagination.jar;lib\pdfbox-app-3.0.0.jar;lib\poi-4.0.1.jar;lib\poi-5.2.3.jar;lib\poi-examples-5.2.3.jar;lib\poi-excelant-5.2.3.jar;lib\poi-javadoc-5.2.3.jar;lib\poi-ooxml-4.0.1.jar;lib\poi-ooxml-5.2.3.jar;lib\poi-ooxml-full-5.2.3.jar;lib\poi-ooxml-lite-5.2.3.jar;lib\poi-ooxml-schemas-4.0.1.jar;lib\poi-scratchpad-5.2.3.jar;lib\qrgen-1.0.jar;lib\sign-7.2.5.jar;lib\slf4j-api-1.6.2.jar;lib\slf4j-api-1.7.2.jar;lib\slf4j-api-1.7.25.jar;lib\slf4j-api-1.7.36.jar;lib\slf4j-log4j12-1.6.2.jar;lib\slf4j-simple-1.7.25.jar;lib\src;lib\svgSalamander-1.1.4.jar;lib\swingx-1.6.1.jar;lib\swingx-all-1.6.4.jar;lib\tesseract-5.3.1-1.5.9.jar;lib\timingframework-core-7.3.1-javadoc.jar;lib\videoinput-0.200-1.5.9.jar;lib\webcam-capture-0.3.12.jar;lib\xmlbeans-3.0.2.jar;lib\xmlbeans-5.0.3.jar;lib\xmlbeans-5.1.1.jar;lib\zxing-1.7-javase.jar;lib\zxing-core-1.7.jar;lib\zxing-core-2.0.jar;lib\zxing-j2se-1.7.jar;lib\jdatepicker-1.3.1.jar;lib\flatlaf-3.2.5.jar;lib\flatlaf-extras-3.2.5.jar;lib\flatlaf-fonts-roboto-2.137.jar;lib\jsvg-1.2.0.jar;lib\miglayout-core.jar;lib\miglayout-swing.jar;lib\swing-chart-1.1.0-beta.jar;lib\swing-glasspane-popup-1.4.0.jar;lib\flatlaf-3.2.5.jar;lib\flatlaf-extras-3.2.5.jar;lib\flatlaf-fonts-roboto-2.137.jar;lib\jsvg-1.2.0.jar;lib\miglayout-core.jar;lib\miglayout-swing.jar;lib\swing-chart-1.1.0-beta.jar;lib\swing-glasspane-popup-1.4.0.jar;lib\jfreechart-demo-1.5.2-jar-with-dependencies = 
+Add classpath:	lib\flatlaf-3.2.jar
+Add classpath:	lib\flatlaf-extras-3.2.jar
+Add classpath:	lib\flatlaf-fonts-roboto-2.137.jar
+Add classpath:	lib\swing-toast-notifications-1.0.1.jar
+Add classpath:	lib\jsvg-1.2.0.jar
+Add classpath:	lib\AbsoluteLayout.jar
+Add classpath:	lib\SparseBitSet-1.2.jar
+Add classpath:	lib\TimingFramework-0.55.jar
+Add classpath:	lib\artoolkitplus-2.3.1-1.5.9.jar
+Add classpath:	lib\barcode.jar
+Add classpath:	lib\barcode4j.jar
+Add classpath:	lib\bouncy-castle-connector-8.0.2.jar
+Add classpath:	lib\bridj-0.6.2-windows-only.jar
+Add classpath:	lib\bridj-0.7.0.jar
+Add classpath:	lib\commons-7.2.5.jar
+Add classpath:	lib\commons-8.0.2.jar
+Add classpath:	lib\commons-codec-1.11.jar
+Add classpath:	lib\commons-codec-1.15.jar
+Add classpath:	lib\commons-collections4-4.2.jar
+Add classpath:	lib\commons-collections4-4.4.jar
+Add classpath:	lib\commons-compress-1.18.jar
+Add classpath:	lib\commons-compress-1.21.jar
+Add classpath:	lib\commons-io-2.11.0.jar
+Add classpath:	lib\commons-logging-1.2.jar
+Add classpath:	lib\commons-math3-3.6.1.jar
+Add classpath:	lib\connector-1.0.3.jar
+Add classpath:	lib\core-3.3.0.jar
+Add classpath:	lib\core-3.3.3.jar
+Add classpath:	lib\core-3.4.0-javadoc.jar
+Add classpath:	lib\core-3.5.1.jar
+Add classpath:	lib\curvesapi-1.07.jar
+Add classpath:	lib\ffmpeg-2.1.1-windows-x86_64.jar
+Add classpath:	lib\ffmpeg-6.0-1.5.9.jar
+Add classpath:	lib\flatlaf-3.0.jar
+Add classpath:	lib\flatlaf-3.1.1.jar
+Add classpath:	lib\flatlaf-3.2.5.jar
+Add classpath:	lib\flatlaf-demo-3.2.5.jar
+Add classpath:	lib\flatlaf-extras-3.1.jar
+Add classpath:	lib\flatlaf-fonts-roboto-2.137.jar
+Add classpath:	lib\flycapture-2.13.3.31-1.5.9.jar
+Add classpath:	lib\font-asian-7.2.5.jar
+Add classpath:	lib\io-8.0.2.jar
+Add classpath:	lib\itext-1.3.1.jar
+Add classpath:	lib\itextpdf-5.4.0.jar
+Add classpath:	lib\itextpdf-5.5.12.jar
+Add classpath:	lib\jakarta.activation-2.0.1.jar
+Add classpath:	lib\jakarta.xml.bind-api-3.0.1.jar
+Add classpath:	lib\javacpp-1.5.9.jar
+Add classpath:	lib\javacv-1.5.9.jar
+Add classpath:	lib\javacv-windows-x86.jar
+Add classpath:	lib\javacv-windows-x86_64.jar
+Add classpath:	lib\javacv.jar
+Add classpath:	lib\javafx-base-11-linux.jar
+Add classpath:	lib\javafx-base-11.jar
+Add classpath:	lib\javafx-graphics-11-linux.jar
+Add classpath:	lib\javafx-graphics-11.jar
+Add classpath:	lib\javase-3.3.0.jar
+Add classpath:	lib\javase-3.5.1.jar
+Add classpath:	lib\javase-3.5.2-javadoc.jar
+Add classpath:	lib\javax.activation-1.2.0.jar
+Add classpath:	lib\javax.mail.jar
+Add classpath:	lib\jcalendar-1.2.2.jar
+Add classpath:	lib\jcalendar-1.4.jar
+Add classpath:	lib\jcommander-1.82.jar
+Add classpath:	lib\jgoodies-common-1.2.0.jar
+Add classpath:	lib\jgoodies-looks-2.4.1.jar
+Add classpath:	lib\jna-3.2.4.jar
+Add classpath:	lib\junit-4.6.jar
+Add classpath:	lib\kernel-8.0.2.jar
+Add classpath:	lib\layout-7.0.1.jar
+Add classpath:	lib\layout-8.0.1.jar
+Add classpath:	lib\leptonica-1.83.0-1.5.9.jar
+Add classpath:	lib\lib-core-3.1.0.jar
+Add classpath:	lib\libdc1394-2.2.6-1.5.9.jar
+Add classpath:	lib\libfreenect-0.5.7-1.5.9.jar
+Add classpath:	lib\libfreenect2-0.2.0-1.5.9.jar
+Add classpath:	lib\librealsense-1.12.4-1.5.9.jar
+Add classpath:	lib\librealsense2-2.53.1-1.5.9.jar
+Add classpath:	lib\log4j-1.2.17.jar
+Add classpath:	lib\log4j-api-2.18.0.jar
+Add classpath:	lib\log4j-core-2.20.0.jar
+Add classpath:	lib\miglayout-4.0.jar
+Add classpath:	lib\mssql-jdbc-11.2.0.jre17.jar
+Add classpath:	lib\mssql-jdbc-11.2.3.jre11.jar
+Add classpath:	lib\mssql-jdbc-11.2.3.jre18.jar
+Add classpath:	lib\mssql-jdbc-11.2.3.jre8.jar
+Add classpath:	lib\mssql-jdbc-12.4.1.jre11.jar
+Add classpath:	lib\mssql-jdbc-12.4.1.jre8.jar
+Add classpath:	lib\mssql-jdbc-12.4.2.jre8.jar
+Add classpath:	lib\mssql-jdbc-9.4.0.jre16.jar
+Add classpath:	lib\mysql-connector-java-5.1.42-bin.jar
+Add classpath:	lib\mysql-connector-java-5.1.49.jar
+Add classpath:	lib\mysql-connector-java-8.0.30.jar
+Add classpath:	lib\mysql-connector.jar
+Add classpath:	lib\openblas-0.3.23-1.5.9.jar
+Add classpath:	lib\opencv-2.4.8-windows-x86_64.jar
+Add classpath:	lib\opencv-4.7.0-1.5.9.jar
+Add classpath:	lib\pagination.jar
+Add classpath:	lib\pdfbox-app-3.0.0.jar
+Add classpath:	lib\poi-4.0.1.jar
+Add classpath:	lib\poi-ooxml-4.0.1.jar
+Add classpath:	lib\poi-ooxml-schemas-4.0.1.jar
+Add classpath:	lib\qrgen-1.0.jar
+Add classpath:	lib\sign-7.2.5.jar
+Add classpath:	lib\slf4j-api-1.6.2.jar
+Add classpath:	lib\slf4j-api-1.7.2.jar
+Add classpath:	lib\slf4j-api-1.7.25.jar
+Add classpath:	lib\slf4j-api-1.7.36.jar
+Add classpath:	lib\slf4j-log4j12-1.6.2.jar
+Add classpath:	lib\slf4j-simple-1.7.25.jar
+Add classpath:	lib\svgSalamander-1.1.4.jar
+Add classpath:	lib\swingx-1.6.1.jar
+Add classpath:	lib\swingx-all-1.6.4.jar
+Add classpath:	lib\tesseract-5.3.1-1.5.9.jar
+Add classpath:	lib\timingframework-core-7.3.1-javadoc.jar
+Add classpath:	lib\videoinput-0.200-1.5.9.jar
+Add classpath:	lib\webcam-capture-0.3.12.jar
+Add classpath:	lib\xmlbeans-3.0.2.jar
+Add classpath:	lib\xmlbeans-5.0.3.jar
+Add classpath:	lib\xmlbeans-5.1.1.jar
+Add classpath:	lib\zxing-1.7-javase.jar
+Add classpath:	lib\zxing-core-1.7.jar
+Add classpath:	lib\zxing-core-2.0.jar
+Add classpath:	lib\zxing-j2se-1.7.jar
+Add classpath:	lib\itextpdf-5.5.13.3.jar
+Add classpath:	lib\AbsoluteLayout.jar
+Add classpath:	lib\TimingFramework-0.55.jar
+Add classpath:	lib\activation-1.1.1.jar
+Add classpath:	lib\flatlaf-3.2.1.jar
+Add classpath:	lib\javax.mail.jar
+Add classpath:	lib\jcalendar-1.4.jar
+Add classpath:	lib\jfreechart-demo-1.5.2-jar-with-dependencies20(1).jar
+Launcher:	C:\Program Files\Java\jdk-17\bin\javaw.exe
+Launcher args:	-classpath "A:\PLN_Team6\builApp\ThePoloMan.exe;lib\flatlaf-3.2.jar;lib\flatlaf-extras-3.2.jar;lib\flatlaf-fonts-roboto-2.137.jar;lib\swing-toast-notifications-1.0.1.jar;lib\jsvg-1.2.0.jar;lib\AbsoluteLayout.jar;lib\SparseBitSet-1.2.jar;lib\TimingFramework-0.55.jar;lib\artoolkitplus-2.3.1-1.5.9.jar;lib\barcode.jar;lib\barcode4j.jar;lib\bouncy-castle-connector-8.0.2.jar;lib\bridj-0.6.2-windows-only.jar;lib\bridj-0.7.0.jar;lib\commons-7.2.5.jar;lib\commons-8.0.2.jar;lib\commons-codec-1.11.jar;lib\commons-codec-1.15.jar;lib\commons-collections4-4.2.jar;lib\commons-collections4-4.4.jar;lib\commons-compress-1.18.jar;lib\commons-compress-1.21.jar;lib\commons-io-2.11.0.jar;lib\commons-logging-1.2.jar;lib\commons-math3-3.6.1.jar;lib\connector-1.0.3.jar;lib\core-3.3.0.jar;lib\core-3.3.3.jar;lib\core-3.4.0-javadoc.jar;lib\core-3.5.1.jar;lib\curvesapi-1.07.jar;lib\ffmpeg-2.1.1-windows-x86_64.jar;lib\ffmpeg-6.0-1.5.9.jar;lib\flatlaf-3.0.jar;lib\flatlaf-3.1.1.jar;lib\flatlaf-3.2.5.jar;lib\flatlaf-demo-3.2.5.jar;lib\flatlaf-extras-3.1.jar;lib\flatlaf-fonts-roboto-2.137.jar;lib\flycapture-2.13.3.31-1.5.9.jar;lib\font-asian-7.2.5.jar;lib\io-8.0.2.jar;lib\itext-1.3.1.jar;lib\itextpdf-5.4.0.jar;lib\itextpdf-5.5.12.jar;lib\jakarta.activation-2.0.1.jar;lib\jakarta.xml.bind-api-3.0.1.jar;lib\javacpp-1.5.9.jar;lib\javacv-1.5.9.jar;lib\javacv-windows-x86.jar;lib\javacv-windows-x86_64.jar;lib\javacv.jar;lib\javafx-base-11-linux.jar;lib\javafx-base-11.jar;lib\javafx-graphics-11-linux.jar;lib\javafx-graphics-11.jar;lib\javase-3.3.0.jar;lib\javase-3.5.1.jar;lib\javase-3.5.2-javadoc.jar;lib\javax.activation-1.2.0.jar;lib\javax.mail.jar;lib\jcalendar-1.2.2.jar;lib\jcalendar-1.4.jar;lib\jcommander-1.82.jar;lib\jgoodies-common-1.2.0.jar;lib\jgoodies-looks-2.4.1.jar;lib\jna-3.2.4.jar;lib\junit-4.6.jar;lib\kernel-8.0.2.jar;lib\layout-7.0.1.jar;lib\layout-8.0.1.jar;lib\leptonica-1.83.0-1.5.9.jar;lib\lib-core-3.1.0.jar;lib\libdc1394-2.2.6-1.5.9.jar;lib\libfreenect-0.5.7-1.5.9.jar;lib\libfreenect2-0.2.0-1.5.9.jar;lib\librealsense-1.12.4-1.5.9.jar;lib\librealsense2-2.53.1-1.5.9.jar;lib\log4j-1.2.17.jar;lib\log4j-api-2.18.0.jar;lib\log4j-core-2.20.0.jar;lib\miglayout-4.0.jar;lib\mssql-jdbc-11.2.0.jre17.jar;lib\mssql-jdbc-11.2.3.jre11.jar;lib\mssql-jdbc-11.2.3.jre18.jar;lib\mssql-jdbc-11.2.3.jre8.jar;lib\mssql-jdbc-12.4.1.jre11.jar;lib\mssql-jdbc-12.4.1.jre8.jar;lib\mssql-jdbc-12.4.2.jre8.jar;lib\mssql-jdbc-9.4.0.jre16.jar;lib\mysql-connector-java-5.1.42-bin.jar;lib\mysql-connector-java-5.1.49.jar;lib\mysql-connector-java-8.0.30.jar;lib\mysql-connector.jar;lib\openblas-0.3.23-1.5.9.jar;lib\opencv-2.4.8-windows-x86_64.jar;lib\opencv-4.7.0-1.5.9.jar;lib\pagination.jar;lib\pdfbox-app-3.0.0.jar;lib\poi-4.0.1.jar;lib\poi-ooxml-4.0.1.jar;lib\poi-ooxml-schemas-4.0.1.jar;lib\qrgen-1.0.jar;lib\sign-7.2.5.jar;lib\slf4j-api-1.6.2.jar;lib\slf4j-api-1.7.2.jar;lib\slf4j-api-1.7.25.jar;lib\slf4j-api-1.7.36.jar;lib\slf4j-log4j12-1.6.2.jar;lib\slf4j-simple-1.7.25.jar;lib\svgSalamander-1.1.4.jar;lib\swingx-1.6.1.jar;lib\swingx-all-1.6.4.jar;lib\tesseract-5.3.1-1.5.9.jar;lib\timingframework-core-7.3.1-javadoc.jar;lib\videoinput-0.200-1.5.9.jar;lib\webcam-capture-0.3.12.jar;lib\xmlbeans-3.0.2.jar;lib\xmlbeans-5.0.3.jar;lib\xmlbeans-5.1.1.jar;lib\zxing-1.7-javase.jar;lib\zxing-core-1.7.jar;lib\zxing-core-2.0.jar;lib\zxing-j2se-1.7.jar;lib\itextpdf-5.5.13.3.jar;lib\AbsoluteLayout.jar;lib\TimingFramework-0.55.jar;lib\activation-1.1.1.jar;lib\flatlaf-3.2.1.jar;lib\javax.mail.jar;lib\jcalendar-1.4.jar;lib\jfreechart-demo-1.5.2-jar-with-dependencies20(1).jar" raven.application.Application
+Args length:	3590/32768 chars
+Exit code:	0
