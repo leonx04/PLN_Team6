@@ -17,7 +17,7 @@ This project is a comprehensive system for managing the inventory, sales, and cu
 
 ## :rocket: Getting Started
 
-1. :octocat: Clone the repository.
+1. :inbox_tray: Clone the repository.
 2. :computer: Open the project in your preferred Java IDE.
 3. :books: Ensure you have the necessary libraries installed (see `lib/` directory).
 4. :play_or_pause_button: Run the application.
@@ -34,3 +34,6 @@ To build the project, use the provided `build.xml` Ant build file.
 
 Contributions are welcome. Please open an issue or submit a pull request.
 
+## :file_cabinet: Database
+
+The database used for this project is located in the `database/` directory.
