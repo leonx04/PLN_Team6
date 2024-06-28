@@ -153,17 +153,6 @@ public class Application extends javax.swing.JFrame {
             // Hiển thị cửa sổ ứng dụng
             app.setVisible(true);
         });
-//        // Khởi tạo JPanel của FormBanHang
-//        FormBanHang formBanHangPanel = new FormBanHang();
-//
-//        // Khởi tạo JFrame của FormAddKhachHang và truyền tham chiếu đến JPanel của FormBanHang
-//        FormAddKhachHang formAddKhachHangFrame = new FormAddKhachHang(formBanHangPanel);
-//
-//        // Thiết lập đóng ứng dụng khi đóng cửa sổ
-//        formAddKhachHangFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//
-//        // Hiển thị JFrame của FormAddKhachHang
-//        formAddKhachHangFrame.setVisible(true);
     }
 
     // Trong lớp Application
@@ -178,6 +167,5 @@ public class Application extends javax.swing.JFrame {
         }
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    // End of variables declaration//GEN-END:variables
+    
 }
