@@ -34,6 +34,6 @@ To build the project, use the provided `build.xml` Ant build file.
 
 Contributions are welcome. Please open an issue or submit a pull request.
 
-## :file_cabinet: Database
+## :file_cabinet: Database  
 
-The database used for this project is located in the `database/` directory.
+The database used for this project is located in the [`database/`](https://github.com/leonx04/ThePoloManShop/tree/main/database) directory.
